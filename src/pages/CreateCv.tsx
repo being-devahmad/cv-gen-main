@@ -32,6 +32,34 @@ const templates = [
     name: 'Perth',
     image: '/placeholder.svg',
   },
+  {
+    id: '6',
+    name: 'Riga',
+    image: '/placeholder.svg',
+  },
+  {
+    id: '7',
+    name: 'Rotterdam',
+    badge: 'new' as const,
+    image: '/placeholder.svg',
+  },
+  {
+    id: '8',
+    name: 'Budapest',
+    badge: 'most-selected' as const,
+    image: '/placeholder.svg',
+  },
+  {
+    id: '9',
+    name: 'Chicago',
+    badge: 'recommended' as const,
+    image: '/placeholder.svg',
+  },
+  {
+    id: '10',
+    name: 'Perth',
+    image: '/placeholder.svg',
+  },
 ]
 
 export default function CreateCv() {

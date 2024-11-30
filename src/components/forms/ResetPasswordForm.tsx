@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 type ResetPasswordFormData = z.infer<typeof ResetPasswordSchema>;
 const ResetPasswordForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { user, resetPassword } = useAuth();
   const { toast } = useToast();
 
   const form = useForm<ResetPasswordFormData>({
@@ -30,9 +30,10 @@ const ResetPasswordForm = () => {
     formState: { errors },
   } = form;
 
-  const handleReset = (values: ResetPasswordFormData) => {
+  const handleReset = async (values: ResetPasswordFormData) => {
     setIsLoading(true);
     try {
+      await resetPassword(values.email);
       setTimeout(() => {
         setIsLoading(false);
         console.log(values);

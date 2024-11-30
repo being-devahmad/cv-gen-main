@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  console.log("currentUser-->" , user)
   const navigate = useNavigate();
 
 

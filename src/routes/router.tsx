@@ -75,9 +75,9 @@ export const router = createBrowserRouter([
       {
         path: "create",
         element: (
-          // <ProtectedRoute>
-          <CreateCv />
-          // </ProtectedRoute>
+          <ProtectedRoute>
+            <CreateCv />
+          </ProtectedRoute>
         ),
       },
 
@@ -85,18 +85,18 @@ export const router = createBrowserRouter([
       {
         path: "create/:id",
         element: (
-          // <ProtectedRoute>
-          <BuilderLandingPage />
-          // </ProtectedRoute>
+          <ProtectedRoute>
+            <BuilderLandingPage />
+          </ProtectedRoute>
         ),
       },
 
       {
         path: "create/:id/start",
         element: (
-          // <ProtectedRoute>
-          <ResumeStart />
-          // </ProtectedRoute>
+          <ProtectedRoute>
+            <ResumeStart />
+          </ProtectedRoute>
         ),
       },
 

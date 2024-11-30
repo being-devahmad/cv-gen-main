@@ -1,7 +1,7 @@
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useState } from "react";
 import { useToast } from "./use-toast";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebaseConfig";
 
@@ -70,7 +70,7 @@ export const useAuth = () => {
       const user = userCredential.user;
 
       // Fetch user data from Firestore
-      const userDoc = await getDoc(doc(db, "Users", user.uid));
+      const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const userData = userDoc.data();
         context.login({
@@ -103,12 +103,24 @@ export const useAuth = () => {
     }
   };
 
+  const resetPassword = async (email: string) => {
+    setIsLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Password reset error:", error);
+      setIsLoading(false);
+      throw error;
+    }
+  };
+
 
 
 
   return {
     ...context,
-    register, login,
+    register, login, resetPassword,
     isLoading
   };
 };

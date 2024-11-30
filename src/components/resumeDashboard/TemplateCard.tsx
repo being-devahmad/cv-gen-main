@@ -4,6 +4,7 @@ import { Template } from "@/types";
 import { Badge } from "../ui/badge";
 import resumeOne from "../../assets/images/resumeOne.png"
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 interface TemplateCardProps {
@@ -14,6 +15,12 @@ interface TemplateCardProps {
 export function TemplateCard({ template, isActive }: TemplateCardProps) {
 
     const [isHovered, setIsHovered] = useState(false);
+
+    // const navigate = useNavigate()
+
+    // const handleNavigateToCreateCv = () => {
+    //     navigate(`/dashboard/create/${id}/start`)
+    // }
 
     return (
         <div className="relative w-[280px] flex flex-col cursor-pointer"
@@ -50,7 +57,9 @@ export function TemplateCard({ template, isActive }: TemplateCardProps) {
                 <h3 className="font-medium text-lg">{template.city}</h3>
                 {isActive || isHovered && (
                     <div className="absolute inset-0 flex items-end justify-center pb-4transition-opacity duration-300">
-                        <Button className="mt-2 w-3/4 bg-[#0B996F] hover:bg-[#418571]">
+                        <Button className="mt-2 w-3/4 bg-[#0B996F] hover:bg-[#418571]"
+                        // onClick={handleNavigateToCreateCv}
+                        >
                             Select
                         </Button>
                     </div>
