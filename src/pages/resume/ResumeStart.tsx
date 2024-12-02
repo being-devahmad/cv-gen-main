@@ -1,8 +1,9 @@
 import ResumeForm from '@/components/forms/ResumeForm/ResumeForm';
+import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 // import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 import { ResumeProvider } from '@/hooks/useResume';
-import { Azurill } from '@/templates/azurill';
-import { Chikorita } from '@/templates/chikorita';
+// import { Azurill } from '@/templates/azurill';
+// import { Chikorita } from '@/templates/chikorita';
 import React from 'react';
 
 const ResumeStart: React.FC = () => {
@@ -13,9 +14,9 @@ const ResumeStart: React.FC = () => {
                     <ResumeForm />
                 </div>
                 <div className="w-full lg:w-1/2 overflow-y-auto">
-                    {/* <PreviewSection /> */}
-                    {/* <Azurill /> */}
-                    <Chikorita />
+                    <PreviewSection />
+                    {/* <Azurill />  */}
+                    {/* <Chikorita /> */}
                 </div>
             </div>
         </ResumeProvider>
