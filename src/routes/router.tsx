@@ -23,6 +23,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import Resume from "@/pages/Resumes";
 import BuilderLandingPage from "@/pages/resume/ResumeOptions";
 import ResumeStart from "@/pages/resume/ResumeStart";
+import ExperienceForm from "@/components/forms/ResumeForm/ExperienceForm";
 
 export const router = createBrowserRouter([
   {
@@ -83,7 +84,7 @@ export const router = createBrowserRouter([
 
 
       {
-        path: "create/:id",
+        path: "select/:id",
         element: (
           <ProtectedRoute>
             <BuilderLandingPage />
@@ -92,13 +93,14 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "create/:id/start",
+        path: "select/:id/start",
         element: (
           <ProtectedRoute>
             <ResumeStart />
           </ProtectedRoute>
         ),
       },
+
 
 
       {

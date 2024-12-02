@@ -21,9 +21,8 @@ export interface Resume {
 export interface Template {
   id: string;
   name: string;
-  city: string;
-  badge?: 'most-selected' | 'recommended' | 'new';
   image: string;
+  badge?: 'new' | 'most-selected' | 'recommended';
 }
 
 export type FormStep = 'contact' | 'experience' | 'education' | 'skills' | 'about' | 'finish';

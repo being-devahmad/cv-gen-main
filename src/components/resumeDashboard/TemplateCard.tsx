@@ -1,73 +1,60 @@
-
-import { Button } from "@/components/ui/button"
-import { Template } from "@/types";
-import { Badge } from "../ui/badge";
-import resumeOne from "../../assets/images/resumeOne.png"
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { Template } from '@/types'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import { Image } from '@nextui-org/react'
 
 interface TemplateCardProps {
-    template: Template;
-    isActive?: boolean;
+    template: Template
+    isActive: boolean
 }
 
 export function TemplateCard({ template, isActive }: TemplateCardProps) {
-
-    const [isHovered, setIsHovered] = useState(false);
-
-    // const navigate = useNavigate()
-
-    // const handleNavigateToCreateCv = () => {
-    //     navigate(`/dashboard/create/${id}/start`)
-    // }
+    const [isHovered, setIsHovered] = useState(false)
 
     return (
-        <div className="relative w-[280px] flex flex-col cursor-pointer"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}>
-            <div className="relative ">
+        <div
+            className={`relative overflow-hidden rounded-lg transition-all duration-300 ${isActive ? 'shadow-2xl' : 'shadow-md'
+                }`}
+
+        >
+            <div className="aspect-[3/4] w-full" onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}>
+                <Image
+                    src={template.image}
+                    alt={template.name}
+                    width={300}
+                    height={400}
+                    className="object-cover w-full h-full rounded-lg"
+                />
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                <h3 className="text-white font-semibold text-lg mb-2">{template.name}</h3>
                 {template.badge && (
-                    <div className="absolute top-4 right-4 z-10">
-                        <Badge className={`
-              ${template.badge === 'most-selected' ? 'bg-green-500' : ''}
-              ${template.badge === 'recommended' ? 'bg-orange-500' : ''}
-              ${template.badge === 'new' ? 'bg-blue-500' : ''}
-            `}>
-                            {template.badge === 'most-selected' && 'Most selected'}
-                            {template.badge === 'recommended' && 'Recommended'}
-                            {template.badge === 'new' && 'New'}
-                        </Badge>
-                    </div>
-                )}
-                <div className="aspect-[1/1.4] bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                        src={resumeOne}
-                        alt={`${template.city} Template`}
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="absolute bottom-4 left-4">
-                    <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm">
-                        WORD | PDF
+                    <Badge
+                        variant={
+                            template.badge === 'new'
+                                ? 'default'
+                                : template.badge === 'most-selected'
+                                    ? 'secondary'
+                                    : 'outline'
+                        }
+                        className="mb-2"
+                    >
+                        {template.badge}
                     </Badge>
-                </div>
-            </div>
-            <div className="mt-4 text-center">
-                <h3 className="font-medium text-lg">{template.city}</h3>
-                {isActive || isHovered && (
-                    <div className="absolute inset-0 flex items-end justify-center pb-4transition-opacity duration-300">
-                        <Button className="mt-2 w-3/4 bg-[#0B996F] hover:bg-[#418571]"
-                        // onClick={handleNavigateToCreateCv}
-                        >
-                            Select
-                        </Button>
-                    </div>
+                )}
+                {true && (
+                    <Button
+                        variant="secondary"
+                        className={`w-full mt-2 transition-all duration-300 ${isHovered || isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                            }`}
+                    // onClick={() => onSelect(template)}
+                    >
+                        Select Template
+                    </Button>
                 )}
             </div>
-
-
-
         </div>
     )
 }
