@@ -1,8 +1,8 @@
+import { ContactInfoSchema } from '@/lib/validations';
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { PersonalInfoSchema } from '@/lib/validations'
 
 interface ResumeData {
-    personalInfo: {
+    contactInfo: {
         firstName: string;
         lastName: string;
         phone: string;
@@ -23,14 +23,14 @@ interface ResumeContextType {
     updateResumeData: (section: keyof ResumeData, data: any) => void;
     currentPage: number;
     setCurrentPage: (page: number) => void;
-    personalInfoSchema: typeof PersonalInfoSchema;
+    contactInfoSchema: typeof ContactInfoSchema;
 }
 
 const ResumeContext = createContext<ResumeContextType | undefined>(undefined);
 
 export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [resumeData, setResumeData] = useState<ResumeData>({
-        personalInfo: {
+        contactInfo: {
             firstName: "",
             lastName: "",
             phone: "",
@@ -51,7 +51,7 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
 
     return (
-        <ResumeContext.Provider value={{ resumeData, updateResumeData, currentPage, setCurrentPage, personalInfoSchema: PersonalInfoSchema }}>
+        <ResumeContext.Provider value={{ resumeData, updateResumeData, currentPage, setCurrentPage, contactInfoSchema: ContactInfoSchema }}>
             {children}
         </ResumeContext.Provider>
     );
