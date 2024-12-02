@@ -23,7 +23,6 @@ import AuthLayout from "./layouts/AuthLayout";
 import Resume from "@/pages/Resumes";
 import BuilderLandingPage from "@/pages/resume/ResumeOptions";
 import ResumeStart from "@/pages/resume/ResumeStart";
-import ExperienceForm from "@/components/forms/ResumeForm/ExperienceForm";
 
 export const router = createBrowserRouter([
   {
