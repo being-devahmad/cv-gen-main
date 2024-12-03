@@ -1,14 +1,27 @@
-
-import { OptionCard } from "@/components/resumeDashboard/OptionCard"
+import { useState } from "react"
 import { ExistingResumeIcon, NewResumeIcon } from "@/components/resumeDashboard/ResumeIcons"
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"
+import OptionCard from "@/components/resumeDashboard/OptionCard"
+import ResumeUpload from "@/components/resumeDashboard/ResumeUpload"
 
 export default function BuilderLandingPage() {
+    const { id } = useParams()
+    const navigate = useNavigate()
+    const [showResumeUpload, setShowResumeUpload] = useState(false)
 
-    const { id } = useParams();
+    console.log('Selected template ID:', id)
 
-    // Now you can use the `id` in your component
-    console.log('Selected template ID:', id);
+    const handleNewResume = () => {
+        navigate(`/start`)
+    }
+
+    const handleExistingResume = () => {
+        setShowResumeUpload(true)
+    }
+
+    if (showResumeUpload) {
+        return <ResumeUpload />
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
@@ -22,13 +35,13 @@ export default function BuilderLandingPage() {
                         title="Create a new resume"
                         description="We will help you create a resume step-by-step"
                         icon={<NewResumeIcon />}
-                        href={`start`}
+                        onClick={handleNewResume}
                     />
                     <OptionCard
                         title="I already have a resume"
                         description="We'll re-format it and fill in your information so you don't have to."
                         icon={<ExistingResumeIcon />}
-                        href={`/start`}
+                        onClick={handleExistingResume}
                     />
                 </div>
             </div>
