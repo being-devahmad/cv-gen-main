@@ -12,7 +12,7 @@ export default function BuilderLandingPage() {
     console.log('Selected template ID:', id)
 
     const handleNewResume = () => {
-        navigate(`/start`)
+        navigate(`/select/${id}/start`)
     }
 
     const handleExistingResume = () => {
