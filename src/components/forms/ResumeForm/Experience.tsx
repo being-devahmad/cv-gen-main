@@ -402,7 +402,7 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
                             variant="faded"
                             type="submit"
                         >
-                            Next to Skills <span className='pl-2'>&#x2192;</span>
+                            Next to Education <span className='pl-2'>&#x2192;</span>
                         </Button>
                     </div>
                 </form>

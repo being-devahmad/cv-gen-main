@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
     Select,
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Plus, X } from 'lucide-react';
+import { Button } from '@nextui-org/button';
 
 interface SkillsProps {
     data: any[];
@@ -129,6 +129,22 @@ export default function Skills({ data, updateData }: SkillsProps) {
                         </div>
                     ))}
                 </div>
+            </div>
+
+            <div className="flex justify-between items-center mt-10">
+                <Button
+                    variant="light"
+                    type="button"
+                >
+                    Back
+                </Button>
+                <Button
+                    radius="sm"
+                    className="text-white font-bold hover:bg-button-gpt-hover bg-button-gpt"
+                    type="submit"
+                >
+                    Next to Skills <span className='pl-2'>&#x2192;</span>
+                </Button>
             </div>
         </Card>
     );

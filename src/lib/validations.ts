@@ -43,3 +43,12 @@ export const ExperienceSchema = z.object({
   current: z.boolean(),
   description: z.string().min(1, "Description is required"),
 });
+
+export const EducationSchema = z.object({
+  degree: z.string().min(1, "Degree is required"),
+  school: z.string().min(1, "School name is required"),
+  location: z.string().min(1, "Location is required"),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().min(1, "End date is required"),
+  description: z.string().optional(),
+});
