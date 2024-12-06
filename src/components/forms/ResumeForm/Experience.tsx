@@ -42,9 +42,9 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
     const { control, handleSubmit, formState: { errors } } = form;
 
     const onSubmit = (values: { experiences: ExperienceData[] }) => {
-        console.log("values>>",values.experiences)
+        console.log("values>>", values.experiences)
         updateData(values.experiences);
-        onNext(); 
+        onNext();
     };
 
     const addExperience = () => {
@@ -233,6 +233,7 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
                                         </FormItem>
                                     )}
                                 />
+
                             </div>
                         </div>
                     ))}
