@@ -1,6 +1,7 @@
 import { Progress } from "@/components/ui/progress"
 import { useEffect, useState } from "react"
 import { Check } from 'lucide-react'
+import { Image } from "@nextui-org/react"
 
 interface TemplatePreviewProps {
     fileName: string
@@ -29,7 +30,7 @@ export function TemplatePreview({ fileName }: TemplatePreviewProps) {
         <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center justify-center">
             <div className="w-full max-w-3xl space-y-8">
                 <div className="relative w-full aspect-[210/297] bg-white rounded-lg shadow-lg overflow-hidden">
-                    <img
+                    <Image
                         src="/placeholder.svg?height=1000&width=707"
                         alt="Resume template preview"
                         className="w-full h-full object-cover opacity-25"

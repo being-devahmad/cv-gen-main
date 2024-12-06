@@ -6,6 +6,7 @@ import templateOne from "../../assets/images/resumeOne.png"
 import templateTwo from "../../assets/images/resumeTwo.png"
 import templateThree from "../../assets/images/resumeThree.png"
 import templateFour from "../../assets/images/resumeFour.png"
+import { useNavigate } from 'react-router-dom'
 
 interface Template {
     id: string
@@ -24,6 +25,7 @@ const templates: Template[] = [
 
 export function TemplateSlider() {
     const [activeIndex, setActiveIndex] = useState(0)
+    const navigate = useNavigate()
 
     const nextSlide = () => {
         setActiveIndex((prevIndex) => (prevIndex + 1) % templates.length)
@@ -38,10 +40,9 @@ export function TemplateSlider() {
     }
 
     const handleSelectTemplate = (template: Template) => {
-        console.log(`Selected template: ${template.name}`)
-        // Add your logic for template selection here
-    }
-
+        console.log(`Selected template: ${template.name}`);
+        navigate(`${template.id}/start`);
+    };
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-8">
             <div className="relative">
