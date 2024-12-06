@@ -199,7 +199,7 @@ export default function ResumeForm() {
 
                 {/* Form Content */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 lg:p-6 mb-6 border">
-                    <ScrollArea className="h-[calc(100vh-300px)] lg:h-[450px] pr-4 border border-black">
+                    <ScrollArea className="h-[calc(100vh-300px)] lg:h-[450px] pr-4 ">
                         {CurrentStepComponent && (
                             <CurrentStepComponent
                                 data={formData[steps[currentStep].id as keyof typeof formData] as any[]}
@@ -213,7 +213,7 @@ export default function ResumeForm() {
                 </div>
 
                 {/* Navigation */}
-                {/* <div className="flex justify-between">
+                <div className="flex justify-between">
                     <Button
                         variant="outline"
                         onClick={handlePrev}
@@ -227,7 +227,7 @@ export default function ResumeForm() {
                     >
                         Next <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
-                </div> */}
+                </div>
             </div>
         </div>
     );
