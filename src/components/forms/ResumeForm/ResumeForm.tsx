@@ -213,7 +213,7 @@ export default function ResumeForm() {
                 </div>
 
                 {/* Navigation */}
-                {/* <div className="flex justify-between">
+                <div className="flex justify-between">
                     <Button
                         variant="outline"
                         onClick={handlePrev}
@@ -227,7 +227,7 @@ export default function ResumeForm() {
                     >
                         Next <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
-                </div> */}
+                </div>
             </div>
         </div>
     );

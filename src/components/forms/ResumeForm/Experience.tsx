@@ -202,7 +202,7 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
 
     const onSubmit = (values: { experiences: ExperienceData[] }) => {
         updateData(values.experiences);
-        onNext();
+        onNext(); 
     };
 
     const addExperience = () => {
@@ -401,6 +401,7 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
                             className="text-white font-bold hover:bg-button-gpt-hover bg-button-gpt"
                             variant="faded"
                             type="submit"
+
                         >
                             Next to Education <span className='pl-2'>&#x2192;</span>
                         </Button>

@@ -1,82 +1,122 @@
-import { useRef, useState } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation, EffectCreative } from 'swiper/modules'
+import { useState } from 'react'
+import { Card, CardBody, CardFooter, Button, Image } from "@nextui-org/react"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Template } from '@/types'
-import { TemplateCard } from './TemplateCard'
+import { motion, AnimatePresence } from 'framer-motion'
+import templateOne from "../../assets/images/resumeOne.png"
+import templateTwo from "../../assets/images/resumeTwo.png"
+import templateThree from "../../assets/images/resumeThree.png"
+import templateFour from "../../assets/images/resumeFour.png"
 
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/effect-creative'
-
-interface TemplateSliderProps {
-    templates: Template[]
+interface Template {
+    id: string
+    name: string
+    image: string
+    popularity: 'most' | 'recommended' | null
 }
 
-export function TemplateSlider({ templates }: TemplateSliderProps) {
+const templates: Template[] = [
+    { id: '1', name: 'Riga', image: templateOne, popularity: null },
+    { id: '2', name: 'Rotterdam', image: templateTwo, popularity: null },
+    { id: '3', name: 'Budapest', image: templateThree, popularity: 'most' },
+    { id: '4', name: 'Chicago', image: templateFour, popularity: 'recommended' },
+    { id: '5', name: 'Perth', image: templateTwo, popularity: null },
+]
+
+export function TemplateSlider() {
     const [activeIndex, setActiveIndex] = useState(0)
-    const prevRef = useRef<HTMLButtonElement>(null)
-    const nextRef = useRef<HTMLButtonElement>(null)
+
+    const nextSlide = () => {
+        setActiveIndex((prevIndex) => (prevIndex + 1) % templates.length)
+    }
+
+    const prevSlide = () => {
+        setActiveIndex((prevIndex) => (prevIndex - 1 + templates.length) % templates.length)
+    }
+
+    const getAdjustedIndex = (index: number) => {
+        return (index + templates.length) % templates.length
+    }
+
+    const handleSelectTemplate = (template: Template) => {
+        console.log(`Selected template: ${template.name}`)
+        // Add your logic for template selection here
+    }
 
     return (
-        <div className="relative px-4 md:px-16 overflow-hidden">
-            <button
-                ref={prevRef}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 shadow-lg hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-                aria-label="Previous template"
-            >
-                <ChevronLeft className="w-6 h-6" />
-            </button>
-            <Swiper
-                modules={[Navigation, EffectCreative]}
-                spaceBetween={30}
-                slidesPerView="auto"
-                centeredSlides
-                loop
-                effect="creative"
-                creativeEffect={{
-                    prev: {
-                        translate: ['-120%', 0, -500],
-                        rotate: [0, 0, -15],
-                    },
-                    next: {
-                        translate: ['120%', 0, -500],
-                        rotate: [0, 0, 15],
-                    },
-                    // Add this to ensure the active slide has no rotation
-                    // active: {
-                    //     translate: [0, 0, 0],
-                    //     rotate: [0, 0, 0],
-                    // },
-                }}
-                navigation={{
-                    prevEl: prevRef.current,
-                    nextEl: nextRef.current,
-                }}
-                onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-                className="!overflow-visible py-16"
-            >
-                {templates.map((template) => (
-                    <SwiperSlide key={template.id} className="!w-[300px]">
-                        {({ isActive }) => (
-                            <div className={`transition-all duration-300 ease-in-out ${isActive ? 'scale-110' : 'scale-90 opacity-50'}`}>
-                                <TemplateCard
-                                    template={template}
-                                    isActive={isActive}
-                                />
+        <div className="w-full max-w-7xl mx-auto px-4 py-8">
+            <div className="relative">
+                <Button
+                    isIconOnly
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10"
+                    onClick={prevSlide}
+                >
+                    <ChevronLeft />
+                </Button>
+                <div className="overflow-hidden">
+                    <div
+                        className="flex transition-transform duration-300 ease-in-out slider-container"
+                        style={{ transform: `translateX(-${(activeIndex * 33.33)}%)` }}
+                    >
+                        {templates.map((template, index) => (
+                            <div
+                                key={`${template.id}-${index}`}
+                                className="w-1/3 flex-shrink-0 px-2 transition-all duration-300"
+                            >
+                                <AnimatePresence>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 50 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -50 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <Card
+                                            className={`w-full transition-all duration-300 ${getAdjustedIndex(index - activeIndex) === 1
+                                                ? 'scale-105 shadow-lg'
+                                                : 'scale-95 opacity-70'
+                                                }`}
+                                        >
+                                            <CardBody className="p-0">
+                                                <Image
+                                                    src={template.image}
+                                                    alt={template.name}
+                                                    className="w-full h-[400px] object-contain"
+                                                />
+                                                {template.popularity && (
+                                                    <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-semibold ${template.popularity === 'most' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-black'
+                                                        }`}>
+                                                        {template.popularity === 'most' ? 'Most Selected' : 'Recommended'}
+                                                    </div>
+                                                )}
+                                            </CardBody>
+                                            <CardFooter className="justify-between items-center">
+                                                <span>{template.name}</span>
+                                                {getAdjustedIndex(index - activeIndex) === 1 && (
+                                                    <Button
+                                                        size="sm"
+                                                        color={"primary"}
+                                                        onClick={() => handleSelectTemplate(template)}
+                                                    >
+                                                        Select Template
+                                                    </Button>
+                                                )}
+                                                <span className="text-gray-500 text-sm">WORD | PDF</span>
+                                            </CardFooter>
+                                        </Card>
+                                    </motion.div>
+                                </AnimatePresence>
                             </div>
-                        )}
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-            <button
-                ref={nextRef}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 shadow-lg hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-                aria-label="Next template"
-            >
-                <ChevronRight className="w-6 h-6" />
-            </button>
-        </div>
+                        ))}
+                    </div>
+                </div>
+                <Button
+                    isIconOnly
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10"
+                    onClick={nextSlide}
+                >
+                    <ChevronRight />
+                </Button>
+            </div>
+        </div >
     )
 }
 

@@ -1,10 +1,13 @@
-import { ProgressDots } from "@/components/resumeDashboard/ProgressDots";
-import { TemplateSlider } from "@/components/resumeDashboard/TemplateSlider";
-import { Button } from "@/components/ui/button";
-import templateOne from "../assets/images/resumeOne.png";
-import templateTwo from "../assets/images/resumeTwo.png";
-import templateThree from "../assets/images/resumeThree.png";
-import templateFour from "../assets/images/resumeFour.png";
+import { useState } from 'react'
+import { ProgressDots } from "@/components/resumeDashboard/ProgressDots"
+import { TemplateSlider } from "@/components/resumeDashboard/TemplateSlider"
+import { Button } from "@/components/ui/button"
+import templateOne from "../assets/images/resumeOne.png"
+import templateTwo from "../assets/images/resumeTwo.png"
+import templateThree from "../assets/images/resumeThree.png"
+import templateFour from "../assets/images/resumeFour.png"
+import { Template } from "@/types"
+import { useNavigate } from 'react-router-dom'
 
 const templates = [
   {
@@ -39,6 +42,18 @@ const templates = [
 ]
 
 const SelectTemplate = () => {
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
+  const navigate = useNavigate()
+
+  const handleCardSelect = (template: Template) => {
+    setSelectedTemplate(template)
+    console.log('Selected template:', template)
+    // Handle selection logic (e.g., navigate to next step)
+  }
+
+  const handleSkip = () => {
+    navigate('/select/1')
+  }
 
 
   return (
@@ -53,15 +68,32 @@ const SelectTemplate = () => {
             Browse through our collection of professionally designed templates.
             Select the one that best showcases your skills and experience.
           </p>
-          <Button variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-colors">
+          <Button variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-colors" onClick={handleSkip}>
             Skip this step
           </Button>
         </div>
-        <TemplateSlider templates={templates} />
+        <TemplateSlider templates={templates} onCardSelect={handleCardSelect} />
+        {selectedTemplate && (
+          <div className="mt-8 text-center">
+            <p className="text-lg font-semibold">
+              Selected Template: {selectedTemplate.name}
+            </p>
+            <Button
+              variant="default"
+              className="mt-4"
+              onClick={() => {
+                // Handle navigation to the next step
+                console.log('Proceeding with template:', selectedTemplate)
+              }}
+            >
+              Continue with Selected Template
+            </Button>
+          </div>
+        )}
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default SelectTemplate;
+export default SelectTemplate
 
