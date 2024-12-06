@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
@@ -10,7 +11,6 @@ import { Select, SelectItem } from '@nextui-org/select';
 import { Plus, Trash2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { EducationSchema } from '@/lib/validations';
-
 
 interface EducationProps {
     data: any[];
@@ -111,6 +111,7 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                                         size="md"
                                                         type="text"
                                                         label="School"
+                                                        placeholder="Harvard University"
                                                         errorMessage={errors.education?.[index]?.school?.message}
                                                         isInvalid={!!errors.education?.[index]?.school}
                                                         {...field}
@@ -130,6 +131,7 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                                         variant="bordered"
                                                         size="md"
                                                         label="Degree"
+                                                        placeholder="Select degree"
                                                         errorMessage={errors.education?.[index]?.degree?.message}
                                                         isInvalid={!!errors.education?.[index]?.degree}
                                                         {...field}
@@ -158,6 +160,7 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                                         size="md"
                                                         type="text"
                                                         label="Location"
+                                                        placeholder="City, Country"
                                                         errorMessage={errors.education?.[index]?.location?.message}
                                                         isInvalid={!!errors.education?.[index]?.location}
                                                         {...field}
@@ -176,6 +179,7 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                                         variant="bordered"
                                                         size="md"
                                                         type="month"
+                                                        label="Start Date"
                                                         errorMessage={errors.education?.[index]?.startDate?.message}
                                                         isInvalid={!!errors.education?.[index]?.startDate}
                                                         {...field}
@@ -194,6 +198,7 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                                         variant="bordered"
                                                         size="md"
                                                         type="month"
+                                                        label="End Date"
                                                         errorMessage={errors.education?.[index]?.endDate?.message}
                                                         isInvalid={!!errors.education?.[index]?.endDate}
                                                         {...field}
@@ -213,6 +218,7 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                                 <Textarea
                                                     variant="bordered"
                                                     size="md"
+                                                    label="Description"
                                                     placeholder="Write about your educational experience, achievements, and relevant coursework..."
                                                     errorMessage={errors.education?.[index]?.description?.message}
                                                     isInvalid={!!errors.education?.[index]?.description}

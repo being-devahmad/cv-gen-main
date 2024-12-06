@@ -1,44 +1,16 @@
-import { ProgressDots } from "@/components/resumeDashboard/ProgressDots";
-import { TemplateSlider } from "@/components/resumeDashboard/TemplateSlider";
-import { Button } from "@/components/ui/button";
-import templateOne from "../assets/images/resumeOne.png";
-import templateTwo from "../assets/images/resumeTwo.png";
-import templateThree from "../assets/images/resumeThree.png";
-import templateFour from "../assets/images/resumeFour.png";
+import { ProgressDots } from "@/components/resumeDashboard/ProgressDots"
+import { TemplateSlider } from "@/components/resumeDashboard/TemplateSlider"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from 'react-router-dom'
 
-const templates = [
-  {
-    id: '1',
-    name: 'Riga',
-    image: templateOne,
-  },
-  {
-    id: '2',
-    name: 'Rotterdam',
-    badge: 'new' as const,
-    image: templateTwo,
-  },
-  {
-    id: '3',
-    name: 'Budapest',
-    badge: 'most-selected' as const,
-    image: templateThree,
-  },
-  {
-    id: '4',
-    name: 'Chicago',
-    badge: 'recommended' as const,
-    image: templateFour,
-  },
-  {
-    id: '5',
-    name: 'Perth',
-    image: templateTwo,
-  },
-  // ... (other templates)
-]
+
 
 const SelectTemplate = () => {
+  const navigate = useNavigate()
+
+  const handleSkip = () => {
+    navigate('/select/2')
+  }
 
 
   return (
@@ -53,15 +25,15 @@ const SelectTemplate = () => {
             Browse through our collection of professionally designed templates.
             Select the one that best showcases your skills and experience.
           </p>
-          <Button variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-colors">
+          <Button variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-colors" onClick={handleSkip}>
             Skip this step
           </Button>
         </div>
-        <TemplateSlider templates={templates} />
+        <TemplateSlider />
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default SelectTemplate;
+export default SelectTemplate
 
