@@ -205,6 +205,29 @@ const Languages = () => {
   )
 }
 
+
+const References = () => {
+  const languages = [
+    { language: "English", level: "Fluent" },
+    { language: "French", level: "Fluent" },
+    { language: "German", level: "Basic" },
+    { language: "Spanish", level: "Intermediate" }
+  ]
+
+  return (
+    <div className="bg-gray-100 p-8">
+      <h2 className="text-xl font-bold border-b border-gray-300 pb-2 mb-4">LANGUAGES</h2>
+      <ul className="space-y-2">
+        {languages.map((item, index) => (
+          <li key={index}>
+            {item.language} ({item.level})
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 export const Resume = () => {
   return (
     <div className="max-w-[1000px] mx-auto shadow-xl">
@@ -214,6 +237,7 @@ export const Resume = () => {
           <Contact />
           <Skills />
           <Languages />
+          <References />
         </div>
         <div>
           <Profile />
