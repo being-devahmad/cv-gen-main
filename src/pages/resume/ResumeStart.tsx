@@ -1,4 +1,4 @@
-import ResumeForm from '@/components/forms/ResumeForm/ResumeForm';
+import ResumeForm2 from '@/components/forms/ResumeForm/ResumeForm2';
 import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 // import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 import { ResumeProvider } from '@/hooks/useResume';
