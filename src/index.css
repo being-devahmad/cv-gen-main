@@ -170,6 +170,9 @@
   font-weight: 900;
   font-style: italic;
 }
+.active{
+  border-bottom:2px solid blue;
+}
 
 @keyframes shine {
   0% {

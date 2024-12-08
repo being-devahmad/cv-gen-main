@@ -1,167 +1,176 @@
-import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button, Card, Input } from '@nextui-org/react';
-import { AITextarea } from './AIBasedDescription';
-import { TrashIcon } from 'lucide-react';
-
-
-const ExperienceSchema = z.object({
-    title: z.string().min(1, 'Title is required'),
-    company: z.string().min(1, 'Company is required'),
-    location: z.string().min(1, 'Location is required'),
-    startDate: z.string().min(1, 'Start date is required'),
-    endDate: z.string().min(1, 'End date is required'),
-    description: z.string().min(1, 'Description is required'),
-});
-
-type ExperienceData = z.infer<typeof ExperienceSchema>;
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@nextui-org/button";
+import { Input, Textarea } from "@nextui-org/input";
+import { Plus, Trash2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface ExperienceProps {
-    data: ExperienceData[];
-    updateData: (data: ExperienceData[]) => void;
-    onNext: () => void;
+  allData: Record<string, any>;
+  setAllData: (data: Record<string, any>) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
-export default function Experience({ data, updateData, onNext }: ExperienceProps) {
-    const [experiences, setExperiences] = useState<ExperienceData[]>(data || [
-        {
-            title: '',
-            company: '',
-            location: '',
-            startDate: '',
-            endDate: '',
-            description: '',
-        },
+const Experience: React.FC<ExperienceProps> = ({
+  allData,
+  setAllData,
+  activeTab,
+  setActiveTab,
+}) => {
+  const [experiences, setExperiences] = useState(
+    allData.experiences || [
+      {
+        title: "",
+        company: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      },
+    ]
+  );
+
+  const handleAddExperience = () => {
+    setExperiences([
+      ...experiences,
+      {
+        title: "",
+        company: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      },
     ]);
+  };
 
-    const { control, handleSubmit, formState: { errors } } = useForm<{ experiences: ExperienceData[] }>({
-        resolver: zodResolver(z.object({ experiences: ExperienceSchema.array() })),
-        defaultValues: { experiences },
-    });
+  const handleRemoveExperience = (index: number) => {
+    const updatedExperiences = experiences.filter((_:any, i:any) => i !== index);
+    setExperiences(updatedExperiences);
+    setAllData({ ...allData, experiences: updatedExperiences });
+  };
 
-    const onSubmit = (values: { experiences: ExperienceData[] }) => {
-        updateData(values.experiences);
-        onNext();
-    };
-
-    const addExperience = () => {
-        setExperiences([
-            ...experiences,
-            {
-                title: '',
-                company: '',
-                location: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-            },
-        ]);
-    };
-
-    const removeExperience = (index: number) => {
-        setExperiences(experiences.filter((_, i) => i !== index));
-    };
-
-    return (
-        <Card className="p-6">
-            <div className="flex justify-between items-center mb-3">
-                <h2 className="text-2xl font-semibold">Work Experience</h2>
-                <Button onClick={addExperience} className=' bg-[#10a37f] rounded-lg text-white hover:bg-[#095C46] '>
-                    Add Experience
-                </Button>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {experiences.map((_, index) => (
-                    <div key={index} className="space-y-4 border border-gray-300 p-2 rounded-md">
-                        {index > 0 && <hr />}
-                        <div className='flex justify-end'>
-                            <Button onClick={() => removeExperience(index)} className='bg-transparent'>
-                                <TrashIcon />
-                            </Button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-
-                            <Controller
-                                control={control}
-                                name={`experiences.${index}.title`}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        label="Job Title"
-                                        errorMessage={errors.experiences?.[index]?.title?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name={`experiences.${index}.company`}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        label="Company"
-                                        errorMessage={errors.experiences?.[index]?.company?.message}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                            <Controller
-                                control={control}
-                                name={`experiences.${index}.location`}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        label="Location"
-                                        errorMessage={errors.experiences?.[index]?.location?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name={`experiences.${index}.startDate`}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type="month"
-                                        label="Start Date"
-                                        errorMessage={errors.experiences?.[index]?.startDate?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name={`experiences.${index}.endDate`}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type="month"
-                                        label="End Date"
-                                        errorMessage={errors.experiences?.[index]?.endDate?.message}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <Controller
-                            control={control}
-                            name={`experiences.${index}.description`}
-                            render={({ field }) => (
-                                <AITextarea
-                                    {...field}
-                                    label="Description"
-                                    error={errors.experiences?.[index]?.description?.message}
-                                />
-                            )}
-                        />
-                    </div>
-                ))}
-
-                <div className="flex justify-end mt-6">
-                    <Button type="submit">Next to Education</Button>
-                </div>
-            </form>
-        </Card>
+  const handleChange = (index: number, field: string, value: string) => {
+    const updatedExperiences = experiences.map((exp:any, i:any) =>
+      i === index ? { ...exp, [field]: value } : exp
     );
-}
+    setExperiences(updatedExperiences);
+    setAllData({ ...allData, experiences: updatedExperiences });
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // console.log("allData",allData)
+    setAllData({ ...allData, experiences: experiences });
+    setActiveTab("education"); // Proceed to the next tab
+  };
+
+  return (
+    <Card className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Work Experience</h2>
+        <Button onClick={handleAddExperience} variant="bordered" size="sm">
+          <Plus className="h-4 w-4 mr-2" /> Add Experience
+        </Button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {experiences.map((experience:any, index:any) => (
+          <div key={index}>
+            {index > 0 && <Separator className="my-6" />}
+            <div className="relative">
+              <Button
+                variant="light"
+                size="sm"
+                className="absolute right-0 top-0"
+                onClick={() => handleRemoveExperience(index)}
+              >
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </Button>
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {/* Job Title */}
+                <Input
+                  variant="bordered"
+                  label="Job Title"
+                  value={experience.title}
+                  onChange={(e) =>
+                    handleChange(index, "title", e.target.value)
+                  }
+                />
+
+                {/* Company */}
+                <Input
+                  variant="bordered"
+                  label="Company"
+                  value={experience.company}
+                  onChange={(e) =>
+                    handleChange(index, "company", e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                {/* Location */}
+                <Input
+                  variant="bordered"
+                  label="Location"
+                  value={experience.location}
+                  onChange={(e) =>
+                    handleChange(index, "location", e.target.value)
+                  }
+                />
+
+                {/* Start Date */}
+                <Input
+                  variant="bordered"
+                  label="Start Date"
+                  type="month"
+                  value={experience.startDate}
+                  onChange={(e) =>
+                    handleChange(index, "startDate", e.target.value)
+                  }
+                />
+
+                {/* End Date */}
+                <Input
+                  variant="bordered"
+                  label="End Date"
+                  type="month"
+                  value={experience.endDate}
+                  onChange={(e) =>
+                    handleChange(index, "endDate", e.target.value)
+                  }
+                />
+              </div>
+
+              {/* Description */}
+              <Textarea
+                variant="bordered"
+                label="Description"
+                value={experience.description}
+                onChange={(e) =>
+                  handleChange(index, "description", e.target.value)
+                }
+              />
+            </div>
+          </div>
+        ))}
+
+        <div className="flex items-center justify-end mt-10">
+          <Button
+            radius="sm"
+            className="text-white font-bold hover:bg-button-gpt-hover bg-button-gpt"
+            variant="faded"
+            type="submit"
+          >
+            Next to Education <span className="pl-2">&#x2192;</span>
+          </Button>
+        </div>
+      </form>
+    </Card>
+  );
+};
+
+export default Experience;
