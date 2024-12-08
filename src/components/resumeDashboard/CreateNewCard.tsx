@@ -12,7 +12,8 @@ export function CreateNewCard() {
     }
 
     return (
-        <Card className="p-4 flex flex-col items-center justify-center h-full min-h-[400px] border-dashed cursor-pointer hover:bg-gray-50"
+        <Card className="p-4 flex flex-col items-center justify-center h-full min-h-[400px] border-dashed cursor-pointer
+         hover:bg-gray-50"
             onClick={handleCreateNewResume}
         >
             <Plus className="w-8 h-8 text-gray-400 mb-2" />

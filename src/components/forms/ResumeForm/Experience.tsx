@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button, Card, Input } from '@nextui-org/react';
 import { AITextarea } from './AIBasedDescription';
+import { TrashIcon } from 'lucide-react';
 
 
 const ExperienceSchema = z.object({
@@ -65,16 +66,23 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
 
     return (
         <Card className="p-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-3">
                 <h2 className="text-2xl font-semibold">Work Experience</h2>
-                <Button onClick={addExperience}>Add Experience</Button>
+                <Button onClick={addExperience} className=' bg-[#10a37f] rounded-lg text-white hover:bg-[#095C46] '>
+                    Add Experience
+                </Button>
             </div>
-
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {experiences.map((_, index) => (
-                    <div key={index} className="space-y-4">
+                    <div key={index} className="space-y-4 border border-gray-300 p-2 rounded-md">
                         {index > 0 && <hr />}
+                        <div className='flex justify-end'>
+                            <Button onClick={() => removeExperience(index)} className='bg-transparent'>
+                                <TrashIcon />
+                            </Button>
+                        </div>
                         <div className="grid grid-cols-2 gap-4">
+
                             <Controller
                                 control={control}
                                 name={`experiences.${index}.title`}
@@ -146,7 +154,6 @@ export default function Experience({ data, updateData, onNext }: ExperienceProps
                                 />
                             )}
                         />
-                        <Button onClick={() => removeExperience(index)}>Remove</Button>
                     </div>
                 ))}
 

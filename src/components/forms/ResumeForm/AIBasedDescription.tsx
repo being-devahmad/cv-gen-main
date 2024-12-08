@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -34,7 +32,7 @@ export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `Just analyze these points and replace with ATS friendly points based on the description of the job which I've done and just provide me with 3 bullet points lines and donot provide with explainaton just 3 straight lines and add some numeric values to improve ATS score :\n\n"${value}"`
+                                text: `just analyze these points and enhance the description replace with ATS friendly points based on the description of the job which I've done and just provide me with the best bullet points lines and do not provide with explanation just 4 to 5 straight lines and add some numeric values to improve ATS score :\n\n"${value}"`
                             }]
                         }]
                     })
@@ -84,7 +82,7 @@ export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
                 placeholder={label}
             />
             <button
-                className="absolute right-2 top-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                className="absolute right-4 bottom-4 text-sm px-2 py-1 bg-[#10a37f] rounded-lg text-white hover:bg-[#095C46] transition-colors"
                 onClick={analyzeSuggestions}
                 disabled={!value || isAnalyzing}
             >

@@ -1,13 +1,13 @@
 import CreateCard from "@/components/cards/CreateCard";
-import CreateJobApplicationCard from "@/components/cards/CreatJobApplicationCard";
+// import CreateJobApplicationCard from "@/components/cards/CreatJobApplicationCard";
 import DashBoardTabs from "@/components/tabs/DashBoardTabs";
-import TrendingJobs from "@/components/TrendingJobs";
+// import TrendingJobs from "@/components/TrendingJobs";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  console.log("currentUser-->" , user)
+  console.log("currentUser-->", user)
   const navigate = useNavigate();
 
 
@@ -38,10 +38,10 @@ const Dashboard = () => {
         </div>
       </div>
       <DashBoardTabs />
-      <div className="flex md:flex-row flex-col gap-4">
+      {/* <div className="flex md:flex-row flex-col gap-4">
         <TrendingJobs />
         <CreateJobApplicationCard />
-      </div>
+      </div> */}
     </div>
   );
 };

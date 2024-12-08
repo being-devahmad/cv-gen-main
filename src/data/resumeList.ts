@@ -12,7 +12,7 @@ export const resumeList = [
     name: "Untitled",
     lastUpdated: "Last updated 4 days ago",
     imageSrc: resumeTwo,
-  },
+  }, 
   {
     name: "Untitled",
     lastUpdated: "Last updated 2 days ago",

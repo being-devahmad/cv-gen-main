@@ -28,7 +28,7 @@ export function TemplatePreview({ fileName }: TemplatePreviewProps) {
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center justify-center">
-            <div className="w-full max-w-3xl space-y-8">
+            <div className="w-full max-w-xl space-y-8 border border-red-600">
                 <div className="relative w-full aspect-[210/297] bg-white rounded-lg shadow-lg overflow-hidden">
                     <Image
                         src="/placeholder.svg?height=1000&width=707"

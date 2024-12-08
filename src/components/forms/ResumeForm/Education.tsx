@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { Button } from '@nextui-org/button';
 import { Input, Textarea } from '@nextui-org/input';
 import { Select, SelectItem } from '@nextui-org/select';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, TrashIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { EducationSchema } from '@/lib/validations';
 
@@ -75,153 +75,130 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
             <div className="flex justify-between items-center mb-6">
                 <div className="space-y-1">
                     <h2 className="text-2xl font-semibold">Education</h2>
+
                     <p className="text-sm text-gray-500">
                         Enter your last diploma first
                     </p>
                 </div>
-                <Button onClick={addEducation} variant="bordered" size="sm">
-                    <Plus className="h-4 w-4 mr-2" /> Add Education
+                <Button onClick={addEducation} className=' bg-[#10a37f] rounded-lg text-white hover:bg-[#095C46] '>
+                    <Plus className="h-4 w-4 mr-2" /> Add Experience
                 </Button>
             </div>
 
             <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     {education.map((_, index) => (
-                        <div key={index}>
+                        <div key={index} className="space-y-4 border border-gray-300 p-2 rounded-md">
                             {index > 0 && <Separator className="my-6" />}
-                            <div className="relative">
+
+                            <div className='flex justify-end'>
                                 <Button
                                     variant="light"
                                     size="sm"
-                                    className="absolute right-0 top-0"
                                     onClick={() => removeEducation(index)}
                                 >
-                                    <Trash2 className="h-4 w-4 text-red-500" />
+                                    <TrashIcon />
                                 </Button>
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <FormField
-                                        control={control}
-                                        name={`education.${index}.school`}
-                                        render={({ field }) => (
-                                            <FormItem className="relative items-center lg:gap-3">
-                                                <FormControl>
-                                                    <Input
-                                                        variant="bordered"
-                                                        size="md"
-                                                        type="text"
-                                                        label="School"
-                                                        placeholder="Harvard University"
-                                                        errorMessage={errors.education?.[index]?.school?.message}
-                                                        isInvalid={!!errors.education?.[index]?.school}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    <FormField
-                                        control={control}
-                                        name={`education.${index}.degree`}
-                                        render={({ field }) => (
-                                            <FormItem className="relative items-center lg:gap-3">
-                                                <FormControl>
-                                                    <Select
-                                                        variant="bordered"
-                                                        size="md"
-                                                        label="Degree"
-                                                        placeholder="Select degree"
-                                                        errorMessage={errors.education?.[index]?.degree?.message}
-                                                        isInvalid={!!errors.education?.[index]?.degree}
-                                                        {...field}
-                                                    >
-                                                        {degreeOptions.map((option) => (
-                                                            <SelectItem key={option.value} value={option.value}>
-                                                                {option.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-
-                                <div className="grid grid-cols-3 gap-4 mb-4">
-                                    <FormField
-                                        control={control}
-                                        name={`education.${index}.location`}
-                                        render={({ field }) => (
-                                            <FormItem className="relative items-center lg:gap-3">
-                                                <FormControl>
-                                                    <Input
-                                                        variant="bordered"
-                                                        size="md"
-                                                        type="text"
-                                                        label="Location"
-                                                        placeholder="City, Country"
-                                                        errorMessage={errors.education?.[index]?.location?.message}
-                                                        isInvalid={!!errors.education?.[index]?.location}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={control}
-                                        name={`education.${index}.startDate`}
-                                        render={({ field }) => (
-                                            <FormItem className="relative items-center lg:gap-3">
-                                                <FormControl>
-                                                    <Input
-                                                        variant="bordered"
-                                                        size="md"
-                                                        type="month"
-                                                        label="Start Date"
-                                                        errorMessage={errors.education?.[index]?.startDate?.message}
-                                                        isInvalid={!!errors.education?.[index]?.startDate}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={control}
-                                        name={`education.${index}.endDate`}
-                                        render={({ field }) => (
-                                            <FormItem className="relative items-center lg:gap-3">
-                                                <FormControl>
-                                                    <Input
-                                                        variant="bordered"
-                                                        size="md"
-                                                        type="month"
-                                                        label="End Date"
-                                                        errorMessage={errors.education?.[index]?.endDate?.message}
-                                                        isInvalid={!!errors.education?.[index]?.endDate}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-
+                            <div className="grid grid-cols-2 gap-4 mb-4">
                                 <FormField
                                     control={control}
-                                    name={`education.${index}.description`}
+                                    name={`education.${index}.school`}
                                     render={({ field }) => (
                                         <FormItem className="relative items-center lg:gap-3">
                                             <FormControl>
-                                                <Textarea
+                                                <Input
                                                     variant="bordered"
                                                     size="md"
-                                                    label="Description"
-                                                    placeholder="Write about your educational experience, achievements, and relevant coursework..."
-                                                    errorMessage={errors.education?.[index]?.description?.message}
-                                                    isInvalid={!!errors.education?.[index]?.description}
+                                                    type="text"
+                                                    label="School"
+                                                    errorMessage={errors.education?.[index]?.school?.message}
+                                                    isInvalid={!!errors.education?.[index]?.school}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={control}
+                                    name={`education.${index}.degree`}
+                                    render={({ field }) => (
+                                        <FormItem className="relative items-center lg:gap-3">
+                                            <FormControl>
+                                                <Select
+                                                    variant="bordered"
+                                                    size="md"
+                                                    label="Degree"
+                                                    errorMessage={errors.education?.[index]?.degree?.message}
+                                                    isInvalid={!!errors.education?.[index]?.degree}
+                                                    {...field}
+                                                >
+                                                    {degreeOptions.map((option) => (
+                                                        <SelectItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4 mb-4">
+                                <FormField
+                                    control={control}
+                                    name={`education.${index}.location`}
+                                    render={({ field }) => (
+                                        <FormItem className="relative items-center lg:gap-3">
+                                            <FormControl>
+                                                <Input
+                                                    variant="bordered"
+                                                    size="md"
+                                                    type="text"
+                                                    label="Location"
+                                                    errorMessage={errors.education?.[index]?.location?.message}
+                                                    isInvalid={!!errors.education?.[index]?.location}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`education.${index}.startDate`}
+                                    render={({ field }) => (
+                                        <FormItem className="relative items-center lg:gap-3">
+                                            <FormControl>
+                                                <Input
+                                                    variant="bordered"
+                                                    size="md"
+                                                    type="month"
+                                                    errorMessage={errors.education?.[index]?.startDate?.message}
+                                                    isInvalid={!!errors.education?.[index]?.startDate}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`education.${index}.endDate`}
+                                    render={({ field }) => (
+                                        <FormItem className="relative items-center lg:gap-3">
+                                            <FormControl>
+                                                <Input
+                                                    variant="bordered"
+                                                    size="md"
+                                                    type="month"
+                                                    label="End Date"
+                                                    errorMessage={errors.education?.[index]?.endDate?.message}
+                                                    isInvalid={!!errors.education?.[index]?.endDate}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -229,6 +206,26 @@ export default function Education({ data, updateData, onNext }: EducationProps) 
                                     )}
                                 />
                             </div>
+
+                            <FormField
+                                control={control}
+                                name={`education.${index}.description`}
+                                render={({ field }) => (
+                                    <FormItem className="relative items-center lg:gap-3">
+                                        <FormControl>
+                                            <Textarea
+                                                variant="bordered"
+                                                size="md"
+                                                label="Description"
+                                                errorMessage={errors.education?.[index]?.description?.message}
+                                                isInvalid={!!errors.education?.[index]?.description}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
                         </div>
                     ))}
 

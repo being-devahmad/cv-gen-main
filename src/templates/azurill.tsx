@@ -26,7 +26,7 @@ const Header = () => {
                                 <span>·</span>
                                 <span>{email}</span>
                                 <span>·</span>
-                                <p>{links.map((link) => <span>{link}</span>)}</p>
+                                {links.map((link) => <a className="pl-1" href={link}>{link}</a>)}
                             </div>
                             <div className="text-sm mt-1">
                                 <span>{city}</span>,

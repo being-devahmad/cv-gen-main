@@ -13,6 +13,16 @@ const firebaseConfig = {
     measurementId: "G-Y23Z71N42R"
 };
 
+// const firebaseConfig = {
+//     apiKey: "AIzaSyDVFlPgiOBsqQC28FU7A8KJAGKjpswrtls",
+//     authDomain: "optimcv1.firebaseapp.com",
+//     projectId: "optimcv1",
+//     storageBucket: "optimcv1.firebasestorage.app",
+//     messagingSenderId: "164776752773",
+//     appId: "1:164776752773:web:fe739e7d11b3c150ea5bec",
+//     measurementId: "G-VB63J2S3TF"
+// };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

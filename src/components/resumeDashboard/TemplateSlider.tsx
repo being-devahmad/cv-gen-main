@@ -7,6 +7,7 @@ import templateTwo from "../../assets/images/resumeTwo.png"
 import templateThree from "../../assets/images/resumeThree.png"
 import templateFour from "../../assets/images/resumeFour.png"
 import { useNavigate } from 'react-router-dom'
+// import BuilderLandingPage from '@/pages/resume/ResumeOptions'
 
 interface Template {
     id: string
@@ -41,8 +42,9 @@ export function TemplateSlider() {
 
     const handleSelectTemplate = (template: Template) => {
         console.log(`Selected template: ${template.name}`);
-        navigate(`${template.id}/start`);
+        navigate(`/select/${template.id}`);
     };
+
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-8">
             <div className="relative">
