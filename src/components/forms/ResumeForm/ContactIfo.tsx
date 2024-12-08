@@ -1,47 +1,38 @@
 import { Card } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ContactInfoSchema } from "@/lib/validations";
-import { z } from "zod";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { useState } from "react";
+import { z } from "zod";
 
 interface ContactInfoProps {
-  data: any;
-  updateData: (data: any) => void;
-  onNext: () => void; // Add this prop for navigation
+  allData: Record<string, any>;
+  setAllData: (data: Record<string, any>) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
-type ContactInfoData = z.infer<typeof ContactInfoSchema>;
 
-export default function ContactInfo({
-  data,
-  updateData,
-  onNext,
-}: ContactInfoProps) {
-  const form = useForm<ContactInfoData>({
+const ContactIfo: React.FC<ContactInfoProps> = ({
+  allData,
+  setAllData,
+  activeTab,
+  setActiveTab,
+}) => {
+  const form = useForm({
     resolver: zodResolver(ContactInfoSchema),
-    defaultValues: data || {
-      firstName: "",
-      lastName: "",
-      phone: "",
-      email: "",
-      country: "",
-      city: "",
-      postalCode: "",
+    defaultValues: {
+      firstName: allData.firstName || "",
+      lastName: allData.lastName || "",
+      phone: allData.phone || "",
+      email: allData.email || "",
+      country: allData.country || "",
+      city: allData.city || "",
+      postal_code: allData.postal_code || "",
+      description: allData.description || "", // Add description here
     },
     mode: "onChange",
-  });
-  const [allData, setAllData] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    country: "",
-    city: "",
-    postal_code: "",
-    experinces: [{}],
   });
 
   const {
@@ -50,240 +41,156 @@ export default function ContactInfo({
     formState: { errors },
   } = form;
 
-  const onSubmit = (values: ContactInfoData) => {
-    updateData(values);
-    console.log("data-->", allData);
-    onNext();
+  const Submit = (values: z.infer<typeof ContactInfoSchema>) => {
+    console.log("Form Submitted", values);
+    setAllData({ ...allData, ...values });
+    console.log("Updated AllData:", { ...allData, ...values });
+    setActiveTab("experience");
   };
 
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
-      <div>
-        <Form {...form}>
-          <form
-            className="flex w-full flex-col gap-8 lg:gap-5"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* First Name */}
-              <FormField
-                control={control}
-                name="firstName"
-                render={({ field }) => (
-                  <Input
-                    label="First Name"
-                    variant="bordered"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setAllData({
-                        ...allData,
-                        firstName: e.target.value,
-                      });
-                    }}
-                  />
-                )}
-              />
-              {/* Last Name */}
-              <FormField
-                control={control}
-                name="lastName"
-                render={({ field }) => (
-                  <Input
-                    label="Last Name"
-                    variant="bordered"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setAllData({
-                        ...allData,
-                        lastName: e.target.value,
-                      });
-                    }}
-                  />
-                )}
-              />
-            </div>
+      <Form {...form}>
+        <form
+          className="flex w-full flex-col gap-8 lg:gap-5"
+          onSubmit={handleSubmit(Submit)}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* First Name */}
+            <FormField
+              control={control}
+              name="firstName"
+              render={({ field }) => (
+                <Input
+                  label="First Name"
+                  variant="bordered"
+                  errorMessage={errors.firstName?.message}
+                  {...field}
+                />
+              )}
+            />
+            {/* Last Name */}
+            <FormField
+              control={control}
+              name="lastName"
+              render={({ field }) => (
+                <Input
+                  label="Last Name"
+                  variant="bordered"
+                  errorMessage={errors.lastName?.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <FormField
-                control={control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem className=" relative  items-center lg:gap-3">
-                    {/* <FormLabel>phone</FormLabel> */}
-                    <div className="w-full">
-                      <FormControl>
-                        <FormControl>
-                          <Input
-                            variant="bordered"
-                            size="md"
-                            type="text"
-                            label="Phone"
-                            errorMessage={errors.phone?.message}
-                            isInvalid={!!errors.phone?.message}
-                            {...field}
-                            onChange={(e) => {
-                                field.onChange(e);
-                                setAllData({
-                                  ...allData,
-                                  phone: e.target.value,
-                                });
-                              }}
-                          />
-                        </FormControl>
-                      </FormControl>
-                      {/* <FormMessage className="mt-1.5 absolute text-xs" /> */}
-                    </div>
-                  </FormItem>
-                )}
-              />{" "}
-              <FormField
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className=" relative  items-center lg:gap-3">
-                    {/* <FormLabel>Email</FormLabel> */}
-                    <div className="w-full">
-                      <FormControl>
-                        <FormControl>
-                          <Input
-                            variant="bordered"
-                            size="md"
-                            type="email"
-                            label="Email"
-                            errorMessage={errors.email?.message}
-                            isInvalid={!!errors.email?.message}
-                            {...field}
-                            onChange={(e) => {
-                                field.onChange(e);
-                                setAllData({
-                                  ...allData,
-                                  email: e.target.value,
-                                });
-                              }}
-                          />
-                        </FormControl>
-                      </FormControl>
-                      {/* <FormMessage className="mt-1.5 absolute text-xs" /> */}
-                    </div>
-                  </FormItem>
-                )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Phone */}
+            <FormField
+              control={control}
+              name="phone"
+              render={({ field }) => (
+                <Input
+                  label="Phone"
+                  variant="bordered"
+                  errorMessage={errors.phone?.message}
+                  {...field}
+                />
+              )}
+            />
+            {/* Email */}
+            <FormField
+              control={control}
+              name="email"
+              render={({ field }) => (
+                <Input
+                  label="Email"
+                  type="email"
+                  variant="bordered"
+                  errorMessage={errors.email?.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Country */}
+            <FormField
+              control={control}
+              name="country"
+              render={({ field }) => (
+                <Input
+                  label="Country"
+                  variant="bordered"
+                  errorMessage={errors.country?.message}
+                  {...field}
+                />
+              )}
+            />
+            {/* City */}
+            <FormField
+              control={control}
+              name="city"
+              render={({ field }) => (
+                <Input
+                  label="City"
+                  variant="bordered"
+                  errorMessage={errors.city?.message}
+                  {...field}
+                />
+              )}
+            />
+            {/* Postal Code */}
+            <FormField
+              control={control}
+              name="postal_code"
+              render={({ field }) => (
+                <Input
+                  label="Postal Code"
+                  variant="bordered"
+                  errorMessage={errors.postal_code?.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+          <FormField
+            control={control}
+            name="description"
+            render={({ field }) => (
+              <textarea
+                className="textarea-bordered bg-[#F7F7F8] w-full p-2  border-2 rounded-lg shadow-md"
+                placeholder="Enter a brief summary"
+                value={field.value || allData?.description || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  console.log("Updated description:", value); // Debug log
+                  field.onChange(e); // React Hook Form state
+                  setAllData({
+                    ...allData,
+                    description: value, // Update local state
+                  });
+                }}
               />
-            </div>
-            <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
-              <FormField
-                control={control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem className=" relative  items-center lg:gap-3">
-                    {/* <FormLabel>country</FormLabel> */}
-                    <div className="w-full">
-                      <FormControl>
-                        <FormControl>
-                          <Input
-                            variant="bordered"
-                            size="md"
-                            type="text"
-                            label="Country"
-                            errorMessage={errors.country?.message}
-                            isInvalid={!!errors.country?.message}
-                            {...field}
-                            onChange={(e) => {
-                                field.onChange(e);
-                                setAllData({
-                                  ...allData,
-                                  country: e.target.value,
-                                });
-                              }}
-                          />
-                        </FormControl>
-                      </FormControl>
-                      {/* <FormMessage className="mt-1.5 absolute text-xs" /> */}
-                    </div>
-                  </FormItem>
-                )}
-              />{" "}
-              <FormField
-                control={control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem className=" relative  items-center lg:gap-3">
-                    {/* <FormLabel>city</FormLabel> */}
-                    <div className="w-full">
-                      <FormControl>
-                        <FormControl>
-                          <Input
-                            variant="bordered"
-                            size="md"
-                            type="text"
-                            label="City"
-                            errorMessage={errors.city?.message}
-                            isInvalid={!!errors.city?.message}
-                            {...field}
-                            onChange={(e) => {
-                                field.onChange(e);
-                                setAllData({
-                                  ...allData,
-                                  city: e.target.value,
-                                });
-                              }}
-                          />
-                        </FormControl>
-                      </FormControl>
-                      {/* <FormMessage className="mt-1.5 absolute text-xs" /> */}
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="postalCode"
-                render={({ field }) => (
-                  <FormItem className=" relative  items-center lg:gap-3">
-                    {/* <FormLabel>postalCode</FormLabel> */}
-                    <div className="w-full">
-                      <FormControl>
-                        <FormControl>
-                          <Input
-                            variant="bordered"
-                            size="md"
-                            type="text"
-                            label="Postal Code"
-                            errorMessage={errors.postalCode?.message}
-                            isInvalid={!!errors.postalCode?.message}
-                            {...field}
-                            onChange={(e) => {
-                                field.onChange(e);
-                                setAllData({
-                                  ...allData,
-                                  postal_code: e.target.value,
-                                });
-                              }}
-                          />
-                        </FormControl>
-                      </FormControl>
-                      {/* <FormMessage className="mt-1.5 absolute text-xs" /> */}
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex items-center justify-end mt-10">
-              <Button
-                radius="sm"
-                className="text-white font-bold hover:bg-button-gpt-hover bg-button-gpt"
-                // isLoading={isLoading}
-                variant="faded"
-                type="submit"
-              >
-                Next to Experience <span className="pl-2">&#x2192;</span>
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
+            )}
+          />
+
+          <div className="flex items-center justify-end mt-10">
+            <Button
+              radius="sm"
+              className="text-white font-bold hover:bg-button-gpt-hover bg-button-gpt"
+              variant="faded"
+              type="submit"
+            >
+              Next to Experience <span className="pl-2">&#x2192;</span>
+            </Button>
+          </div>
+        </form>
+      </Form>
     </Card>
   );
-}
+};
+
+export default ContactIfo;
