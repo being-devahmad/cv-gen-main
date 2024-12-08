@@ -28,9 +28,10 @@
 
 
 
+
+// import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
+// import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 import ResumeForm2 from '@/components/forms/ResumeForm/ResumeForm2';
-// import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
-// import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 import { ResumeProvider } from '@/hooks/useResume';
 // import Azurill from '@/templates/azurill';
 import Chikorita from '@/templates/chikorita';

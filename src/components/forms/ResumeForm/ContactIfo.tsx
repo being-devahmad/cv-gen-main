@@ -14,7 +14,7 @@ interface ContactInfoProps {
   setActiveTab: (tab: string) => void;
 }
 
-const ContactIfo: React.FC<ContactInfoProps> = ({
+const ContactInfo: React.FC<ContactInfoProps> = ({
   allData,
   setAllData,
   activeTab,
@@ -193,4 +193,4 @@ const ContactIfo: React.FC<ContactInfoProps> = ({
   );
 };
 
-export default ContactIfo;
+export default ContactInfo;
