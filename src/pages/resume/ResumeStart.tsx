@@ -36,6 +36,7 @@ import { ResumeProvider } from '@/hooks/useResume';
 import { Azurill } from '@/templates/azurill';
 // import Azurill from '@/templates/azurill';
 import Chikorita from '@/templates/chikorita';
+import { Nosepass } from '@/templates/nosepass';
 // import { Azurill } from '@/templates/azurill';
 // import { Chikorita } from '@/templates/chikorita';
 import React from 'react';
@@ -49,8 +50,9 @@ const ResumeStart: React.FC = () => {
                 </div>
                 <div className="w-full lg:w-1/2 overflow-y-auto">
                     {/* <PreviewSection /> */}
-                    <Azurill />
+                    {/* <Azurill /> */}
                     {/* <Chikorita /> */}
+                    <Nosepass/>
                 </div>
             </div>
         </ResumeProvider>
