@@ -169,16 +169,29 @@
 
 // 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import { CircleDot, GraduationCap, Briefcase, Globe, Award, Plus, Download } from 'lucide-react'
-import { useState } from "react"
-
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import {
+  CircleDot,
+  GraduationCap,
+  Briefcase,
+  Globe,
+  Award,
+  Plus,
+  Download,
+} from "lucide-react";
+import { useState } from "react";
 
 interface PreviewResumeProps {
   allData: Record<string, any>;
@@ -187,32 +200,31 @@ interface PreviewResumeProps {
 
 export const PreviewResume: React.FC<PreviewResumeProps> = ({
   allData,
-  setAllData }) => {
-
-  const [isSaving, setIsSaving] = useState(false)
-  const { toast } = useToast()
+  setAllData,
+}) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const { toast } = useToast();
 
   const handleSaveAndDownload = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
     try {
-      console.log("Finished Data -->", allData)
+      console.log("Finished Data -->", allData);
       toast({
         title: "Success",
         description: "Your resume data has been saved.",
-      })
+      });
       // Here you would typically trigger the download process
     } catch (error) {
-      console.error("Error saving resume data:", error)
+      console.error("Error saving resume data:", error);
       toast({
         title: "Error",
         description: "Failed to save resume data. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -221,22 +233,35 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
         <div className="w-full ">
           <Card className="p-6 sticky top-4">
             <div className=" bg-white rounded-lg shadow-sm p-8">
-              <h1 className="text-2xl font-bold text-center mb-8">MUHAMMAD UMER</h1>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <h2 className="font-semibold mb-4">CONTACTS</h2>
+              <h1 className="text-2xl font-bold text-center mb-8">
+                {allData?.firstName} {allData?.lastName}
+              </h1>
+              <div className="grid grid-cols-12 ">
+                <div className=" col-span-7">
+                  <h2 className=" font-semibold mb-4 ">CONTACTS</h2>
                   <div className="space-y-2 text-sm">
-                    <p>email@example.com</p>
-                    <p>+1 234 567 890</p>
-                    <p>City, Country</p>
+                    <p>{allData?.email}</p>
+                    <p>{allData?.phone}</p>
+                    <p>
+                      {allData?.city}, {allData?.country}
+                    </p>
                   </div>
                 </div>
-                <div>
+                <div className=" col-span-5 text-center">
                   <h2 className="font-semibold mb-4">SKILLS</h2>
                   <div className="space-y-2 text-sm">
-                    <p>Skill 1</p>
+                    {allData?.skills?.map((val: any, ind: any) => {
+                      return val.items.map((value: any, index: any) => {
+                        return (
+                          <>
+                            <p>{value}</p>
+                          </>
+                        );
+                      });
+                    })}
+                    {/* <p>Skill 1</p>
                     <p>Skill 2</p>
-                    <p>Skill 3</p>
+                    <p>Skill 3</p> */}
                   </div>
                 </div>
               </div>
@@ -268,7 +293,12 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
               <div>
                 <Label>Accent Color</Label>
                 <div className="flex gap-2 mt-2">
-                  {['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-purple-500'].map((color) => (
+                  {[
+                    "bg-blue-500",
+                    "bg-green-500",
+                    "bg-red-500",
+                    "bg-purple-500",
+                  ].map((color) => (
                     <button
                       key={color}
                       className={`w-6 h-6 rounded-full ${color} hover:ring-2 ring-offset-2`}
@@ -286,37 +316,66 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>First Name</Label>
-                  <Input placeholder="Enter first name" />
+                  <Input
+                    placeholder="Enter first name"
+                    value={allData?.firstName}
+                    disabled
+                  />
                 </div>
                 <div>
                   <Label>Last Name</Label>
-                  <Input placeholder="Enter last name" />
+                  <Input
+                    placeholder="Enter last name"
+                    value={allData?.lastName}
+                    disabled
+                  />
                 </div>
               </div>
               <div>
                 <Label>Job Title</Label>
-                <Input placeholder="e.g. Marketing Manager" />
+                <Input
+                  placeholder="e.g. Marketing Manager"
+                  value={allData?.experiences[0]?.title}
+                  disabled
+                />
               </div>
               <div>
                 <Label>Email</Label>
-                <Input type="email" placeholder="your@email.com" />
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={allData?.email}
+                  disabled
+                />
               </div>
               <div>
                 <Label>Phone</Label>
-                <Input placeholder="Your phone number" />
+                <Input
+                  placeholder="Your phone number"
+                  value={allData?.phone}
+                  disabled
+                />
               </div>
               <div>
-                <Label>Address</Label>
-                <Input placeholder="Enter a Location" />
+                <Label>Country</Label>
+                <Input
+                  placeholder="Enter a country"
+                  value={allData?.country}
+                  disabled
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>City</Label>
-                  <Input placeholder="City" />
+                  <Input placeholder="City" value={allData?.city} disabled />
                 </div>
                 <div>
                   <Label>Postal Code</Label>
-                  <Input placeholder="Postal Code" />
+                  <Input
+                    placeholder="Postal Code"
+                    value={allData?.postal_code}
+                    disabled
+                  />
                 </div>
               </div>
             </div>
@@ -328,16 +387,18 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
             <Textarea
               placeholder="e.g. Accomplished Marketing Manager with expertise in developing campaigns..."
               className="min-h-[100px]"
+              value={allData?.description}
+              disabled
             />
           </Card>
 
           {/* Section Buttons */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { icon: Globe, label: 'Websites & Social Links' },
-              { icon: Briefcase, label: 'Employment History' },
-              { icon: GraduationCap, label: 'Education' },
-              { icon: Award, label: 'Skills' },
+              { icon: Globe, label: "Websites & Social Links" },
+              { icon: Briefcase, label: "Employment History" },
+              { icon: GraduationCap, label: "Education" },
+              { icon: Award, label: "Skills" },
             ].map(({ icon: Icon, label }) => (
               <Button
                 key={label}
@@ -355,15 +416,18 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
             <h2 className="text-lg font-semibold mb-4">Add Blocks</h2>
             <div className="grid grid-cols-2 gap-4">
               {[
-                'Languages', 'Personal details', 'Hobbies', 'Courses',
-                'Custom section', 'References', 'Extra-Curricular Activities', 'Internships',
-                'Publications', 'Driving license'
+                "Languages",
+                "Personal details",
+                "Hobbies",
+                "Courses",
+                "Custom section",
+                "References",
+                "Extra-Curricular Activities",
+                "Internships",
+                "Publications",
+                "Driving license",
               ].map((block) => (
-                <Button
-                  key={block}
-                  variant="outline"
-                  className="justify-start"
-                >
+                <Button key={block} variant="outline" className="justify-start">
                   <Plus className="w-4 h-4 mr-2" />
                   {block}
                 </Button>
@@ -390,10 +454,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
             )}
           </Button>
         </div>
-
-
       </div>
     </div>
-  )
-}
-
+  );
+};
