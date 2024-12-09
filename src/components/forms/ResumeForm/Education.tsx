@@ -56,7 +56,7 @@ export default function Education({
   };
 
   const handleNext = () => {
-    console.log("allData>>",allData)
+    console.log("allData>>", allData)
     setAllData({ ...allData, education });
     setActiveTab("skills");
   };
@@ -91,14 +91,14 @@ export default function Education({
 
           <div className="grid grid-cols-2 gap-4">
             <Input
+              variant="bordered"
               label="School"
-              placeholder="Harvard University"
               value={edu.school}
               onChange={(e) => handleChange(index, "school", e.target.value)}
             />
             <Input
+              variant="bordered"
               label="Degree"
-              placeholder="Bachelor's Degree"
               value={edu.degree}
               onChange={(e) => handleChange(index, "degree", e.target.value)}
             />
@@ -106,18 +106,20 @@ export default function Education({
 
           <div className="grid grid-cols-3 gap-4 mt-4">
             <Input
+              variant="bordered"
               label="Location"
-              placeholder="City, Country"
               value={edu.location}
               onChange={(e) => handleChange(index, "location", e.target.value)}
             />
             <Input
+              variant="bordered"
               type="month"
               label="Start Date"
               value={edu.startDate}
               onChange={(e) => handleChange(index, "startDate", e.target.value)}
             />
             <Input
+              variant="bordered"
               type="month"
               label="End Date"
               value={edu.endDate}
@@ -126,9 +128,9 @@ export default function Education({
           </div>
 
           <Textarea
+            variant="bordered"
             className="mt-4"
             label="Description"
-            placeholder="Describe your education..."
             value={edu.description}
             onChange={(e) => handleChange(index, "description", e.target.value)}
           />

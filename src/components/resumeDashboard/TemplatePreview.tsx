@@ -1,34 +1,31 @@
-import { Progress } from "@/components/ui/progress"
-import { useEffect, useState } from "react"
-import { Check } from 'lucide-react'
+import { useState, useEffect } from "react"
 import { Image } from "@nextui-org/react"
+import { useTemplateProcessing } from "@/hooks/useTemplateProcessing"
+import { AIProcessingDialog } from "./AIProcessingDialog"
 
 interface TemplatePreviewProps {
     fileName: string
+    fileContent: string | ArrayBuffer | null
 }
 
-export function TemplatePreview({ fileName }: TemplatePreviewProps) {
-    const [progress, setProgress] = useState(0)
-    const [isComplete, setIsComplete] = useState(false)
+export function TemplatePreview({ fileName, fileContent }: TemplatePreviewProps) {
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const { isComplete, isProcessing, categoryData, processingError, processDocument } = useTemplateProcessing()
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress((prevProgress) => {
-                if (prevProgress >= 100) {
-                    clearInterval(timer)
-                    setIsComplete(true)
-                    return 100
-                }
-                return prevProgress + 10
-            })
-        }, 500)
+        if (fileContent) {
+            setIsDialogOpen(true)
+            processDocument(fileContent)
+        }
+    }, [fileContent, processDocument])
 
-        return () => clearInterval(timer)
-    }, [])
+    const handleRetry = () => {
+        processDocument(fileContent)
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center justify-center">
-            <div className="w-full max-w-xl space-y-8 border border-red-600">
+            <div className="w-full max-w-xl space-y-8">
                 <div className="relative w-full aspect-[210/297] bg-white rounded-lg shadow-lg overflow-hidden">
                     <Image
                         src="/placeholder.svg?height=1000&width=707"
@@ -36,30 +33,29 @@ export function TemplatePreview({ fileName }: TemplatePreviewProps) {
                         className="w-full h-full object-cover opacity-25"
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
-                        <div className="w-full max-w-md space-y-4">
-                            {isComplete ? (
-                                <div className="flex flex-col items-center space-y-2">
-                                    <div className="rounded-full bg-green-500 p-2">
-                                        <Check className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h2 className="text-xl font-semibold text-center text-green-500">
-                                        Applied
-                                    </h2>
-                                </div>
-                            ) : (
-                                <>
-                                    <h2 className="text-xl font-semibold text-center text-blue-500">
-                                        Applying Template...
-                                    </h2>
-                                    <Progress value={progress} className="w-full" />
-                                </>
-                            )}
-                        </div>
+                        <h2 className="text-2xl font-bold text-center">
+                            {fileName}
+                        </h2>
                     </div>
                 </div>
-                <p className="text-center text-gray-600">
-                    {isComplete ? "Template applied successfully!" : `Applying template to ${fileName}`}
-                </p>
+
+                <AIProcessingDialog
+                    isOpen={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                    isComplete={isComplete}
+                    isProcessing={isProcessing}
+                    processingError={processingError}
+                    onRetry={handleRetry}
+                />
+
+                {categoryData && (
+                    <div className="mt-4 p-4 bg-white rounded-lg shadow">
+                        <h3 className="text-lg font-semibold mb-2">Categorized Document Data:</h3>
+                        <pre className="whitespace-pre-wrap text-sm">
+                            {JSON.stringify(categoryData, null, 2)}
+                        </pre>
+                    </div>
+                )}
             </div>
         </div>
     )

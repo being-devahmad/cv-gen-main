@@ -7,6 +7,7 @@ import { TemplatePreview } from "./TemplatePreview"
 interface FileDetails {
     name: string
     uploadDate: string
+    content: string | ArrayBuffer | null
 }
 
 export default function ResumeUpload() {
@@ -52,10 +53,15 @@ export default function ResumeUpload() {
         ]
 
         if (supportedTypes.includes(uploadedFile.type)) {
-            setFile({
-                name: uploadedFile.name,
-                uploadDate: new Date().toLocaleDateString()
-            })
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                setFile({
+                    name: uploadedFile.name,
+                    uploadDate: new Date().toLocaleDateString(),
+                    content: e.target?.result || null
+                })
+            }
+            reader.readAsText(uploadedFile)
         } else {
             alert('Please upload a supported file format (doc, docx, pdf, txt, html, rtf)')
         }
@@ -70,7 +76,7 @@ export default function ResumeUpload() {
     }, [])
 
     if (showPreview && file) {
-        return <TemplatePreview fileName={file.name} />
+        return <TemplatePreview fileName={file.name} fileContent={file.content} />
     }
 
     return (
