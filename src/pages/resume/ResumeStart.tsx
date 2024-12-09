@@ -31,7 +31,7 @@
 
 // import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 // import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
-// import { ResumeForm2 } from '@/components/forms/ResumeForm/ResumeForm2';
+import { ResumeForm2 } from '@/components/forms/ResumeForm/ResumeForm2';
 import { ResumeProvider } from '@/hooks/useResume';
 import { Azurill } from '@/templates/azurill';
 // import Azurill from '@/templates/azurill';
@@ -46,7 +46,7 @@ const ResumeStart: React.FC = () => {
         <ResumeProvider>
             <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
                 <div className="w-full lg:w-1/2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-gray-200">
-                    {/* <ResumeForm2 /> */}
+                    <ResumeForm2 />
                 </div>
                 <div className="w-full lg:w-1/2 overflow-y-auto">
                     {/* <PreviewSection /> */}

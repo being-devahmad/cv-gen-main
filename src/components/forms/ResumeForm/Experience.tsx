@@ -4,6 +4,7 @@ import { Button } from "@nextui-org/button";
 import { Input, Textarea } from "@nextui-org/input";
 import { Plus, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { AITextarea } from "./AIBasedDescription";
 
 interface ExperienceProps {
   allData: Record<string, any>;
@@ -46,13 +47,13 @@ const Experience: React.FC<ExperienceProps> = ({
   };
 
   const handleRemoveExperience = (index: number) => {
-    const updatedExperiences = experiences.filter((_:any, i:any) => i !== index);
+    const updatedExperiences = experiences.filter((_: any, i: any) => i !== index);
     setExperiences(updatedExperiences);
     setAllData({ ...allData, experiences: updatedExperiences });
   };
 
   const handleChange = (index: number, field: string, value: string) => {
-    const updatedExperiences = experiences.map((exp:any, i:any) =>
+    const updatedExperiences = experiences.map((exp: any, i: any) =>
       i === index ? { ...exp, [field]: value } : exp
     );
     setExperiences(updatedExperiences);
@@ -76,7 +77,7 @@ const Experience: React.FC<ExperienceProps> = ({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {experiences.map((experience:any, index:any) => (
+        {experiences.map((experience: any, index: any) => (
           <div key={index}>
             {index > 0 && <Separator className="my-6" />}
             <div className="relative">
@@ -146,14 +147,22 @@ const Experience: React.FC<ExperienceProps> = ({
               </div>
 
               {/* Description */}
-              <Textarea
+              {/* <Textarea
                 variant="bordered"
                 label="Description"
                 value={experience.description}
                 onChange={(e) =>
                   handleChange(index, "description", e.target.value)
                 }
-              />
+              /> */}
+
+              <div>
+                <AITextarea value={experience.description}
+                  onChange={(value) => handleChange(index, "description", value)}
+                  label="Description" />
+              </div>
+
+
             </div>
           </div>
         ))}
