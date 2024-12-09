@@ -32,7 +32,7 @@ export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `just analyze these points and enhance the description replace with ATS friendly points based on the description of the job which I've done and just provide me with the best bullet points lines and do not provide with explanation just 4 to 5 straight lines and add some numeric values to improve ATS score :\n\n"${value}"`
+                                text: `just analyze these points and enhance the description replace with ATS friendly points based on the description of the job which I've done and just provide me with the best bullet points lines and do not provide with explanation just 2 to 3 straight lines and add some numeric values to improve ATS score :\n\n"${value}"`
                             }]
                         }]
                     })
