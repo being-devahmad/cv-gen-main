@@ -6,14 +6,14 @@ import ContactIfo from "./ContactIfo";
 import Experience from "./Experience";
 import Education from "./Education";
 import Skills from "./Skills";
-import PreviewResume from "./PreviewResume";
+import { PreviewResume } from "./PreviewResume";
 const steps = [
   { id: "contact", title: "Contact Info" },
   { id: "experience", title: "Experience" },
   { id: "education", title: "Education" },
   { id: "skills", title: "Skills" },
 ];
-const ResumeForm2 = () => {
+export const ResumeForm2 = () => {
   const [allData, setAllData] = useState({
     firstName: "",
     lastName: "",
@@ -50,11 +50,10 @@ const ResumeForm2 = () => {
               {steps.map((step, index) => (
                 <span
                   key={step.id}
-                  className={`text-xs lg:text-sm font-medium ${
-                    activeTab === step.id
+                  className={`text-xs lg:text-sm font-medium ${activeTab === step.id
                       ? "active text-blue-600 font-bold"
                       : "text-gray-600"
-                  }`}
+                    }`}
                   style={{ cursor: "pointer" }}
                   onClick={() => handleActivetab(step.id)}
                 >
@@ -98,23 +97,23 @@ const ResumeForm2 = () => {
               ) : activeTab == "skills" ? (
                 <>
                   <Skills
-                   allData={allData}
-                   setAllData={setAllData}
-                   activeTab={activeTab}
-                   setActiveTab={setActiveTab}
+                    allData={allData}
+                    setAllData={setAllData}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                   />
                 </>
-              ) :activeTab=='previewResume'? (
+              ) : activeTab == 'previewResume' ? (
                 <>
-                <PreviewResume
-                allData={allData}
-                setActiveTab={setActiveTab}
-                />
+                  <PreviewResume
+                    allData={allData}
+                    setActiveTab={setActiveTab}
+                  />
                 </>
               )
-              : (
-                ""
-              )}
+                : (
+                  ""
+                )}
             </ScrollArea>
           </div>
 
@@ -122,8 +121,8 @@ const ResumeForm2 = () => {
           <div className="flex justify-between">
             <Button
               variant="outline"
-              //   onClick={handlePrev}
-              //   disabled={currentStep === 0}
+            //   onClick={handlePrev}
+            //   disabled={currentStep === 0}
             >
               <ChevronLeft className="mr-2 h-4 w-4" /> Previous
             </Button>
@@ -139,4 +138,3 @@ const ResumeForm2 = () => {
     </>
   );
 };
-export default ResumeForm2;

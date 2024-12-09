@@ -175,14 +175,50 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
 import { CircleDot, GraduationCap, Briefcase, Globe, Award, Plus, Download } from 'lucide-react'
+import { useState } from "react"
 
-export default function PreviewResume() {
+
+interface PreviewResumeProps {
+  allData: Record<string, any>;
+  setAllData: (data: Record<string, any>) => void;
+}
+
+export const PreviewResume: React.FC<PreviewResumeProps> = ({
+  allData,
+  setAllData }) => {
+
+  const [isSaving, setIsSaving] = useState(false)
+  const { toast } = useToast()
+
+  const handleSaveAndDownload = async () => {
+    setIsSaving(true)
+    try {
+      console.log("Finished Data -->", allData)
+      toast({
+        title: "Success",
+        description: "Your resume data has been saved.",
+      })
+      // Here you would typically trigger the download process
+    } catch (error) {
+      console.error("Error saving resume data:", error)
+      toast({
+        title: "Error",
+        description: "Failed to save resume data. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto p-4 ">
-         {/* Preview Section */}
-         <div className="w-full ">
+        {/* Preview Section */}
+        <div className="w-full ">
           <Card className="p-6 sticky top-4">
             <div className=" bg-white rounded-lg shadow-sm p-8">
               <h1 className="text-2xl font-bold text-center mb-8">MUHAMMAD UMER</h1>
@@ -289,7 +325,7 @@ export default function PreviewResume() {
           {/* Professional Summary */}
           <Card className="p-4 space-y-4">
             <h2 className="text-lg font-semibold">Professional Summary</h2>
-            <Textarea 
+            <Textarea
               placeholder="e.g. Accomplished Marketing Manager with expertise in developing campaigns..."
               className="min-h-[100px]"
             />
@@ -335,13 +371,27 @@ export default function PreviewResume() {
             </div>
           </Card>
 
-          <Button className="w-full" size="lg">
-            <Download className="w-4 h-4 mr-2" />
-            Next to Download
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={handleSaveAndDownload}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <>
+                <CircleDot className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 mr-2" />
+                Save and Download
+              </>
+            )}
           </Button>
         </div>
 
-        
+
       </div>
     </div>
   )

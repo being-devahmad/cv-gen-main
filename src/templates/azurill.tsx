@@ -1,8 +1,6 @@
 import { Divider } from "@nextui-org/react"
 
 const Header = () => {
-
-
     const contactDetails = [{
         name: "Ahmad Owais",
         phone: "+92 3106938050",
