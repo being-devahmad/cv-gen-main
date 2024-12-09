@@ -32,10 +32,12 @@
 // import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 // import { PreviewSection } from '@/components/resumeDashboard/ResumePreview';
 import { ResumeForm2 } from '@/components/forms/ResumeForm/ResumeForm2';
+import { ResumeForm2 } from '@/components/forms/ResumeForm/ResumeForm2';
 import { ResumeProvider } from '@/hooks/useResume';
 import { Azurill } from '@/templates/azurill';
 // import Azurill from '@/templates/azurill';
 import Chikorita from '@/templates/chikorita';
+import { Nosepass } from '@/templates/nosepass';
 // import { Azurill } from '@/templates/azurill';
 // import { Chikorita } from '@/templates/chikorita';
 import React, { useState } from 'react';
@@ -64,6 +66,7 @@ const ResumeStart: React.FC = () => {
                     {/* <PreviewSection /> */}
                     <Azurill allData={allData} />
                     {/* <Chikorita /> */}
+                    <Nosepass/>
                 </div>
             </div>
         </ResumeProvider>
