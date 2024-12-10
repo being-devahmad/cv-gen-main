@@ -1,299 +1,3 @@
-// import { Button } from "@/components/ui/button";
-// import { Card } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { Textarea } from "@/components/ui/textarea";
-// import { useToast } from "@/hooks/use-toast";
-// import {
-//   CircleDot,
-//   GraduationCap,
-//   Briefcase,
-//   Globe,
-//   Award,
-//   Plus,
-//   Download,
-// } from "lucide-react";
-// import React, { useState } from "react";
-
-// interface PreviewResumeProps {
-//   allData: Record<string, any>;
-//   setAllData: (data: Record<string, any>) => void;
-// }
-
-// export const PreviewResume: React.FC<PreviewResumeProps> = ({
-//   allData,
-//   setAllData,
-// }) => {
-//   const [isSaving, setIsSaving] = useState(false);
-//   const { toast } = useToast();
-
-//   const handleSaveAndDownload = async () => {
-//     setIsSaving(true);
-//     try {
-//       console.log("Finished Data -->", allData);
-//       toast({
-//         title: "Success",
-//         description: "Your resume data has been saved.",
-//       });
-//       // Here you would typically trigger the download process
-//     } catch (error) {
-//       console.error("Error saving resume data:", error);
-//       toast({
-//         title: "Error",
-//         description: "Failed to save resume data. Please try again.",
-//         variant: "destructive",
-//       });
-//     } finally {
-//       setIsSaving(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       <div className="container mx-auto p-4 ">
-//         {/* Preview Section */}
-//         <div className="w-full ">
-//           <Card className="p-6 sticky top-4">
-//             <div className=" bg-white rounded-lg shadow-sm p-8">
-//               <h1 className="text-2xl font-bold text-center mb-8">
-//                 {allData?.firstName} {allData?.lastName}
-//               </h1>
-//               <div className="grid grid-cols-12 ">
-//                 <div className=" col-span-7">
-//                   <h2 className=" font-semibold mb-4 ">CONTACTS</h2>
-//                   <div className="space-y-2 text-sm">
-//                     <p>{allData?.email}</p>
-//                     <p>{allData?.phone}</p>
-//                     <p>
-//                       {allData?.city}, {allData?.country}
-//                     </p>
-//                   </div>
-//                 </div>
-//                 <div className=" col-span-5 text-center">
-//                   <h2 className="font-semibold mb-4">SKILLS</h2>
-//                   <div className="space-y-2 text-sm">
-//                     {allData?.skills?.map((val: any, ind: any) => {
-//                       return val.items.map((value: any, index: any) => {
-//                         return (
-//                           <>
-//                             <p>{value}</p>
-//                           </>
-//                         );
-//                       });
-//                     })}
-//                     {/* <p>Skill 1</p>
-//                     <p>Skill 2</p>
-//                     <p>Skill 3</p> */}
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </Card>
-//         </div>
-//         {/* Form Section */}
-//         <div className="w-full  space-y-6">
-//           {/* Resume Formatting */}
-//           <Card className="p-4 space-y-4">
-//             <h2 className="text-lg font-semibold flex items-center gap-2">
-//               <CircleDot className="w-4 h-4" />
-//               Resume Formatting
-//             </h2>
-//             <div className="grid gap-4">
-//               <div>
-//                 <Label>Template</Label>
-//                 <Select>
-//                   <SelectTrigger>
-//                     <SelectValue placeholder="Monte Carlo" />
-//                   </SelectTrigger>
-//                   <SelectContent>
-//                     <SelectItem value="monte-carlo">Monte Carlo</SelectItem>
-//                     <SelectItem value="paris">Paris</SelectItem>
-//                     <SelectItem value="london">London</SelectItem>
-//                   </SelectContent>
-//                 </Select>
-//               </div>
-//               <div>
-//                 <Label>Accent Color</Label>
-//                 <div className="flex gap-2 mt-2">
-//                   {[
-//                     "bg-blue-500",
-//                     "bg-green-500",
-//                     "bg-red-500",
-//                     "bg-purple-500",
-//                   ].map((color) => (
-//                     <button
-//                       key={color}
-//                       className={`w-6 h-6 rounded-full ${color} hover:ring-2 ring-offset-2`}
-//                     />
-//                   ))}
-//                 </div>
-//               </div>
-//             </div>
-//           </Card>
-
-//           {/* Personal Information */}
-//           <Card className="p-4 space-y-4">
-//             <h2 className="text-lg font-semibold">Personal Information</h2>
-//             <div className="grid gap-4">
-//               <div className="grid grid-cols-2 gap-4">
-//                 <div>
-//                   <Label>First Name</Label>
-//                   <Input
-//                     placeholder="Enter first name"
-//                     value={allData?.firstName}
-//                     disabled
-//                   />
-//                 </div>
-//                 <div>
-//                   <Label>Last Name</Label>
-//                   <Input
-//                     placeholder="Enter last name"
-//                     value={allData?.lastName}
-//                     disabled
-//                   />
-//                 </div>
-//               </div>
-//               <div>
-//                 <Label>Job Title</Label>
-//                 <Input
-//                   placeholder="e.g. Marketing Manager"
-//                   value={allData?.experiences[0]?.title}
-//                   disabled
-//                 />
-//               </div>
-//               <div>
-//                 <Label>Email</Label>
-//                 <Input
-//                   type="email"
-//                   placeholder="your@email.com"
-//                   value={allData?.email}
-//                   disabled
-//                 />
-//               </div>
-//               <div>
-//                 <Label>Phone</Label>
-//                 <Input
-//                   placeholder="Your phone number"
-//                   value={allData?.phone}
-//                   disabled
-//                 />
-//               </div>
-//               <div>
-//                 <Label>Country</Label>
-//                 <Input
-//                   placeholder="Enter a country"
-//                   value={allData?.country}
-//                   disabled
-//                 />
-//               </div>
-//               <div className="grid grid-cols-2 gap-4">
-//                 <div>
-//                   <Label>City</Label>
-//                   <Input placeholder="City" value={allData?.city} disabled />
-//                 </div>
-//                 <div>
-//                   <Label>Postal Code</Label>
-//                   <Input
-//                     placeholder="Postal Code"
-//                     value={allData?.postal_code}
-//                     disabled
-//                   />
-//                 </div>
-//               </div>
-//             </div>
-//           </Card>
-
-//           {/* Professional Summary */}
-//           <Card className="p-4 space-y-4">
-//             <h2 className="text-lg font-semibold">Professional Summary</h2>
-//             <Textarea
-//               placeholder="e.g. Accomplished Marketing Manager with expertise in developing campaigns..."
-//               className="min-h-[100px]"
-//               value={allData?.description}
-//               disabled
-//             />
-//           </Card>
-
-//           {/* Section Buttons */}
-//           <div className="grid grid-cols-2 gap-4">
-//             {[
-//               { icon: Globe, label: "Websites & Social Links" },
-//               { icon: Briefcase, label: "Employment History" },
-//               { icon: GraduationCap, label: "Education" },
-//               { icon: Award, label: "Skills" },
-//             ].map(({ icon: Icon, label }) => (
-//               <Button
-//                 key={label}
-//                 variant="outline"
-//                 className="h-auto py-4 flex flex-col gap-2"
-//               >
-//                 <Icon className="w-5 h-5" />
-//                 <span>{label}</span>
-//               </Button>
-//             ))}
-//           </div>
-
-//           {/* Add Blocks */}
-//           <Card className="p-4">
-//             <h2 className="text-lg font-semibold mb-4">Add Blocks</h2>
-//             <div className="grid grid-cols-2 gap-4">
-//               {[
-//                 "Languages",
-//                 "Personal details",
-//                 "Hobbies",
-//                 "Courses",
-//                 "Custom section",
-//                 "References",
-//                 "Extra-Curricular Activities",
-//                 "Internships",
-//                 "Publications",
-//                 "Driving license",
-//               ].map((block) => (
-//                 <Button key={block} variant="outline" className="justify-start">
-//                   <Plus className="w-4 h-4 mr-2" />
-//                   {block}
-//                 </Button>
-//               ))}
-//             </div>
-//           </Card>
-
-// <Button
-//   className="w-full"
-//   size="lg"
-//   onClick={handleSaveAndDownload}
-//   disabled={isSaving}
-// >
-//   {isSaving ? (
-//     <>
-//       <CircleDot className="mr-2 h-4 w-4 animate-spin" />
-//       Saving...
-//     </>
-//   ) : (
-//     <>
-//       <Download className="w-4 h-4 mr-2" />
-//       Save and Download
-//     </>
-//   )}
-// </Button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-
-// ---------------------------------------------------------------
-
-
-
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -314,21 +18,47 @@ import { ArrowLeft, CircleDot, Download, Plus } from 'lucide-react'
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@nextui-org/button"
+import { addDoc, collection } from "firebase/firestore"
+import { db } from "@/lib/firebaseConfig"
 
 interface PreviewResumeProps {
   allData: Record<string, any>;
   setAllData: (data: Record<string, any>) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
 export const PreviewResume: React.FC<PreviewResumeProps> = ({
   allData,
   setAllData,
-  activeTab,
   setActiveTab
 }) => {
 
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
+
+  const [customSections, setCustomSections] = useState([]);
+  const [newSectionName, setNewSectionName] = useState('');
+
+  const handleAddCustomSection = () => {
+    if (newSectionName) {
+      setCustomSections(prevSections => [...prevSections, newSectionName]);
+      setAllData(prevData => ({
+        ...prevData,
+        [newSectionName]: []
+      }));
+      setNewSectionName('');
+    }
+  };
+
+  const handleAddCustomField = (sectionName: string) => {
+    const updatedSection = [...(allData[sectionName] || []), { title: '', description: '' }];
+    setAllData({
+      ...allData,
+      [sectionName]: updatedSection
+    });
+  };
+
 
   const handleSaveAndDownload = async () => {
     setIsSaving(true);
@@ -338,7 +68,9 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
         title: "Success",
         description: "Your resume data has been saved.",
       });
-      // Here you would typically trigger the download process
+      // Add data to the 'resumes' collection in Firestore
+      const docRef = await addDoc(collection(db, "resumes"), allData);
+
     } catch (error) {
       console.error("Error saving resume data:", error);
       toast({
@@ -505,7 +237,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
                     </Select>
                   </div>
                 ))}
-                <Button variant="outline" className="w-full">
+                <Button className="w-full">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Skill
                 </Button>
@@ -513,6 +245,54 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+
+        {/* Add this section for custom sections */}
+        {customSections.map((sectionName) => (
+          <AccordionItem key={sectionName} value={sectionName}>
+            <AccordionTrigger className="text-base font-medium">{sectionName}</AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-4 p-2">
+                {allData[sectionName]?.map((item: { title: string; description: string }, index: number) => (
+                  <div key={index} className="space-y-2">
+                    <Input
+                      placeholder="Title"
+                      value={item.title}
+                      onChange={(e) => {
+                        const updatedSection = [...allData[sectionName]];
+                        updatedSection[index].title = e.target.value;
+                        setAllData({ ...allData, [sectionName]: updatedSection });
+                      }}
+                    />
+                    <Textarea
+                      placeholder="Description"
+                      value={item.description}
+                      onChange={(e) => {
+                        const updatedSection = [...allData[sectionName]];
+                        updatedSection[index].description = e.target.value;
+                        setAllData({ ...allData, [sectionName]: updatedSection });
+                      }}
+                    />
+                  </div>
+                ))}
+                <Button onClick={() => handleAddCustomField(sectionName)}>Add Field</Button>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+
+        {/* Add Custom Section */}
+        <div className="space-y-4">
+          <h3 className="font-medium">Add Custom Section</h3>
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Section Name"
+              value={newSectionName}
+              onChange={(e) => setNewSectionName(e.target.value)}
+            />
+            <Button onClick={handleAddCustomSection}>Add</Button>
+          </div>
+        </div>
+
 
         {/* Add Blocks Section */}
         <div className="space-y-4">
@@ -530,7 +310,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
               "Publications",
               "Driving license"
             ].map((block) => (
-              <Button key={block} variant="outline" className="justify-start">
+              <Button key={block} className="justify-start">
                 <Plus className="w-4 h-4 mr-2" />
                 {block}
               </Button>
@@ -542,17 +322,6 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
           <Button variant="light" onClick={handleBack}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          {/* <Button
-            color="primary"
-            variant="solid"
-            type="submit"
-            className="font-bold"
-            onClick={handleSaveAndDownload}
-          >
-            Submit <span className="pl-2">&#x2192;</span>
-          </Button> */}
-
-
           <Button
             color="primary"
             variant="solid"

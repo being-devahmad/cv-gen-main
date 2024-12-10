@@ -31,45 +31,6 @@ const Header = ({ allData }) => {
     );
 };
 
-// const Education = () => {
-
-//     const education = [
-//         {
-//             degree: "Bachelors in Information Technology",
-//             date: "2021 - Present",
-//             organization: "Government College University Faisalabad"
-//         },
-//         {
-//             degree: "Intermediate",
-//             date: "2019 - 2021",
-//             organization: "Nishat College of Science of Multan"
-//         }
-//     ]
-
-//     return (
-//         <section className="mb-8">
-//             <h2 className="text-lg font-bold uppercase mb-2">Education</h2>
-//             <div className="flex flex-col gap-4">
-//                 {
-//                     education.map((educationVal) => {
-//                         const {degree, date, organization} = educationVal
-//                         return (
-//                             <div>
-//                                 <div className="flex justify-between">
-//                                     <h3 className="font-bold">{degree}</h3>
-//                                     <p className="text-sm">{date}</p>
-//                                 </div>
-//                                 <div>{organization}</div>
-
-//                             </div>
-//                         )
-//                     })
-//                 }
-//             </div>
-
-//         </section>
-//     )
-// }
 const Education = ({ allData }) => {
     const { education } = allData;
 
@@ -197,6 +158,7 @@ const Experience = ({ allData }) => {
 //         </section >
 //     )
 // }
+
 // const Projects = ({allData}) => {
 //     const {projects} = allData;
 
@@ -227,35 +189,6 @@ const Experience = ({ allData }) => {
 // };
 
 
-// const Skills = () => {
-//     return (
-//         <section>
-//             <h2 className="text-lg font-bold uppercase mb-4">Skills & Certifications</h2>
-//             <div className="space-y-1 text-sm">
-//                 <div className="flex gap-3">
-//                     <div className="font-bold">Languages : </div>
-//                     <div>HTML , CSS , Javascript , Typescript</div>
-//                 </div>
-//                 <div className="flex gap-3">
-//                     <div className="font-bold">Libraries : </div>
-//                     <div>React.js , Express.js , Node.js</div>
-//                 </div>
-//                 <div className="flex gap-3">
-//                     <div className="font-bold">Frameworks : </div>
-//                     <div>Next.js , Bootstrap , Tailwind CSS</div>
-//                 </div>
-//                 <div className="flex gap-3">
-//                     <div className="font-bold">Databases : </div>
-//                     <div>MySQL , Firebase , Supabase , MongoDB</div>
-//                 </div>
-//                 <div className="flex gap-3">
-//                     <div className="font-bold">Developer Tools : </div>
-//                     <div>Git/Github , BitBucket , Jira</div>
-//                 </div>
-//             </div>
-//         </section>
-//     )
-// }
 const Skills = ({ allData }) => {
     const { skills } = allData;
 
