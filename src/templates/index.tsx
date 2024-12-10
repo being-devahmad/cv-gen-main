@@ -2,7 +2,6 @@ import { Template } from "@reactive-resume/utils";
 
 import { Azurill } from "./azurill";
 import { Bronzor } from "./bronzor";
-import { Chikorita } from "./chikorita";
 import { Ditto } from "./ditto";
 import { Gengar } from "./gengar";
 import { Glalie } from "./glalie";
@@ -12,6 +11,7 @@ import { Nosepass } from "./nosepass";
 import { Onyx } from "./onyx";
 import { Pikachu } from "./pikachu";
 import { Rhyhorn } from "./rhyhorn";
+import Chikorita from "./chikorita";
 
 export const getTemplate = (template: Template) => {
   switch (template) {

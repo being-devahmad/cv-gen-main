@@ -28,11 +28,11 @@ export const ContactInfoSchema = z.object({
   firstName: z.string().min(2, "First Name is required"),
   lastName: z.string().min(2, "Last Name is required"),
   city: z.string().min(2, "City is required"),
-  postal_code: z.string().min(2, "Postal Code is required"),
+  postalCode: z.string().min(2, "Postal Code is required"),
   country: z.string().min(3, "Countryis required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(11, "Phone number must be at least 11 digits"),
-  description: z.string().optional(), // Add description
+  summary: z.string().optional(), // Add summary
 });
 
 export const ExperienceSchema = z.object({

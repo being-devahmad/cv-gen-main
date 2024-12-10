@@ -36,6 +36,7 @@ export default function Skills({
 
   const [newSkill, setNewSkill] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Technical Skills");
+
   const addSkill = () => {
     if (!newSkill.trim()) return;
     const updatedSkills = skills.map((category: any) =>
@@ -62,7 +63,7 @@ export default function Skills({
   const handleNext = () => {
     console.log("allData", allData);
     setAllData({ ...allData, skills });
-    setActiveTab("previewResume");
+    setActiveTab("finish");
   };
   const handleBack = () => {
     setActiveTab("education");

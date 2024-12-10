@@ -34,7 +34,6 @@ export function useTemplateProcessing() {
                         contents: [{
                             parts: [{
                                 text: `Analyze and categorize the following resume content into a structured JSON format. Use the following guidelines:
-
 1. Main categories should be: "Personal Information", "Education", "Work Experience", "Projects", "Skills", and any other relevant sections found in the resume.
 2. For "Personal Information", create key-value pairs for each piece of information (e.g., "Name", "Phone", "Email").
 3. For "Education", "Work Experience", and "Projects", create an array of objects. Each object should represent one entry and contain key-value pairs for details like "Institution/Company", "Degree/Position", "Duration", "Location", etc.
@@ -42,7 +41,6 @@ export function useTemplateProcessing() {
 5. For "Skills", create subcategories as needed (e.g., "Languages", "Frameworks", "Tools") with arrays of skills as values.
 6. Ensure all standard resume categories are included, using empty arrays or objects for missing information.
 7. Remove any PDF-specific formatting artifacts (e.g., "Tj" at the end of lines).
-
 Parse and structure the following resume content:
 
 ${fileContent}`

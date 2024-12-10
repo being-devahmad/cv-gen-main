@@ -125,7 +125,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Experience from './Experience';
 import Education from './Education';
 import Skills from './Skills';
-import ContactInfo from './ContactIfo';
+import ContactInfo from './ContactInfo';
 
 const steps = [
     { id: 'contact', title: 'Contact Info', component: ContactInfo },

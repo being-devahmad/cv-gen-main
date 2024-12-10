@@ -30,10 +30,12 @@ export type FormStep = 'contact' | 'experience' | 'education' | 'skills' | 'abou
 export interface ContactInfo {
   firstName: string;
   lastName: string;
+  country: "";
   city: string;
   postalCode: string;
   phone: string;
   email: string;
+  summary: "";
 }
 
 export interface ResumeData {
@@ -43,4 +45,20 @@ export interface ResumeData {
   skills: string[];
   about: string;
 }
+
+export interface ExperienceItem {
+  title: string;
+  company: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  currentlyWorking: boolean;
+  description: DescriptionPoint[];
+}
+
+export interface DescriptionPoint {
+  id: string;
+  text: string;
+}
+
 

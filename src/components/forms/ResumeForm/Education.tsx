@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@nextui-org/button";
-import { Input, Textarea } from "@nextui-org/input";
-import { Plus, Trash2 } from "lucide-react";
+import { Input } from "@nextui-org/input";
+import { Plus, Trash2 } from 'lucide-react';
 
 interface EducationProps {
   allData: Record<string, any>;
@@ -21,49 +21,49 @@ export default function Education({
     allData.education || [
       {
         degree: "",
-        school: "",
+        organization: "",
         location: "",
         startDate: "",
         endDate: "",
-        description: "",
       },
     ]
   );
 
   const addEducation = () => {
-    setEducation([
+    const newEducation = [
       ...education,
       {
         degree: "",
-        school: "",
+        organization: "",
         location: "",
         startDate: "",
         endDate: "",
-        description: "",
       },
-    ]);
+    ];
+    setEducation(newEducation);
   };
 
   const removeEducation = (index: number) => {
-    const updatedEducation = education.filter((_: any, i: any) => i !== index);
+    const updatedEducation = education.filter((_, i) => i !== index);
     setEducation(updatedEducation);
   };
 
   const handleChange = (index: number, field: string, value: string) => {
-    const updatedEducation = [...education];
-    updatedEducation[index][field] = value;
+    const updatedEducation = education.map((edu, i) =>
+      i === index ? { ...edu, [field]: value } : edu
+    );
     setEducation(updatedEducation);
+    setAllData({ ...allData, education: updatedEducation });
   };
 
   const handleNext = () => {
-    console.log("allData>>", allData)
-    setAllData({ ...allData, education });
     setActiveTab("skills");
   };
 
   const handleBack = () => {
     setActiveTab('experience');
   };
+
 
   return (
     <Card className="p-6">
@@ -77,7 +77,7 @@ export default function Education({
         </Button>
       </div>
 
-      {education.map((edu: any, index: any) => (
+      {education.map((edu, index) => (
         <div key={index} className="relative mb-6">
           {index > 0 && <hr className="my-4" />}
           <Button
@@ -92,9 +92,9 @@ export default function Education({
           <div className="grid grid-cols-2 gap-4">
             <Input
               variant="bordered"
-              label="School"
-              value={edu.school}
-              onChange={(e) => handleChange(index, "school", e.target.value)}
+              label="Organization"
+              value={edu.organization}
+              onChange={(e) => handleChange(index, "organization", e.target.value)}
             />
             <Input
               variant="bordered"
@@ -126,14 +126,6 @@ export default function Education({
               onChange={(e) => handleChange(index, "endDate", e.target.value)}
             />
           </div>
-
-          <Textarea
-            variant="bordered"
-            className="mt-4"
-            label="Description"
-            value={edu.description}
-            onChange={(e) => handleChange(index, "description", e.target.value)}
-          />
         </div>
       ))}
 
@@ -141,10 +133,17 @@ export default function Education({
         <Button variant="light" onClick={handleBack}>
           Back
         </Button>
-        <Button className="text-white bg-blue-500" onClick={handleNext}>
+        <Button
+          color="primary"
+          variant="solid"
+          type="submit"
+          className="font-bold"
+          onClick={handleNext}
+        >
           Next to Skills <span className="pl-2">&#x2192;</span>
         </Button>
       </div>
     </Card>
   );
 }
+

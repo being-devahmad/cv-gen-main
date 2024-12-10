@@ -3,15 +3,17 @@ import { X } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { GEMINI_API_KEY } from '@/lib/config'
+import { Textarea } from '@nextui-org/input'
 
 interface AITextareaProps {
     value: string
     onChange: (value: string) => void
     label?: string
     error?: string
+    customPrompt?: string
 }
 
-export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
+export function AITextarea({ value, onChange, label, error, customPrompt }: AITextareaProps) {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [suggestions, setSuggestions] = useState<string[]>([])
     const [showSuggestions, setShowSuggestions] = useState(false)
@@ -20,6 +22,8 @@ export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
         if (!value) return
         setIsAnalyzing(true)
         setShowSuggestions(true)
+
+        const prompt = customPrompt || `Just analyze these points and enhance the description replace with ATS friendly points based on the description of the job which I've done and just provide me with the best bullet points lines and do not provide with explanation just 2 to 3 straight lines and add some numeric values to improve ATS score :\n\n"${value}"`
 
         try {
             const response = await fetch(
@@ -32,7 +36,7 @@ export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `just analyze these points and enhance the description replace with ATS friendly points based on the description of the job which I've done and just provide me with the best bullet points lines and do not provide with explanation just 2 to 3 straight lines and add some numeric values to improve ATS score :\n\n"${value}"`
+                                text: prompt
                             }]
                         }]
                     })
@@ -75,11 +79,13 @@ export function AITextarea({ value, onChange, label, error }: AITextareaProps) {
 
     return (
         <div className="relative">
-            <textarea
+            <Textarea
+                variant="bordered"
+                className="mt-4"
+                label="Description"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full p-2 border rounded min-h-[200px]"
-                placeholder={label}
+                rows={30}
             />
             <button
                 className="absolute right-4 bottom-4 text-sm px-2 py-1 bg-[#10a37f] rounded-lg text-white hover:bg-[#095C46] transition-colors"

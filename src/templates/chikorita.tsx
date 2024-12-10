@@ -228,7 +228,7 @@ const References = () => {
   )
 }
 
-export const Resume = () => {
+export const Chikorita = () => {
   return (
     <div className="max-w-[1000px] mx-auto shadow-xl">
       <Header />
@@ -249,5 +249,5 @@ export const Resume = () => {
   )
 }
 
-export default Resume
+export default Chikorita
 

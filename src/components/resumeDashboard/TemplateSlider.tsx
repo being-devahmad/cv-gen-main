@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { Card, CardBody, CardFooter, Button, Image } from "@nextui-org/react"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import templateOne from "../../assets/images/resumeOne.png"
-import templateTwo from "../../assets/images/resumeTwo.png"
-import templateThree from "../../assets/images/resumeThree.png"
-import templateFour from "../../assets/images/resumeFour.png"
+
 import { useNavigate } from 'react-router-dom'
+import { templates } from '@/data/templates'
 // import BuilderLandingPage from '@/pages/resume/ResumeOptions'
+
 
 interface Template {
     id: string
@@ -15,14 +14,6 @@ interface Template {
     image: string
     popularity: 'most' | 'recommended' | null
 }
-
-const templates: Template[] = [
-    { id: '1', name: 'Riga', image: templateOne, popularity: null },
-    { id: '2', name: 'Rotterdam', image: templateTwo, popularity: null },
-    { id: '3', name: 'Budapest', image: templateThree, popularity: 'most' },
-    { id: '4', name: 'Chicago', image: templateFour, popularity: 'recommended' },
-    { id: '5', name: 'Perth', image: templateTwo, popularity: null },
-]
 
 export function TemplateSlider() {
     const [activeIndex, setActiveIndex] = useState(0)

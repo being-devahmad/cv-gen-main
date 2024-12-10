@@ -1,58 +1,33 @@
 import { Divider } from "@nextui-org/react"
 
-// const Header = () => {
-//     const contactDetails = [{
-//         name: "Ahmad Owais",
-//         phone: "+92 3106938050",
-//         email: "ahmadowais41@gmail.com",
-//         links: ["https://github.com/being-devahmad", "https://github.com/being-devahmad"],
-//         city: "Multan",
-//         postalCode: "66000",
-//         country: "Pakistan"
-//     }]
-
-//     return (
-//         <header className="text-center mb-8">
-//             {
-//                 contactDetails.map((contactInfoVal) => {
-//                     const { name, phone, email, links, city, postalCode, country } = contactInfoVal
-//                     return (
-//                         <div>
-//                             <h1 className="text-4xl font-bold mb-2">{name}</h1>
-//                             <div className="text-sm space-x-2">
-//                                 <span>{phone}</span>
-//                                 <span>·</span>
-//                                 <span>{email}</span>
-//                                 <span>·</span>
-//                                 {links.map((link) => <a className="pl-1" href={link}>{link}</a>)}
-//                             </div>
-//                             <div className="text-sm mt-1">
-//                                 <span>{city}</span>,
-//                                 <span>{postalCode}</span>,
-//                                 <span>{country}</span>
-//                             </div>
-//                         </div>
-//                     )
-//                 })
-//             }
-//         </header>
-//     )
-// }
 const Header = ({ allData }) => {
-    const { firstName, lastName, phone, email, city, postal_code, country } = allData;
+    const { firstName, lastName, phone, email, city, postal_code, country, summary } = allData;
 
     return (
-        <header className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-2">{`${firstName} ${lastName}`}</h1>
-            <div className="text-sm space-x-2">
-                <span>{phone}</span>
-                <span>·</span>
-                <span>{email}</span>
+        <>
+            <div>
+                <h1 className="text-4xl font-bold mb-2">{firstName} {lastName} </h1>
+                <div className="text-sm space-x-2">
+                    <span>{phone}</span>
+                    <span>·</span>
+                    <span>{email}</span>
+                    <span>·</span>
+                    {/* {links.map((link) => <a className="pl-1" href={link}>{link}</a>)} */}
+                </div>
+                <div className="text-sm mt-1">
+                    <span>{city}</span>,
+                    <span>{postal_code}</span>,
+                    <span>{country}</span>
+                </div>
             </div>
-            <div className="text-sm mt-1">
-                <span>{city}</span>, <span>{postal_code}</span>, <span>{country}</span>
+            <h2 className="text-lg font-bold uppercase mb-2">Summary</h2 >
+            <div className="flex flex-col gap-4 mb-2">
+                <p className="text-sm mt-2">
+                    {summary}
+                </p>
             </div>
-        </header>
+
+        </>
     );
 };
 
@@ -77,7 +52,7 @@ const Header = ({ allData }) => {
 //             <div className="flex flex-col gap-4">
 //                 {
 //                     education.map((educationVal) => {
-//                         const { degree, date, organization } = educationVal
+//                         const {degree, date, organization} = educationVal
 //                         return (
 //                             <div>
 //                                 <div className="flex justify-between">
@@ -101,83 +76,60 @@ const Education = ({ allData }) => {
     return (
         <section className="mb-8">
             <h2 className="text-lg font-bold uppercase mb-2">Education</h2>
-            <div className="flex flex-col gap-4">
-                {education.map(({ degree, date, organization }, index) => (
-                    <div key={index}>
-                        <div className="flex justify-between">
-                            <h3 className="font-bold">{degree}</h3>
-                            <p className="text-sm">{date}</p>
-                        </div>
-                        <div>{organization}</div>
-                    </div>
-                ))}
+            <div className="flex flex-col gap-4 mb-2">
+                {
+                    education.map((educationVal, index) => {
+                        const { degree, startDate, endDate, organization } = educationVal
+                        return (
+                            <div key={index}>
+                                <div className="flex justify-between">
+                                    <h3 className="font-bold">{degree}</h3>
+                                    <div className="flex gap-0.5 items-center">
+                                        <p className="text-sm">{startDate}</p>
+                                        <span>-</span>
+                                        <p className="text-sm">{endDate}</p>
+                                    </div>
+
+                                </div>
+                                <div>{organization}</div>
+                            </div>
+                        )
+                    })
+                }
             </div>
+
         </section>
     );
 };
 
-// const Experience = () => {
 
-//     const experiences = [
-//         {
-//             company: "Arrowai Industries",
-//             date: "Oct 2023 - Present",
-//             designation: "Business Analyst Intern",
-//             description: "Developed and implemented a streamlined process for gathering business requirements, reducing project delivery time by 15%. Develop and implemented a standardised reporting framework, resulting in improved visibility of key performance metrics and enabling data-driven decision-making at all levels of the organisation."
-//         },
-//         {
-//             company: "Arrowai Industries",
-//             date: "Oct 2023 - Present",
-//             designation: "Business Analyst Intern",
-//             description: "Developed and implemented a streamlined process for gathering business requirements, reducing project delivery time by 15%. Develop and implemented a standardised reporting framework, resulting in improved visibility of key performance metrics and enabling data-driven decision-making at all levels of the organisation."
-//         }
-//     ]
 
-//     return (
-//         <section className="mb-8">
-//             <h2 className="text-lg font-bold uppercase mb-4">Professional Experience</h2>
-
-//             <div className="space-y-6">
-//                 <div className="flex justify-between items-start flex-col gap-4">
-//                     {
-//                         experiences.map((experienceVal) => {
-//                             const { company, date, description, designation } = experienceVal
-//                             return (
-//                                 <div>
-//                                     <div className="flex justify-between">
-//                                         <h3 className="font-bold">{company}</h3>
-//                                         <p className="text-sm">{date}</p>
-//                                     </div>
-//                                     <div className="font-bold">{designation}</div>
-//                                     <p className="text-sm mt-2">
-//                                         {description}
-//                                     </p>
-//                                 </div>
-//                             )
-//                         })
-//                     }
-//                 </div>
-//             </div>
-//         </section>
-//     )
-// }
 const Experience = ({ allData }) => {
-    const { experience } = allData;
-
+    const { experiences } = allData;
+    console.log("exp--> ", experiences)
     return (
         <section className="mb-8">
             <h2 className="text-lg font-bold uppercase mb-4">Professional Experience</h2>
             <div className="space-y-6">
-                {experience.map(({ company, startDate, title, description }, index) => (
-                    <div key={index}>
-                        <div className="flex justify-between">
-                            <h3 className="font-bold">{company}</h3>
-                            <p className="text-sm">{startDate}</p>
+                {experiences.map((experienceVal, index) => {
+                    const { company, startDate, endDate, title, description } = experienceVal
+                    return (
+                        <div>
+                            <div className="flex justify-between">
+                                <h3 className="font-bold">{company}</h3>
+                                <div className="flex gap-0.5 items-center">
+                                    <p className="text-sm">{startDate}</p>
+                                    <span>-</span>
+                                    <p className="text-sm">{endDate ? endDate : "present"}</p>
+                                </div>
+                            </div>
+                            <div className="font-bold">{title}</div>
+                            <p className="text-sm mt-2">
+                                {description}
+                            </p>
                         </div>
-                        <div className="font-bold">{title}</div>
-                        <p className="text-sm mt-2">{description}</p>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
         </section>
     );
@@ -217,7 +169,7 @@ const Experience = ({ allData }) => {
 //                 <div className="flex justify-between items-start flex-col gap-4">
 //                     {
 //                         projects.map((projectValues) => {
-//                             const { title, technologies, date, description } = projectValues
+//                             const {title, technologies, date, description} = projectValues
 //                             return (
 //                                 <div>
 //                                     <div className="flex justify-between">
@@ -245,8 +197,8 @@ const Experience = ({ allData }) => {
 //         </section >
 //     )
 // }
-// const Projects = ({ allData }) => {
-//     const { projects } = allData;
+// const Projects = ({allData}) => {
+//     const {projects} = allData;
 
 //     return (
 //         <section className="mb-8">
@@ -311,12 +263,15 @@ const Skills = ({ allData }) => {
         <section>
             <h2 className="text-lg font-bold uppercase mb-4">Skills & Certifications</h2>
             <div className="space-y-1 text-sm">
-                {skills?.map(({ category, items }, index) => (
-                    <div key={index} className="flex gap-3">
-                        <div className="font-bold">{category}:</div>
-                        <div>{items.join(", ")}</div>
-                    </div>
-                ))}
+                {skills?.map((skill, index) => {
+                    const { category, items } = skill
+                    return (
+                        <div key={index} className="flex gap-3">
+                            <div className="font-bold">{category}:</div>
+                            <div>{items.join(", ")}</div>
+                        </div>
+                    )
+                })}
             </div>
         </section>
     );

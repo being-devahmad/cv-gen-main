@@ -1,18 +1,19 @@
-import { Button } from "@nextui-org/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ContactIfo from "./ContactIfo";
 import Experience from "./Experience";
 import Education from "./Education";
 import Skills from "./Skills";
+import { Projects } from "./Projects";
 import { PreviewResume } from "./PreviewResume";
+import { ContactInfo } from "./ContactInfo"
 
 const steps = [
   { id: "contact", title: "Contact Info" },
   { id: "experience", title: "Experience" },
   { id: "education", title: "Education" },
+  { id: "projects", title: "Projects" },
   { id: "skills", title: "Skills" },
+  { id: "finish", title: "Finish" },
 ];
 
 export const ResumeForm2 = ({ allData, setAllData }) => {
@@ -23,7 +24,8 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 p-4 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900
+    dark:to-gray-800 p-4 lg:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -41,11 +43,11 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
             {steps.map((step) => (
               <span
                 key={step.id}
-                className={`text-xs lg:text-sm font-medium ${
-                  activeTab === step.id
+                className={`text-xs lg:text-sm font-medium
+                   ${activeTab === step.id
                     ? "active text-blue-600 font-bold"
                     : "text-gray-600"
-                }`}
+                  }`}
                 style={{ cursor: "pointer" }}
                 onClick={() => handleActivetab(step.id)}
               >
@@ -59,7 +61,7 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 lg:p-6 mb-6 border">
           <ScrollArea className="h-[calc(100vh-300px)] lg:h-[450px] pr-4">
             {activeTab === "contact" ? (
-              <ContactIfo
+              <ContactInfo
                 allData={allData}
                 setAllData={setAllData}
                 activeTab={activeTab}
@@ -79,6 +81,13 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
+            ) : activeTab === "projects" ? (
+              <Projects
+                allData={allData}
+                setAllData={setAllData}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
             ) : activeTab === "skills" ? (
               <Skills
                 allData={allData}
@@ -86,8 +95,13 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
-            ) : activeTab === "previewResume" ? (
-              <PreviewResume allData={allData} setActiveTab={setActiveTab} />
+            ) : activeTab === "finish" ? (
+              <PreviewResume
+                allData={allData}
+                setAllData={setAllData}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
             ) : (
               ""
             )}
@@ -95,14 +109,14 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <Button variant="outline">
             <ChevronLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
           <Button>
             Next <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
