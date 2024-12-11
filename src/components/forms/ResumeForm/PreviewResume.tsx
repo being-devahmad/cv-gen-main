@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Button } from "@nextui-org/button"
 import { addDoc, collection } from "firebase/firestore"
 import { db } from "@/lib/firebaseConfig"
+import { jsPDF } from "jspdf";
 
 interface PreviewResumeProps {
   allData: Record<string, any>;
@@ -60,17 +61,122 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
   };
 
 
+  // const handleSaveAndDownload = async () => {
+  //   setIsSaving(true);
+  //   try {
+  //     console.log("Finished Data -->", allData);
+  //     toast({
+  //       title: "Success",
+  //       description: "Your resume data has been saved.",
+  //     });
+  //     // Add data to the 'resumes' collection in Firestore
+  //     // const docRef = await addDoc(collection(db, "resumes"), allData);
+
+  //     // // Trigger download of the resume data as a JSON file
+  //     // const blob = new Blob([JSON.stringify(allData, null, 2)], { type: "application/json" });
+  //     // const link = document.createElement("a");
+  //     // link.href = URL.createObjectURL(blob);
+  //     // link.download = `${allData?.firstName || "Untitled"}_${allData?.lastName || ""}_CV.json`;
+  //     // document.body.appendChild(link);
+  //     // link.click();
+  //     // document.body.removeChild(link);
+
+
+  //     // Generate PDF using jsPDF
+  //     const pdf = new jsPDF();
+
+  //     // Add content to the PDF
+  //     pdf.setFontSize(16);
+  //     pdf.text("Resume", 10, 10);
+  //     pdf.setFontSize(12);
+
+  //     // Formatting allData into readable content
+  //     const formattedData = `
+  //     Name: ${allData?.firstName || ""} ${allData?.lastName || ""}
+  //     Email: ${allData?.email || ""}
+  //     Phone: ${allData?.phone || ""}
+  //     Address: ${allData?.address || ""}
+
+  //     Experience:
+  //   `;
+
+  //     pdf.text(formattedData, 10, 20);
+
+  //     allData?.experiences?.forEach((exp, index) => {
+  //       const experienceText = `
+  //       ${index + 1}. ${exp.company || "Unknown Company"} (${exp.startDate || "N/A"} - ${exp.endDate || "Present"
+  //         })
+  //       Title: ${exp.title || "N/A"}
+  //       Description: ${exp.description || "N/A"}
+  //     `;
+  //       pdf.text(experienceText, 10, 40 + index * 30); // Adjust line spacing for multiple experiences
+  //     });
+
+  //     // Save the PDF
+  //     const fileName = `${allData?.firstName || "Untitled"}_${allData?.lastName || ""}_CV.pdf`;
+  //     pdf.save(fileName);
+
+
+  //   } catch (error) {
+  //     console.error("Error saving resume data:", error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to save resume data. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+
+
   const handleSaveAndDownload = async () => {
     setIsSaving(true);
     try {
       console.log("Finished Data -->", allData);
+
+      // Save data to Firestore in the 'resumes' collection
+      // const docRef = await addDoc(collection(db, "resumes"), allData);
+      // console.log("Document written with ID: ", docRef.id);
+
       toast({
         title: "Success",
         description: "Your resume data has been saved.",
       });
-      // Add data to the 'resumes' collection in Firestore
-      const docRef = await addDoc(collection(db, "resumes"), allData);
 
+      // Generate PDF using jsPDF
+      const pdf = new jsPDF();
+
+      // Add content to the PDF
+      pdf.setFontSize(16);
+      pdf.text("Resume", 10, 10);
+      pdf.setFontSize(12);
+
+      // Formatting allData into readable content
+      const formattedData = `
+        Name: ${allData?.firstName || ""} ${allData?.lastName || ""}
+        Email: ${allData?.email || ""}
+        Phone: ${allData?.phone || ""}
+        Address: ${allData?.address || ""}
+        
+        Experience:
+      `;
+
+      pdf.text(formattedData, 10, 20);
+
+      allData?.experiences?.forEach((exp, index) => {
+        const experienceText = `
+          ${index + 1}. ${exp.company || "Unknown Company"} (${exp.startDate || "N/A"} - ${exp.endDate || "Present"
+          })
+          Title: ${exp.title || "N/A"}
+          Description: ${exp.description || "N/A"}
+        `;
+        pdf.text(experienceText, 10, 40 + index * 30); // Adjust line spacing for multiple experiences
+      });
+
+      // Save the PDF
+      const fileName = `${allData?.firstName || "Untitled"}_${allData?.lastName || ""}_CV.pdf`;
+      pdf.save(fileName);
     } catch (error) {
       console.error("Error saving resume data:", error);
       toast({

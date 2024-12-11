@@ -51,7 +51,14 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
 
     return (
-        <ResumeContext.Provider value={{ resumeData, updateResumeData, currentPage, setCurrentPage, contactInfoSchema: ContactInfoSchema }}>
+        <ResumeContext.Provider
+            value={{
+                resumeData,
+                updateResumeData,
+                currentPage,
+                setCurrentPage,
+                contactInfoSchema: ContactInfoSchema
+            }}>
             {children}
         </ResumeContext.Provider>
     );

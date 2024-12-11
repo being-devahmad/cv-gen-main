@@ -9,8 +9,8 @@ import { Nosepass } from '@/templates/nosepass';
 import { useParams } from 'react-router-dom';
 
 const ResumeStart: React.FC = () => {
-    const { templateId } = useParams<{ templateId: string }>();
-    console.log("TemplateId------->", templateId)
+    const { id } = useParams()
+    console.log("TemplateId------->", id)
 
     const [allData, setAllData] = useState({
         firstName: "",
@@ -28,13 +28,13 @@ const ResumeStart: React.FC = () => {
     });
 
     const renderTemplate = () => {
-        switch (templateId) {
+        switch (id) {
             case '1':
                 return <Azurill allData={allData} />;
             case '2':
-                return <Chikorita />;
+                return <Chikorita allData={allData} />;
             case '3':
-                return <Nosepass />;
+                return <Nosepass allData={allData} />;
             default:
                 return <Azurill allData={allData} />;
         }

@@ -67,7 +67,6 @@ const Education = ({ allData }) => {
 
 const Experience = ({ allData }) => {
     const { experiences } = allData;
-    console.log("exp--> ", experiences)
     return (
         <section className="mb-8">
             <h2 className="text-lg font-bold uppercase mb-4">Professional Experience</h2>
