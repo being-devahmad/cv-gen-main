@@ -37,18 +37,27 @@ export function useTemplateProcessing() {
                         body: JSON.stringify({
                             contents: [{
                                 parts: [{
-                                    text: `Analyze and categorize the following resume content into a structured JSON format. Use the following guidelines:
-    1. Main categories should be: "Personal Information", "Education", "Work Experience", "Projects", "Skills", and any other relevant sections found in the resume.
-    2. For "Personal Information", create key-value pairs for each piece of information (e.g., "Name", "Phone", "Email").
-    3. For "Education", "Work Experience", and "Projects", create an array of objects. Each object should represent one entry and contain key-value pairs for details like "Institution/Company", "Degree/Position", "Duration", "Location", etc.
-    4. For "Work Experience" and "Projects", include a "Description" key with an array of bullet points as its value.
-    5. For "Skills", create subcategories as needed (e.g., "Languages", "Frameworks", "Tools") with arrays of skills as values.
-    6. Ensure all standard resume categories are included, using empty arrays or objects for missing information.
-    7. Remove any PDF-specific formatting artifacts (e.g., "Tj" at the end of lines).
-    8. The object names should be in camel case just like personalInformation etc.
-    Parse and structure the following resume content:
-    
-    ${fileContent}`
+                                    //                                 text: `Analyze and categorize the following resume content into a structured JSON format. Use the following guidelines:
+                                    // 1. Main categories should be: "Personal Information", "Education", "Work Experience", "Projects", "Skills", and any other relevant sections found in the resume.
+                                    // 2. For "Personal Information", create key-value pairs for each piece of information (e.g., "Name", "Phone", "Email").
+                                    // 3. For "Education", "Work Experience", and "Projects", create an array of objects. Each object should represent one entry and contain key-value pairs for details like "Institution/Company", "Degree/Position", "Duration", "Location", etc.
+                                    // 4. For "Work Experience" and "Projects", include a "Description" key with an array of bullet points as its value.
+                                    // 5. For "Skills", create subcategories as needed (e.g., "Languages", "Frameworks", "Tools") with arrays of skills as values.
+                                    // 6. Ensure all standard resume categories are included, using empty arrays or objects for missing information.
+                                    // 7. Remove any PDF-specific formatting artifacts (e.g., "Tj" at the end of lines).
+                                    // 8. The object names should be in camel case just like personalInformation etc.
+                                    // Parse and structure the following resume content:
+
+                                    // ${fileContent}`
+                                    text: `Analyze the uploaded file to determine if it matches a resume format. If it is a resume, extract its content into a structured JSON format. The JSON should include key-value pairs such as personalInformation, education, experience, projects, and skills. Each section should adhere to the following structure:
+personalInformation should include fields like name, contact, and email.
+education should be an array of objects, each containing institution, degree, location, and year.
+experience should be an array of objects with jobTitle, company, location, duration, and responsibilities.
+projects should be an array of objects with name, technologies, and description.
+skills should list languages, frameworks, tools, and libraries.
+Return the result in JSON format, preserving the hierarchy and logical groupings of the information.
+Parse and structure the following resume content:
+                                    ${fileContent}`
                                 }]
                             }]
                         })

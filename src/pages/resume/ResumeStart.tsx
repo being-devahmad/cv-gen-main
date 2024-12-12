@@ -17,9 +17,6 @@ const ResumeStart: React.FC = () => {
 
     console.log("Received categoryData:", categoryData); // Debugging log
 
-    if (!categoryData) {
-        return <div>No data found. Please navigate correctly.</div>;
-    }
 
     const [allData, setAllData] = useState({
         firstName: "",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@nextui-org/button";
 import { Input, Checkbox } from "@nextui-org/react";
@@ -90,7 +90,6 @@ const Experience: React.FC<ExperienceProps> = ({
   const handleBack = () => {
     setActiveTab('contact');
   };
-
 
 
   return (
