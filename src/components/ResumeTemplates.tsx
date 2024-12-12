@@ -1,234 +1,257 @@
-// import { Card, CardContent, CardHeader } from "./ui/card";
-// import { Separator } from "./ui/separator";
-// import { Image } from "@nextui-org/react";
-// import { useEffect, useState } from "react";
-// import { collection, getDocs, query, where } from "firebase/firestore";
-// import { db } from "@/lib/firebaseConfig";
-// import { useAuth } from "@/hooks/useAuth";
-
-// interface Resume {
-//   id: string;
-//   name: string;
-//   url: string;
-//   updatedAt: {
-//     seconds: number;
-//     nanoseconds: number;
-//   };
-//   userId: string; // Add this field to the interface
-// }
-
-// const ResumeTemplates = () => {
-//   const [resumes, setResumes] = useState<Resume[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const { user } = useAuth();
-
-//   useEffect(() => {
-//     const fetchResumes = async () => {
-//       console.log("loggedInUser ---->", user?.id);
-
-//       if (!user) {
-//         setLoading(false);
-//         setError("User not authenticated");
-//         return;
-//       }
-
-//       try {
-//         const resumesCollection = collection(db, 'resumes');
-//         console.log("resumesCollection-->", resumesCollection)
-//         const resumeQuery = query(resumesCollection, where("userId", "==", user.id));
-//         console.log("resumesQuery-->", resumeQuery)
-//         const resumeSnapshot = await getDocs(resumeQuery);
-//         console.log("Query snapshot ----->", resumeSnapshot);
-//         console.log("Query snapshot size:", resumeSnapshot.size);
-//         console.log("Query snapshot empty:", resumeSnapshot.empty);
-
-//         const resumeList = resumeSnapshot.docs.map(doc => {
-//           const data = doc.data();
-//           console.log("Resume document:", doc.id, data);
-//           return {
-//             id: doc.id,
-//             ...data
-//           } as Resume;
-//         });
-
-//         console.log("Processed resume list:", resumeList);
-//         setResumes(resumeList);
-//         setError(null);
-//       } catch (error) {
-//         console.error("Error fetching resumes:", error);
-//         setError(`Failed to fetch resumes: ${error instanceof Error ? error.message : 'Unknown error'}`);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchResumes();
-//   }, [user]);
-
-//   const formatDate = (timestamp: { seconds: number; nanoseconds: number }) => {
-//     const date = new Date(timestamp.seconds * 1000);
-//     return date.toLocaleDateString();
-//   };
-
-//   if (loading) {
-//     return <div className="text-center py-4">Loading your resumes...</div>;
-//   }
-
-//   if (error) {
-//     return <div className="text-center py-4 text-red-500">{error}</div>;
-//   }
-
-//   return (
-//     <div>
-//       <h1 className="text-2xl font-bold mb-4">Your Resumes</h1>
-//       <p className="mb-4">User ID: {user?.id}</p>
-//       {resumes.length === 0 ? (
-//         <div className="text-center py-4">
-//           No resumes found for this user ID. Please check if you have created any resumes or if there's a mismatch in user IDs.
-//         </div>
-//       ) : (
-//         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-//           {resumes.map((resume) => (
-//             <Card key={resume.id}>
-//               <CardHeader className="p-3">
-//                 <div className="max-w-[240px]">
-//                   <Image
-//                     src={resume.url}
-//                     alt={resume.name}
-//                     className="rounded-md w-full object-cover"
-//                   />
-//                 </div>
-//               </CardHeader>
-//               <Separator />
-//               <CardContent className="mt-2 p-2">
-//                 <h2 className="font-bold text-md">{resume.name}</h2>
-//                 <p className="text-slate-600 text-xm">{formatDate(resume.updatedAt)}</p>
-//                 <p className="text-slate-500 text-xs">Resume ID: {resume.id}</p>
-//                 <p className="text-slate-500 text-xs">User ID: {resume.userId}</p>
-//               </CardContent>
-//             </Card>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ResumeTemplates;
-
-
-
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Separator } from "./ui/separator";
-import { Image } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebaseConfig";
-import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useState } from "react"
+import { collection, doc, getDocs, query, updateDoc, deleteDoc, where } from "firebase/firestore"
+import { db } from "@/lib/firebaseConfig"
+import { useAuth } from "@/hooks/useAuth"
+import { templates } from "@/data/templates"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Skeleton } from "@/components/ui/skeleton"
+import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface Resume {
-  id: string;
-  name: string;
-  url: string;
+  id: string
+  name: string
+  url: string
   updatedAt: {
-    seconds: number;
-    nanoseconds: number;
-  };
-  userId: string;
+    seconds: number
+    nanoseconds: number
+  }
+  userId: string
+  templateId?: string
 }
 
-const ResumeTemplates = () => {
-  const [resumes, setResumes] = useState<Resume[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+export function ResumeTemplates() {
+  const [resumes, setResumes] = useState<Resume[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedResume, setSelectedResume] = useState<Resume | null>(null)
+  const [updatedName, setUpdatedName] = useState("")
+  const { user } = useAuth()
 
   useEffect(() => {
     const fetchResumes = async () => {
       if (!user?.id) {
-        setLoading(false);
-        setError("User not authenticated");
-        return;
+        setLoading(false)
+        setError("User not authenticated")
+        return
       }
 
       try {
-        const resumesCollection = collection(db, 'resumes');
-        // Use the full path format for userId as shown in Firestore
-        const resumeQuery = query(
-          resumesCollection,
-          where("userId", "==", `/users/${user.id}`)
-        );
-        const resumeSnapshot = await getDocs(resumeQuery);
+        const resumesCollection = collection(db, "resumes")
+        const resumeQuery = query(resumesCollection, where("userId", "==", user.id))
+        const resumeSnapshot = await getDocs(resumeQuery)
 
         if (resumeSnapshot.empty) {
-          console.log("No resumes found");
-          setResumes([]);
+          console.log("No resumes found")
+          setResumes([])
         } else {
-          const resumeList = resumeSnapshot.docs.map(doc => ({
+          const resumeList = resumeSnapshot.docs.map((doc) => ({
             id: doc.id,
-            ...doc.data()
-          } as Resume));
-          setResumes(resumeList);
-        } 
-        setError(null);
+            ...doc.data(),
+          } as Resume))
+          setResumes(resumeList)
+        }
+        setError(null)
       } catch (error) {
-        console.error("Error fetching resumes:", error);
-        setError(`Failed to fetch resumes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error("Error fetching resumes:", error)
+        setError(
+          `Failed to fetch resumes: ${error instanceof Error ? error.message : "Unknown error"}`
+        )
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchResumes();
-  }, [user]);
+    fetchResumes()
+  }, [user])
 
+  const getTemplateImage = (templateId?: string) => {
+    const template = templates.find((temp) => temp.id === templateId)
+    return template?.image || "/placeholder.svg?height=240&width=320"
+  }
 
-  const formatDate = (timestamp: { seconds: number; nanoseconds: number }) => {
-    const date = new Date(timestamp.seconds * 1000);
-    return date.toLocaleDateString();
-  };
+  function formatDate(timestamp: { seconds: number; nanoseconds: number }) {
+    const date = new Date(timestamp.seconds * 1000)
+    return date.toLocaleDateString()
+  }
+
+  const handleSave = async () => {
+    if (!selectedResume || !updatedName.trim()) return
+
+    try {
+      const resumeDoc = doc(db, "resumes", selectedResume.id)
+      await updateDoc(resumeDoc, { name: updatedName })
+
+      setResumes((prev) =>
+        prev.map((resume) =>
+          resume.id === selectedResume.id ? { ...resume, name: updatedName } : resume
+        )
+      )
+
+      setSelectedResume(null)
+    } catch (error) {
+      console.error("Error updating resume:", error)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!selectedResume) return
+
+    try {
+      const resumeDoc = doc(db, "resumes", selectedResume.id)
+      await deleteDoc(resumeDoc)
+
+      setResumes((prev) => prev.filter((resume) => resume.id !== selectedResume.id))
+      setSelectedResume(null)
+    } catch (error) {
+      console.error("Error deleting resume:", error)
+    }
+  }
 
   if (loading) {
-    return <div className="text-center py-4">Loading your resumes...</div>;
+    return <ResumesSkeleton />
   }
 
   if (error) {
-    return <div className="text-center py-4 text-red-500">{error}</div>;
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    )
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Your Resumes</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Your Resumes</h1>
       {resumes.length === 0 ? (
-        <div className="text-center py-4">
-          No resumes found. Create your first resume to get started!
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">
+              No resumes found. Create your first resume to get started!
+            </p>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {resumes.map((resume) => (
-            <Card key={resume.id}>
-              <CardHeader className="p-3">
-                <div className="max-w-[240px]">
-                  <Image
-                    src={resume.url}
-                    alt={resume.name}
-                    className="rounded-md w-full object-cover"
-                  />
-                </div>
-              </CardHeader>
-              <Separator />
-              <CardContent className="mt-2 p-2">
-                <h2 className="font-bold text-md">{resume.name}</h2>
-                <p className="text-slate-600 text-xm">{formatDate(resume.updatedAt)}</p>
-              </CardContent>
-            </Card>
+            <ResumeCard
+              key={resume.id}
+              resume={resume}
+              onEdit={() => {
+                setSelectedResume(resume)
+                setUpdatedName(resume.name)
+              }}
+            />
           ))}
         </div>
       )}
+
+      <Dialog open={!!selectedResume} onOpenChange={() => setSelectedResume(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Resume</DialogTitle>
+            <DialogDescription>Make changes to your resume here.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <img
+                src={getTemplateImage(selectedResume?.templateId)}
+                alt="Selected Resume"
+                className="col-span-4 rounded-md object-cover w-full h-48"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Input
+                id="name"
+                value={updatedName}
+                onChange={(e) => setUpdatedName(e.target.value)}
+                className="col-span-4"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleDelete}>
+              Delete
+            </Button>
+            <Button onClick={handleSave}>Save changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default ResumeTemplates;
+function ResumeCard({ resume, onEdit }: { resume: Resume; onEdit: () => void }) {
+  const templateImage = getTemplateImage(resume.templateId)
 
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader className="p-0">
+        <img
+          src={templateImage}
+          alt={resume.name}
+          className="w-full h-48 object-cover"
+        />
+      </CardHeader>
+      <CardContent className="p-4">
+        <h2 className="font-semibold text-lg truncate">{resume.name || "Untitled"}</h2>
+        <p className="text-sm text-muted-foreground">
+          {formatDate(resume.updatedAt)}
+        </p>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={onEdit} className="w-full">
+          Edit
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function ResumesSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-9 w-[200px]" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <Card key={index} className="overflow-hidden">
+            <CardHeader className="p-0">
+              <Skeleton className="h-48 w-full" />
+            </CardHeader>
+            <CardContent className="p-4 space-y-2">
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-4 w-24" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-9 w-full" />
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function getTemplateImage(templateId?: string) {
+  const template = templates.find((temp) => temp.id === templateId)
+  return template?.image || "/placeholder.svg?height=240&width=320"
+}
+
+
+
+function formatDate(timestamp: { seconds: number; nanoseconds: number }) {
+  const date = new Date(timestamp.seconds * 1000)
+  return date.toLocaleDateString()
+}

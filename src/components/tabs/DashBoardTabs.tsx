@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@nextui-org/button";
-import ResumeTemplates from "../ResumeTemplates";
 import CoverLetterTemplates from "../CoverLetterTemplates";
+import { ResumeTemplates } from "../ResumeTemplates";
 
 const DashBoardTabs = () => {
   return (

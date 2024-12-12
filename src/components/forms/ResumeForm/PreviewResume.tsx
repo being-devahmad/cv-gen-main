@@ -18,9 +18,10 @@ import { ArrowLeft, CircleDot, Download, Plus } from 'lucide-react'
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@nextui-org/button"
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { db } from "@/lib/firebaseConfig"
 import { jsPDF } from "jspdf";
+import { useAuth } from "@/hooks/useAuth"
 
 interface PreviewResumeProps {
   allData: Record<string, any>;
@@ -37,6 +38,8 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
 
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth()
+  console.log("currentUserId-->", user?.id || null)
 
   const [customSections, setCustomSections] = useState([]);
   const [newSectionName, setNewSectionName] = useState('');
@@ -133,11 +136,17 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
   const handleSaveAndDownload = async () => {
     setIsSaving(true);
     try {
-      console.log("Finished Data -->", allData);
+      const dataToSave = {
+        ...allData,
+        userId: user?.id || null,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+      console.log("Final Data to Save -->", dataToSave);
 
       // Save data to Firestore in the 'resumes' collection
-      // const docRef = await addDoc(collection(db, "resumes"), allData);
-      // console.log("Document written with ID: ", docRef.id);
+      const docRef = await addDoc(collection(db, "resumes"), dataToSave);
+      console.log("Document written with ID: ", docRef.id);
 
       toast({
         title: "Success",
