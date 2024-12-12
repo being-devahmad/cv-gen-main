@@ -16,7 +16,7 @@ const steps = [
   { id: "finish", title: "Finish" },
 ];
 
-export const ResumeForm2 = ({ allData, setAllData }) => {
+export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
   const [activeTab, setActiveTab] = useState("contact");
 
   const handleActivetab = (tab) => {
@@ -66,6 +66,7 @@ export const ResumeForm2 = ({ allData, setAllData }) => {
                 setAllData={setAllData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                categoryData={categoryData}
               />
             ) : activeTab === "experience" ? (
               <Experience

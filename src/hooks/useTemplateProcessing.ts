@@ -8,6 +8,9 @@ interface ProcessingResult {
     processingError: string | null
 }
 
+const MAX_RETRIES = 3
+const RETRY_DELAY = 1000 // 1 second
+
 export function useTemplateProcessing() {
     const [result, setResult] = useState<ProcessingResult>({
         isComplete: false,
@@ -24,37 +27,55 @@ export function useTemplateProcessing() {
 
         setResult(prev => ({ ...prev, isProcessing: true, processingError: null, categoryData: null }))
 
-        try {
-            const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Analyze and categorize the following resume content into a structured JSON format. Use the following guidelines:
-1. Main categories should be: "Personal Information", "Education", "Work Experience", "Projects", "Skills", and any other relevant sections found in the resume.
-2. For "Personal Information", create key-value pairs for each piece of information (e.g., "Name", "Phone", "Email").
-3. For "Education", "Work Experience", and "Projects", create an array of objects. Each object should represent one entry and contain key-value pairs for details like "Institution/Company", "Degree/Position", "Duration", "Location", etc.
-4. For "Work Experience" and "Projects", include a "Description" key with an array of bullet points as its value.
-5. For "Skills", create subcategories as needed (e.g., "Languages", "Frameworks", "Tools") with arrays of skills as values.
-6. Ensure all standard resume categories are included, using empty arrays or objects for missing information.
-7. Remove any PDF-specific formatting artifacts (e.g., "Tj" at the end of lines).
-Parse and structure the following resume content:
-
-${fileContent}`
+        const fetchWithRetry = async (retryCount = 0): Promise<any> => {
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `Analyze and categorize the following resume content into a structured JSON format. Use the following guidelines:
+    1. Main categories should be: "Personal Information", "Education", "Work Experience", "Projects", "Skills", and any other relevant sections found in the resume.
+    2. For "Personal Information", create key-value pairs for each piece of information (e.g., "Name", "Phone", "Email").
+    3. For "Education", "Work Experience", and "Projects", create an array of objects. Each object should represent one entry and contain key-value pairs for details like "Institution/Company", "Degree/Position", "Duration", "Location", etc.
+    4. For "Work Experience" and "Projects", include a "Description" key with an array of bullet points as its value.
+    5. For "Skills", create subcategories as needed (e.g., "Languages", "Frameworks", "Tools") with arrays of skills as values.
+    6. Ensure all standard resume categories are included, using empty arrays or objects for missing information.
+    7. Remove any PDF-specific formatting artifacts (e.g., "Tj" at the end of lines).
+    8. The object names should be in camel case just like personalInformation etc.
+    Parse and structure the following resume content:
+    
+    ${fileContent}`
+                                }]
                             }]
-                        }]
-                    })
+                        })
+                    }
+                )
+
+                if (response.status === 429 && retryCount < MAX_RETRIES) {
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)))
+                    return fetchWithRetry(retryCount + 1)
                 }
-            )
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+
+                return await response.json()
+            } catch (error) {
+                if (error instanceof Error && error.message.includes('429') && retryCount < MAX_RETRIES) {
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)))
+                    return fetchWithRetry(retryCount + 1)
+                }
+                throw error
             }
+        }
 
-            const data = await response.json()
+        try {
+            const data = await fetchWithRetry()
             const rawText = data.candidates[0].content.parts[0].text
 
             const jsonMatch = rawText.match(/\{[\s\S]*\}/)
@@ -77,7 +98,7 @@ ${fileContent}`
                 throw new Error('Unable to extract valid JSON from the API response')
             }
         } catch (error) {
-            setResult(prev => ({ ...prev, processingError: error.message }))
+            setResult(prev => ({ ...prev, processingError: error instanceof Error ? error.message : 'An unknown error occurred' }))
         } finally {
             setResult(prev => ({ ...prev, isProcessing: false }))
         }

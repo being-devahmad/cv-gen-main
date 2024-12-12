@@ -6,11 +6,20 @@ import { Chikorita } from '@/templates/chikorita';
 import { Nosepass } from '@/templates/nosepass';
 // import { Chicago } from '@/templates/chicago';
 // import { Perth } from '@/templates/perth';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const ResumeStart: React.FC = () => {
     const { id } = useParams()
     console.log("TemplateId------->", id)
+
+     const location = useLocation();
+    const { categoryData } = location.state || {}; // Ensure fallback to empty object
+
+    console.log("Received categoryData:", categoryData); // Debugging log
+
+    if (!categoryData) {
+        return <div>No data found. Please navigate correctly.</div>;
+    }
 
     const [allData, setAllData] = useState({
         firstName: "",
@@ -44,7 +53,7 @@ const ResumeStart: React.FC = () => {
         <ResumeProvider>
             <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
                 <div className="w-full lg:w-1/2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-gray-200">
-                    <ResumeForm2 allData={allData} setAllData={setAllData} />
+                    <ResumeForm2 allData={allData} setAllData={setAllData} categoryData={categoryData} />
                 </div>
                 <div className="w-full lg:w-1/2 overflow-y-auto">
                     {renderTemplate()}

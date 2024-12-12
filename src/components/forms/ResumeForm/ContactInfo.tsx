@@ -6,12 +6,14 @@ import { ContactInfoSchema } from "@/lib/validations";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { z } from "zod";
+import { useEffect } from "react";
 
 interface ContactInfoProps {
   allData: Record<string, any>;
   setAllData: (data: Record<string, any>) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  categoryData: Record<string, any>;
 }
 
 export const ContactInfo: React.FC<ContactInfoProps> = ({
@@ -19,6 +21,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   setAllData,
   activeTab,
   setActiveTab,
+  categoryData
 }) => {
   const form = useForm({
     resolver: zodResolver(ContactInfoSchema),
@@ -52,6 +55,25 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
     setActiveTab("experience");
   };
 
+  useEffect(() => {
+    if (categoryData?.PersonalInformation) {
+      const { Name, Email, Phone } = categoryData.PersonalInformation;
+      const updatedValues = {
+        firstName: Name?.split(' ')[0] || '',
+        lastName: Name?.split(' ').slice(1).join(' ') || '',
+        email: Email || '',
+        phone: Phone || '',
+        country: form.getValues('country'),
+        city: form.getValues('city'),
+        postalCode: form.getValues('postalCode'),
+        summary: form.getValues('summary'),
+      };
+
+      form.reset(updatedValues);
+      setAllData((prevData) => ({ ...prevData, ...updatedValues }));
+    }
+  }, [categoryData, form, setAllData]);
+
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
@@ -69,8 +91,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="First Name"
                   variant="bordered"
-                  errorMessage={errors.firstName?.message}
                   {...field}
+                  errorMessage={errors.firstName?.message?.toString()}
                   onChange={(e) => {
                     field.onChange(e);
                     handleInputChange("firstName", e.target.value);
@@ -86,7 +108,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Last Name"
                   variant="bordered"
-                  errorMessage={errors.lastName?.message}
+                  errorMessage={errors.lastName?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -106,7 +128,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Phone"
                   variant="bordered"
-                  errorMessage={errors.phone?.message}
+                  errorMessage={errors.phone?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -124,7 +146,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                   label="Email"
                   type="email"
                   variant="bordered"
-                  errorMessage={errors.email?.message}
+                  errorMessage={errors?.email?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -144,7 +166,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Country"
                   variant="bordered"
-                  errorMessage={errors.country?.message}
+                  errorMessage={errors?.country?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -161,7 +183,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="City"
                   variant="bordered"
-                  errorMessage={errors.city?.message}
+                  errorMessage={errors?.city?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -178,7 +200,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Postal Code"
                   variant="bordered"
-                  errorMessage={errors.postalCode?.message}
+                  errorMessage={errors?.postalCode?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);

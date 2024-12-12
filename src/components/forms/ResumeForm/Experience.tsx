@@ -11,6 +11,7 @@ interface ExperienceProps {
   setAllData: (data: Record<string, any>) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  categoryData: Record<string, any>;
 }
 
 interface ExperienceItem {
@@ -28,6 +29,7 @@ const Experience: React.FC<ExperienceProps> = ({
   setAllData,
   activeTab,
   setActiveTab,
+  categoryData
 }) => {
 
 
@@ -88,6 +90,8 @@ const Experience: React.FC<ExperienceProps> = ({
   const handleBack = () => {
     setActiveTab('contact');
   };
+
+
 
   return (
     <Card className="p-6">

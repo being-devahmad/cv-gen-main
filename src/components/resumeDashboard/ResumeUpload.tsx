@@ -88,8 +88,8 @@ export default function ResumeUpload() {
 
                 {!file ? (
                     <Card
-                        className={`p-8 border-2 border-dashed ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
-                            }`}
+                        className={`p-8 border-2 border-dashed
+                            ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}

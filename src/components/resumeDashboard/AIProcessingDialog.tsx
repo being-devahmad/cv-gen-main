@@ -2,6 +2,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
 import { AlertTriangle, Check, FileText, RefreshCw } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { DialogTitle } from "@radix-ui/react-dialog"
 
 interface AIProcessingDialogProps {
     isOpen: boolean
@@ -24,7 +25,12 @@ export function AIProcessingDialog({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md">
                 <div className="space-y-4">
-                    {isComplete ? (
+                    <DialogTitle>
+                        <h2 className="text-xl font-semibold text-center text-green-500">
+                            Title
+                        </h2>
+                    </DialogTitle>
+                    {/* {isComplete ? (
                         <div className="flex flex-col items-center space-y-2">
                             <div className="rounded-full bg-green-500 p-2">
                                 <Check className="w-8 h-8 text-white" />
@@ -40,12 +46,23 @@ export function AIProcessingDialog({
                             </h2>
                             <Progress value={isProcessing ? 50 : 100} className="w-full" />
                         </>
-                    )}
+                    )} */}
 
-                    {isProcessing && (
-                        <div className="flex items-center justify-center space-x-2">
-                            <FileText className="animate-pulse text-blue-500" />
-                            <p className="text-blue-500">Processing document...</p>
+                    {(isComplete && isProcessing) ? (
+                        <div className="flex flex-col items-center space-y-2">
+                            <div className="rounded-full bg-green-500 p-2">
+                                <Check className="w-8 h-8 text-white" />
+                            </div>
+                            <h2 className="text-xl font-semibold text-center text-green-500">
+                                Template Applied
+                            </h2>
+                        </div>
+                    ) : (
+                        <div>
+                            <h2 className="text-xl font-semibold text-center text-blue-500">
+                                Applying Template...
+                            </h2>
+                            <Progress value={isProcessing ? 50 : 100} className="w-full" />
                         </div>
                     )}
 
@@ -68,4 +85,3 @@ export function AIProcessingDialog({
         </Dialog>
     )
 }
-
