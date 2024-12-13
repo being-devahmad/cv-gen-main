@@ -15,6 +15,6 @@ export const templates: Template[] = [
     { id: '1', name: 'Azurill', image: Azurill, popularity: 'recommended' },
     { id: '2', name: 'Chikorita', image: Chikorita, popularity: "most" },
     { id: '3', name: 'Nosepass', image: templateThree, popularity: null },
-    { id: '4', name: 'Chicago', image: templateFour, popularity: null },
+    { id: '4', name: 'Onyx', image: templateFour, popularity: null },
     { id: '5', name: 'Perth', image: Chikorita, popularity: null },
 ]

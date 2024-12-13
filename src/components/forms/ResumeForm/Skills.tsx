@@ -193,7 +193,7 @@ export default function Skills({
   categoryData,
 }: SkillsProps) {
   const [skills, setSkills] = useState<SkillCategory[]>(() => {
-    if (categoryData.skills) {
+    if (categoryData && categoryData.skills) {
       const skillCategories: SkillCategory[] = [
         { category: "Technical Skills", items: [] },
         { category: "Soft Skills", items: [] },

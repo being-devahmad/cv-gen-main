@@ -3,6 +3,7 @@ import { Image, Progress } from "@nextui-org/react"
 import { useTemplateProcessing } from "@/hooks/useTemplateProcessing"
 import { Check } from 'lucide-react'
 import { useNavigate, useParams } from "react-router-dom"
+import { templates } from "@/data/templates"
 
 interface TemplatePreviewProps {
     fileName: string
@@ -13,6 +14,11 @@ export function TemplatePreview({ fileName, fileContent }: TemplatePreviewProps)
     const { id } = useParams()
     const navigate = useNavigate()
     const { isComplete, isProcessing, categoryData, processingError, processDocument } = useTemplateProcessing()
+
+    const getTemplateImage = (templateId?: string) => {
+        const template = templates.find((temp) => temp.id === id)
+        return template?.image || "/placeholder.svg?height=240&width=320"
+    }
 
     useEffect(() => {
         if (fileContent) {
@@ -45,7 +51,7 @@ export function TemplatePreview({ fileName, fileContent }: TemplatePreviewProps)
             <div className="w-full max-w-xl space-y-8">
                 <div className="relative w-full aspect-[210/297] bg-white rounded-lg shadow-lg overflow-hidden">
                     <Image
-                        src="/placeholder.svg?height=1000&width=707"
+                        src={getTemplateImage(id)}
                         alt="Resume template preview"
                         className="w-full h-full object-cover opacity-25"
                     />

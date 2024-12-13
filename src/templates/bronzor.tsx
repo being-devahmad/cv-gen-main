@@ -1,596 +1,225 @@
-import {
-  Award,
-  Certification,
-  CustomSection,
-  CustomSectionGroup,
-  Education,
-  Experience,
-  Interest,
-  Language,
-  Profile,
-  Project,
-  Publication,
-  Reference,
-  SectionKey,
-  SectionWithItem,
-  Skill,
-  URL,
-  Volunteer,
-} from "@reactive-resume/schema";
-import { cn, isEmptyString, isUrl } from "@reactive-resume/utils";
-import get from "lodash.get";
-import { Fragment } from "react";
-
-import { Picture } from "../components/picture";
-import { useArtboardStore } from "../store/artboard";
-import { TemplateProps } from "../types/template";
+import { MapPin, Phone, Mail, Linkedin, Github, Globe } from "lucide-react";
 
 const Header = () => {
-  const basics = useArtboardStore((state) => state.resume.basics);
-
   return (
-    <div className="flex flex-col items-center space-y-2 text-center">
-      <Picture />
-
-      <div>
-        <div className="text-2xl font-bold">{basics.name}</div>
-        <div className="text-base">{basics.headline}</div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
-        {basics.location && (
-          <div className="flex items-center gap-x-1.5">
-            <i className="ph ph-bold ph-map-pin text-primary" />
-            <div>{basics.location}</div>
+    <div className="flex items-center justify-between p-6 bg-white">
+      <div className="flex flex-col gap-4">
+        <h1 className="text-3xl font-bold">John Doe</h1>
+        <p className="text-lg text-gray-600">Creative and Innovative Web Developer</p>
+        <div className="flex flex-wrap gap-6 mt-2 text-sm text-gray-800">
+          <div className="flex items-center gap-2">
+            <MapPin size={20} />
+            <span>📍 Pleasantville, CA 94588</span>
           </div>
-        )}
-        {basics.phone && (
-          <div className="flex items-center gap-x-1.5">
-            <i className="ph ph-bold ph-phone text-primary" />
-            <a href={`tel:${basics.phone}`} target="_blank" rel="noreferrer">
-              {basics.phone}
+          <div className="flex items-center gap-2">
+            <Phone size={20} />
+            <span>📞 (555) 123-4567</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Mail size={20} />
+            <span>📧 john.doe@gmail.com</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Globe size={20} />
+            <span>🔗 https://johndoe.me/</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <a href="https://linkedin.com/in/johndoe" className="text-blue-600 flex items-center gap-1">
+              <Linkedin size={20} />
+              <span>johndoe</span>
             </a>
           </div>
-        )}
-        {basics.email && (
-          <div className="flex items-center gap-x-1.5">
-            <i className="ph ph-bold ph-at text-primary" />
-            <a href={`mailto:${basics.email}`} target="_blank" rel="noreferrer">
-              {basics.email}
+          <div className="flex items-center gap-2">
+            <a href="https://github.com/johndoe" className="text-gray-800 flex items-center gap-1">
+              <Github size={20} />
+              <span>johndoe</span>
             </a>
           </div>
-        )}
-        <Link url={basics.url} />
-        {basics.customFields.map((item) => (
-          <div key={item.id} className="flex items-center gap-x-1.5">
-            <i className={cn(`ph ph-bold ph-${item.icon}`, "text-primary")} />
-            {isUrl(item.value) ? (
-              <a href={item.value} target="_blank" rel="noreferrer noopener nofollow">
-                {item.name || item.value}
-              </a>
-            ) : (
-              <span>{[item.name, item.value].filter(Boolean).join(": ")}</span>
-            )}
-          </div>
-        ))}
+        </div>
       </div>
     </div>
   );
 };
+
+
 
 const Summary = () => {
-  const section = useArtboardStore((state) => state.resume.sections.summary);
-
-  if (!section.visible || isEmptyString(section.content)) return null;
-
   return (
-    <section id={section.id} className="grid grid-cols-5 border-t pt-2.5">
-      <div>
-        <h4 className="text-base font-bold">{section.name}</h4>
-      </div>
-
-      <div
-        dangerouslySetInnerHTML={{ __html: section.content }}
-        className="wysiwyg col-span-4"
-        style={{ columns: section.columns }}
-      />
-    </section>
-  );
-};
-
-type RatingProps = { level: number };
-
-const Rating = ({ level }: RatingProps) => (
-  <div className="flex items-center gap-x-1.5">
-    {Array.from({ length: 5 }).map((_, index) => (
-      <div
-        key={index}
-        className={cn("size-2 rounded-full border border-primary", level > index && "bg-primary")}
-      />
-    ))}
-  </div>
-);
-
-type LinkProps = {
-  url: URL;
-  icon?: React.ReactNode;
-  iconOnRight?: boolean;
-  label?: string;
-  className?: string;
-};
-
-const Link = ({ url, icon, iconOnRight, label, className }: LinkProps) => {
-  if (!isUrl(url.href)) return null;
-
-  return (
-    <div className="flex items-center gap-x-1.5">
-      {!iconOnRight && (icon ?? <i className="ph ph-bold ph-link text-primary" />)}
-      <a
-        href={url.href}
-        target="_blank"
-        rel="noreferrer noopener nofollow"
-        className={cn("inline-block", className)}
-      >
-        {label ?? (url.label || url.href)}
-      </a>
-      {iconOnRight && (icon ?? <i className="ph ph-bold ph-link text-primary" />)}
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-3">Summary</h2>
+      <p className="text-gray-700">
+        Innovative Web Developer with 5 years of experience in building impactful and user-friendly websites and applications. Specializes in front-end technologies and passionate about modern web standards and cutting-edge development techniques. Proven track record of leading successful projects from concept to deployment.
+      </p>
     </div>
-  );
-};
-
-type LinkedEntityProps = {
-  name: string;
-  url: URL;
-  separateLinks: boolean;
-  className?: string;
-};
-
-const LinkedEntity = ({ name, url, separateLinks, className }: LinkedEntityProps) => {
-  return !separateLinks && isUrl(url.href) ? (
-    <Link
-      url={url}
-      label={name}
-      icon={<i className="ph ph-bold ph-globe text-primary" />}
-      iconOnRight={true}
-      className={className}
-    />
-  ) : (
-    <div className={className}>{name}</div>
-  );
-};
-
-type SectionProps<T> = {
-  section: SectionWithItem<T> | CustomSectionGroup;
-  children?: (item: T) => React.ReactNode;
-  className?: string;
-  urlKey?: keyof T;
-  levelKey?: keyof T;
-  summaryKey?: keyof T;
-  keywordsKey?: keyof T;
-};
-
-const Section = <T,>({
-  section,
-  children,
-  className,
-  urlKey,
-  levelKey,
-  summaryKey,
-  keywordsKey,
-}: SectionProps<T>) => {
-  if (!section.visible || section.items.length === 0) return null;
-
-  return (
-    <section id={section.id} className="grid grid-cols-5 border-t pt-2.5">
-      <div>
-        <h4 className="text-base font-bold">{section.name}</h4>
-      </div>
-
-      <div
-        className="col-span-4 grid gap-x-6 gap-y-3"
-        style={{ gridTemplateColumns: `repeat(${section.columns}, 1fr)` }}
-      >
-        {section.items
-          .filter((item) => item.visible)
-          .map((item) => {
-            const url = (urlKey && get(item, urlKey)) as URL | undefined;
-            const level = (levelKey && get(item, levelKey, 0)) as number | undefined;
-            const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
-            const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
-
-            return (
-              <div key={item.id} className={cn("space-y-2", className)}>
-                <div>
-                  {children?.(item as T)}
-                  {url !== undefined && section.separateLinks && <Link url={url} />}
-                </div>
-
-                {summary !== undefined && !isEmptyString(summary) && (
-                  <div dangerouslySetInnerHTML={{ __html: summary }} className="wysiwyg" />
-                )}
-
-                {level !== undefined && level > 0 && <Rating level={level} />}
-
-                {keywords !== undefined && keywords.length > 0 && (
-                  <p className="text-sm">{keywords.join(", ")}</p>
-                )}
-              </div>
-            );
-          })}
-      </div>
-    </section>
-  );
-};
-
-const Profiles = () => {
-  const section = useArtboardStore((state) => state.resume.sections.profiles);
-  const fontSize = useArtboardStore((state) => state.resume.metadata.typography.font.size);
-
-  return (
-    <Section<Profile> section={section}>
-      {(item) => (
-        <div>
-          {isUrl(item.url.href) ? (
-            <Link
-              url={item.url}
-              label={item.username}
-              icon={
-                <img
-                  className="ph"
-                  width={fontSize}
-                  height={fontSize}
-                  alt={item.network}
-                  src={`https://cdn.simpleicons.org/${item.icon}`}
-                />
-              }
-            />
-          ) : (
-            <p>{item.username}</p>
-          )}
-          {!item.icon && <p className="text-sm">{item.network}</p>}
-        </div>
-      )}
-    </Section>
-  );
-};
+  )
+}
 
 const Experience = () => {
-  const section = useArtboardStore((state) => state.resume.sections.experience);
-
   return (
-    <Section<Experience> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.company}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.position}</div>
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Experience</h2>
+      <div className="space-y-6">
+        <div>
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="font-bold">Creative Solutions Inc.</h3>
+              <p className="text-gray-600">Senior Web Developer</p>
+              <a href="https://creativesolutions.inc/" className="text-blue-600 text-sm">https://creativesolutions.inc/</a>
+            </div>
+            <div className="text-right">
+              <p>January 2019 to Present</p>
+              <p className="text-gray-600">San Francisco, CA</p>
+            </div>
           </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-            <div>{item.location}</div>
-          </div>
+          <ul className="list-disc ml-5 mt-2 text-gray-700">
+            <li>Spearheaded the redesign of the main product website, resulting in a 40% increase in user engagement.</li>
+            <li>Developed and implemented a new responsive framework, improving cross-device compatibility.</li>
+            <li>Mentored a team of four junior developers, fostering a culture of technical excellence.</li>
+          </ul>
         </div>
-      )}
-    </Section>
-  );
-};
+        <div>
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="font-bold">TechAdvancers</h3>
+              <p className="text-gray-600">Web Developer</p>
+              <a href="https://techadvancers.com/" className="text-blue-600 text-sm">https://techadvancers.com/</a>
+            </div>
+            <div className="text-right">
+              <p>June 2016 to December 2018</p>
+              <p className="text-gray-600">San Jose, CA</p>
+            </div>
+          </div>
+          <ul className="list-disc ml-5 mt-2 text-gray-700">
+            <li>Collaborated in a team of 10 to develop high-quality web applications using React.js and Node.js.</li>
+            <li>Managed the integration of third-party services such as Stripe for payments and Twilio for SMS services.</li>
+            <li>Optimized application performance, achieving a 30% reduction in load times.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const Education = () => {
-  const section = useArtboardStore((state) => state.resume.sections.education);
-
   return (
-    <Section<Education> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.institution}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.area}</div>
-            <div>{item.score}</div>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-            <div>{item.studyType}</div>
-          </div>
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Education</h2>
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className="font-bold">University of California</h3>
+          <p className="text-gray-600">Computer Science</p>
+          <p className="text-gray-600">Berkeley, CA</p>
+          <a href="https://www.universityofcalifornia.edu/" className="text-blue-600 text-sm">https://www.universityofcalifornia.edu/</a>
         </div>
-      )}
-    </Section>
-  );
-};
+        <div className="text-right">
+          <p>August 2012 to May 2016</p>
+          <p className="text-gray-600">Bachelor of Science</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-const Awards = () => {
-  const section = useArtboardStore((state) => state.resume.sections.awards);
-
+const Profiles = () => {
   return (
-    <Section<Award> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <div className="font-bold">{item.title}</div>
-            <LinkedEntity
-              name={item.awarder}
-              url={item.url}
-              separateLinks={section.separateLinks}
-            />
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-          </div>
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Projects</h2>
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-bold">E-Commerce Platform</h3>
+          <p className="text-gray-600">Project Lead</p>
+          <p className="text-gray-700">Led the development of a full-stack e-commerce platform, improving sales conversion by 25%.</p>
         </div>
-      )}
-    </Section>
-  );
-};
-
-const Certifications = () => {
-  const section = useArtboardStore((state) => state.resume.sections.certifications);
-
-  return (
-    <Section<Certification> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <div className="font-bold">{item.name}</div>
-            <LinkedEntity name={item.issuer} url={item.url} separateLinks={section.separateLinks} />
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-          </div>
+        <div>
+          <h3 className="font-bold">Interactive Dashboard</h3>
+          <p className="text-gray-600">Frontend Developer</p>
+          <p className="text-gray-700">Created an interactive analytics dashboard for a SaaS application, enhancing data visualization for clients.</p>
         </div>
-      )}
-    </Section>
-  );
-};
+      </div>
+    </div>
+  )
+}
 
 const Skills = () => {
-  const section = useArtboardStore((state) => state.resume.sections.skills);
-
   return (
-    <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
-      {(item) => (
-        <div className="space-y-0.5">
-          <div className="font-bold">{item.name}</div>
-          <div>{item.description}</div>
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Skills</h2>
+      <div className="grid grid-cols-3 gap-6">
+        <div>
+          <h3 className="font-bold mb-2">Web Technologies</h3>
+          <p className="text-gray-600">Advanced</p>
+          <p className="text-gray-700">HTML5, JavaScript, PHP, Python</p>
         </div>
-      )}
-    </Section>
-  );
-};
-
-const Interests = () => {
-  const section = useArtboardStore((state) => state.resume.sections.interests);
-
-  return (
-    <Section<Interest> section={section} keywordsKey="keywords" className="space-y-0.5">
-      {(item) => <div className="font-bold">{item.name}</div>}
-    </Section>
-  );
-};
-
-const Publications = () => {
-  const section = useArtboardStore((state) => state.resume.sections.publications);
-
-  return (
-    <Section<Publication> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.name}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.publisher}</div>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-          </div>
+        <div>
+          <h3 className="font-bold mb-2">Web Frameworks</h3>
+          <p className="text-gray-600">Intermediate</p>
+          <p className="text-gray-700">React.js, Angular, Vue.js, Laravel, Django</p>
         </div>
-      )}
-    </Section>
-  );
-};
-
-const Volunteer = () => {
-  const section = useArtboardStore((state) => state.resume.sections.volunteer);
-
-  return (
-    <Section<Volunteer> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.organization}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.position}</div>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-            <div>{item.location}</div>
-          </div>
+        <div>
+          <h3 className="font-bold mb-2">Tools</h3>
+          <p className="text-gray-600">Intermediate</p>
+          <p className="text-gray-700">Webpack, Git, Jenkins, Docker, JIRA</p>
         </div>
-      )}
-    </Section>
-  );
-};
+      </div>
+    </div>
+  )
+}
+
+const Certifications = () => {
+  return (
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Certifications</h2>
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <h3 className="font-bold">Full-Stack Web Development</h3>
+          <p className="text-gray-600">CodeAcademy</p>
+          <p className="text-gray-700">2020</p>
+        </div>
+        <div>
+          <h3 className="font-bold">AWS Certified Developer</h3>
+          <p className="text-gray-600">Amazon Web Services</p>
+          <p className="text-gray-700">2019</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const Languages = () => {
-  const section = useArtboardStore((state) => state.resume.sections.languages);
-
   return (
-    <Section<Language> section={section} levelKey="level">
-      {(item) => (
-        <div className="space-y-0.5">
-          <div className="font-bold">{item.name}</div>
-          <div>{item.description}</div>
-        </div>
-      )}
-    </Section>
-  );
-};
-
-const Projects = () => {
-  const section = useArtboardStore((state) => state.resume.sections.projects);
-
-  return (
-    <Section<Project> section={section} urlKey="url" summaryKey="summary" keywordsKey="keywords">
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.name}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.description}</div>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-          </div>
-        </div>
-      )}
-    </Section>
-  );
-};
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Languages</h2>
+      <ul className="list-disc ml-5 text-gray-700">
+        <li>English (Native)</li>
+        <li>Spanish (Professional Working Proficiency)</li>
+      </ul>
+    </div>
+  )
+}
 
 const References = () => {
-  const section = useArtboardStore((state) => state.resume.sections.references);
-
   return (
-    <Section<Reference> section={section} urlKey="url" summaryKey="summary">
-      {(item) => (
-        <div>
-          <LinkedEntity
-            name={item.name}
-            url={item.url}
-            separateLinks={section.separateLinks}
-            className="font-bold"
-          />
-          <div>{item.description}</div>
-        </div>
-      )}
-    </Section>
-  );
-};
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">References</h2>
+      <p className="text-gray-700">Available upon request</p>
+    </div>
+  )
+}
 
-const Custom = ({ id }: { id: string }) => {
-  const section = useArtboardStore((state) => state.resume.sections.custom[id]);
-
+const Bronzor = () => {
   return (
-    <Section<CustomSection>
-      section={section}
-      urlKey="url"
-      summaryKey="summary"
-      keywordsKey="keywords"
-    >
-      {(item) => (
-        <div className="flex items-start justify-between">
-          <div className="text-left">
-            <LinkedEntity
-              name={item.name}
-              url={item.url}
-              separateLinks={section.separateLinks}
-              className="font-bold"
-            />
-            <div>{item.description}</div>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
-            <div>{item.location}</div>
-          </div>
-        </div>
-      )}
-    </Section>
-  );
-};
-
-const mapSectionToComponent = (section: SectionKey) => {
-  switch (section) {
-    case "profiles": {
-      return <Profiles />;
-    }
-    case "summary": {
-      return <Summary />;
-    }
-    case "experience": {
-      return <Experience />;
-    }
-    case "education": {
-      return <Education />;
-    }
-    case "awards": {
-      return <Awards />;
-    }
-    case "certifications": {
-      return <Certifications />;
-    }
-    case "skills": {
-      return <Skills />;
-    }
-    case "interests": {
-      return <Interests />;
-    }
-    case "publications": {
-      return <Publications />;
-    }
-    case "volunteer": {
-      return <Volunteer />;
-    }
-    case "languages": {
-      return <Languages />;
-    }
-    case "projects": {
-      return <Projects />;
-    }
-    case "references": {
-      return <References />;
-    }
-    default: {
-      if (section.startsWith("custom.")) return <Custom id={section.split(".")[1]} />;
-
-      return null;
-    }
-  }
-};
-
-export const Bronzor = ({ columns, isFirstPage = false }: TemplateProps) => {
-  const [main, sidebar] = columns;
-
-  return (
-    <div className="p-custom space-y-4">
-      {isFirstPage && <Header />}
-
-      <div className="space-y-4">
-        {main.map((section) => (
-          <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
-        ))}
-
-        {sidebar.map((section) => (
-          <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
-        ))}
-      </div>
+    <div className="max-w-4xl mx-auto bg-gray-100 min-h-screen">
+      <Header />
+      <Summary />
+      <Experience />
+      <Education />
+      <Profiles />
+      <Skills />
+      <Certifications />
+      <Languages />
+      <References />
     </div>
   );
 };
+
+export default Bronzor;

@@ -1,7 +1,18 @@
 import React from "react";
 
-const Header = ({ allData }) => {
-    const { firstName, lastName, phone, email, city, postal_code, country, summary } = allData;
+const Header = ({ allData }: {
+    allData: {
+        firstName: string;
+        lastName: string;
+        phone: string;
+        email: string;
+        city: string;
+        postalCode: string;
+        country: string;
+        summary: string;
+    }
+}) => {
+    const { firstName, lastName, phone, email, city, postalCode, country, summary } = allData;
 
     return (
         <>
@@ -16,7 +27,7 @@ const Header = ({ allData }) => {
                 </div>
                 <div className="text-sm mt-1">
                     <span>{city}</span>,
-                    <span>{postal_code}</span>,
+                    <span>{postalCode}</span>,
                     <span>{country}</span>
                 </div>
             </div>
@@ -40,7 +51,7 @@ const Education = ({ allData }: { allData: { education: any[] } }) => {
             <div className="flex flex-col gap-4 mb-2">
                 {
                     education.map((educationVal, index) => {
-                        const { degree, startDate, endDate, organization } = educationVal
+                        const { degree, startDate, endDate, organization, location } = educationVal
                         return (
                             <div key={index}>
                                 <div className="flex justify-between">
@@ -52,7 +63,10 @@ const Education = ({ allData }: { allData: { education: any[] } }) => {
                                     </div>
 
                                 </div>
-                                <div>{organization}</div>
+                                <div className="flex justify-between">
+                                    <p>{organization}</p>
+                                    <p>{location}</p>
+                                </div>
                             </div>
                         )
                     })
@@ -70,7 +84,7 @@ const Experience = ({ allData }: { allData: { experiences: any[] } }) => {
             <h2 className="text-lg font-bold uppercase mb-4">Professional Experience</h2>
             <div className="space-y-6">
                 {experiences.map((experienceVal) => {
-                    const { company, startDate, endDate, title, description } = experienceVal
+                    const { company, startDate, endDate, title, location, description } = experienceVal
                     return (
                         <div>
                             <div className="flex justify-between">
@@ -81,7 +95,10 @@ const Experience = ({ allData }: { allData: { experiences: any[] } }) => {
                                     <p className="text-sm">{endDate ? endDate : "present"}</p>
                                 </div>
                             </div>
-                            <div className="font-bold">{title}</div>
+                            <div>
+                                <p className="font-bold">{title}</p>
+                                <p>{location}</p>
+                            </div>
                             <p className="text-sm mt-2">
                                 {description}
                             </p>
@@ -217,7 +234,7 @@ const Skills = ({ allData }: { allData: { skills: Array<{ category: string; item
                     const { category, items } = skill
                     return (
                         <div key={index} className="flex gap-3">
-                            <div className="font-bold">{category}:</div>
+                            {items.length > 0 && <div className="font-bold">{category}:</div>}
                             <div>{items.join(", ")}</div>
                         </div>
                     )

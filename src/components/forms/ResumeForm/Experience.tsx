@@ -37,30 +37,15 @@ const Experience: React.FC<ExperienceProps> = ({
 }) => {
 
 
-
-  // const [experiences, setExperiences] = useState<ExperienceItem[]>(
-  //   allData.experiences || [
-  //     {
-  //       title: "",
-  //       company: "",
-  //       location: "",
-  //       startDate: "",
-  //       endDate: "",
-  //       currentlyWorking: false,
-  //       description: "",
-  //     },
-  //   ]
-  // );
-
   const [experiences, setExperiences] = useState<ExperienceItem[]>(() => {
-    if (categoryData.experience && categoryData.experience.length > 0) {
+    if (categoryData && categoryData.experience.length > 0) {
       return categoryData.experience.map((exp: any) => ({
         title: exp.jobTitle || "",
         company: exp.company || "",
         location: exp.location || "",
         startDate: exp.duration ? exp.duration.split(' - ')[0] : "",
         endDate: exp.duration ? exp.duration.split(' - ')[1] : "",
-        currentlyWorking: exp.duration.toLowerCase().includes('present'),
+        // currentlyWorking: exp.duration.includes('present'),
         description: exp.responsibilities ? exp.responsibilities.join('\n') : "",
       }));
     }
@@ -140,7 +125,7 @@ const Experience: React.FC<ExperienceProps> = ({
     <Card className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Work Experience</h2>
-        <Button onClick={handleAddExperience} color="primary" variant="flat" size="sm">
+        <Button onClick={handleAddExperience} variant="bordered" size="sm">
           <Plus className="h-4 w-4 mr-2" /> Add Experience
         </Button>
       </div>

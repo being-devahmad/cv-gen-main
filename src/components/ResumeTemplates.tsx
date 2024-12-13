@@ -176,7 +176,7 @@ export function ResumeTemplates() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Input
                 id="name"
-                value={updatedName || "Untitled"}
+                placeholder="Untitled"
                 onChange={(e) => setUpdatedName(e.target.value)}
                 className="col-span-4"
               />

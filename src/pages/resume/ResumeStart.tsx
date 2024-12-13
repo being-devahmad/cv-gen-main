@@ -9,6 +9,9 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '@nextui-org/button';
 import { toast } from '@/hooks/use-toast';
+import ResumePreview from '@/components/resumeDashboard/ResumePreview';
+import { Onyx } from '@/templates/onyx';
+import Bronzor from '@/templates/bronzor';
 
 const ResumeStart: React.FC = () => {
     const { id } = useParams()
@@ -95,14 +98,19 @@ const ResumeStart: React.FC = () => {
                 return <Chikorita allData={allData} />;
             case '3':
                 return <Nosepass allData={allData} />;
+            case '4':
+                return <Onyx />;
+            case '5':
+                return <Bronzor />;
             default:
-                return <Azurill allData={allData} />;
+                return <Azurill  />;
         }
     };
 
     return (
+
         <ResumeProvider>
-            <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
+            <div className="flex flex-col lg:flex-row min-h-screen"> {/* Ensure minimum height */}
                 <div className="w-full lg:w-1/2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-gray-200">
                     <ResumeForm2 allData={allData} setAllData={setAllData} categoryData={categoryData} />
                 </div>
@@ -111,14 +119,12 @@ const ResumeStart: React.FC = () => {
                         <Button
                             onClick={handleDownload}
                             className="w-full bg-gray-400 text-white px-4 py-2 rounded-md font-semibold
-                            hover:bg-gray-400 transition-colors"
+                            hover:bg-gray-500 transition-colors"
                         >
                             Download as PDF
                         </Button>
                     </div>
-                    <div ref={resumeRef} className="flex-grow p-4">
-                        {renderTemplate()}
-                    </div>
+                    <ResumePreview renderTemplate={renderTemplate} resumeRef={resumeRef} />
                 </div>
             </div>
         </ResumeProvider>

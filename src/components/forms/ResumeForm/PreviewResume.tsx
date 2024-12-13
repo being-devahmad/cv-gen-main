@@ -298,7 +298,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
           </AccordionItem>
 
           {/* Languages */}
-          <AccordionItem value="languages">
+          {/* <AccordionItem value="languages">
             <AccordionTrigger className="text-base font-medium">Languages</AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4 p-2">
@@ -325,10 +325,10 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
                 </Select>
               </div>
             </AccordionContent>
-          </AccordionItem>
+          </AccordionItem> */}
 
           {/* Skills */}
-          <AccordionItem value="skills">
+          {/* <AccordionItem value="skills">
             <AccordionTrigger className="text-base font-medium">Skills</AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4 p-2">
@@ -353,12 +353,12 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
                 </Button>
               </div>
             </AccordionContent>
-          </AccordionItem>
+          </AccordionItem> */}
         </Accordion>
 
 
         {/* Add Blocks Section */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <h3 className="font-medium">Add Blocks</h3>
           <div className="grid grid-cols-2 gap-4">
             {[
@@ -379,7 +379,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
               </Button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="flex items-center justify-between mt-10">
           <Button variant="light" onClick={handleBack}>
