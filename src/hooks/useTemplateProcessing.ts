@@ -28,14 +28,15 @@ export function useTemplateProcessing() {
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
         const model = genAI.getGenerativeModel({ model: "gemini-pro" })
 
-        const prompt = `Analyze the uploaded file to determine if it matches a resume format. If it is a resume, extract its content into a structured JSON format. The JSON should include key-value pairs such as personalInformation, education, experience, projects, and skills. Each section should adhere to the following structure:
-    personalInformation should include fields like name, contact, and email.
-    education should be an array of objects, each containing institution, degree, location, and year.
-    experience should be an array of objects with jobTitle, company, location, duration, and responsibilities.
-    projects should be an array of objects with name, technologies, and description.
-    skills should list languages, frameworks, tools, and libraries.
-    Return the result in JSON format, preserving the hierarchy and logical groupings of the information.
-    Parse and structure the following resume content:
+        const prompt =
+            `Analyze the uploaded file to determine if it matches a resume format. If it is a resume, extract its content into a structured JSON format. Ensure that all content, including any text with background colors (e.g., headers or highlighted sections), is included. Utilize OCR or text recognition techniques to handle complex PDF layouts or styles. The JSON should follow this structure:
+            personalInformation: Include fields such as name, contact, and email. Make sure to extract text even if it is part of a header or styled with background colors.
+            education: An array of objects, each containing institution, degree, location, and year.
+            experience: An array of objects with jobTitle, company, location, duration, and responsibilities.
+            projects: An array of objects with name, technologies, and description.
+            skills: A list of categorized skills, including languages, frameworks, tools, and libraries.
+            Ensure the extraction process preserves the hierarchy and logical groupings of the information, capturing details across various text styles, layouts, and formats. 
+            Return the result in structured JSON format:
     ${fileContent}`
 
         try {
@@ -63,7 +64,10 @@ export function useTemplateProcessing() {
                 throw new Error('Unable to extract valid JSON from the API response')
             }
         } catch (error) {
-            setResult(prev => ({ ...prev, processingError: error instanceof Error ? error.message : 'An unknown error occurred' }))
+            setResult(prev => ({
+                ...prev,
+                processingError: error instanceof Error ? error.message : 'An unknown error occurred'
+            }))
         } finally {
             setResult(prev => ({ ...prev, isProcessing: false }))
         }

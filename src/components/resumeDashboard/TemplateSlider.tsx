@@ -16,7 +16,7 @@ interface Template {
 }
 
 export function TemplateSlider() {
-    const [activeIndex, setActiveIndex] = useState(0)
+    const [activeIndex, setActiveIndex] = useState(0-1)
     const navigate = useNavigate()
 
     const nextSlide = () => {
@@ -24,6 +24,7 @@ export function TemplateSlider() {
     }
 
     const prevSlide = () => {
+        console.log("activeIndex" , activeIndex)
         setActiveIndex((prevIndex) => (prevIndex - 1 + templates.length) % templates.length)
     }
 

@@ -1,4 +1,4 @@
-import { Divider } from "@nextui-org/react"
+import React from "react";
 
 const Header = ({ allData }) => {
     const { firstName, lastName, phone, email, city, postal_code, country, summary } = allData;
@@ -31,7 +31,7 @@ const Header = ({ allData }) => {
     );
 };
 
-const Education = ({ allData }) => {
+const Education = ({ allData }: { allData: { education: any[] } }) => {
     const { education } = allData;
 
     return (
@@ -63,15 +63,13 @@ const Education = ({ allData }) => {
     );
 };
 
-
-
-const Experience = ({ allData }) => {
+const Experience = ({ allData }: { allData: { experiences: any[] } }) => {
     const { experiences } = allData;
     return (
         <section className="mb-8">
             <h2 className="text-lg font-bold uppercase mb-4">Professional Experience</h2>
             <div className="space-y-6">
-                {experiences.map((experienceVal, index) => {
+                {experiences.map((experienceVal) => {
                     const { company, startDate, endDate, title, description } = experienceVal
                     return (
                         <div>
@@ -188,8 +186,28 @@ const Experience = ({ allData }) => {
 // };
 
 
-const Skills = ({ allData }) => {
+const Skills = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
     const { skills } = allData;
+
+    const renderSkillItem = (item: string | { category: string; items: string[] }) => {
+        if (typeof item === 'string') {
+            return <li className="ml-4">{item}</li>;
+        } else if (typeof item === 'object' && item !== null) {
+            return (
+                <li>
+                    {item.items.length > 0 && <h3 className="font-semibold">{item.category}</h3>}
+                    <ul className="list-disc list-inside">
+                        {Array.isArray(skills) ? skills.map((skill, index) => (
+                            <React.Fragment key={index}>
+                                {renderSkillItem(skill)}
+                            </React.Fragment>
+                        )) : null}
+                    </ul>
+                </li>
+            );
+        }
+        return null;
+    };
 
     return (
         <section>
@@ -210,7 +228,7 @@ const Skills = ({ allData }) => {
 };
 
 
-export const Azurill = ({ allData }) => {
+export const Azurill = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
     return (
         <div className="max-w-[800px] mx-auto p-8 font-sans">
             <Header allData={allData} />

@@ -14,15 +14,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeft, CircleDot, Download, Plus } from 'lucide-react'
+import { ArrowLeft, Plus } from 'lucide-react'
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@nextui-org/button"
 import { addDoc, collection, serverTimestamp } from "firebase/firestore"
-import { db } from "@/lib/firebaseConfig"
-import { jsPDF } from "jspdf";
+import { db } from "@/lib/firebaseConfig";
 import { useAuth } from "@/hooks/useAuth"
-import { usePDF } from 'react-to-pdf';
 import { useParams } from "react-router-dom"
 
 interface PreviewResumeProps {
@@ -186,9 +184,6 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
     setActiveTab('skills');
   };
 
-  const [isDownloading, setIsDownloading] = useState(false);
-  const { toPDF, targetRef } = usePDF({ filename: 'resume.pdf' });
-
   const removeUndefined = (obj: any): any => {
     Object.keys(obj).forEach(key => {
       if (obj[key] && typeof obj[key] === 'object') {
@@ -232,63 +227,12 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
     }
   };
 
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    try {
-      await toPDF();
-      toast({
-        title: "Success",
-        description: "Your resume has been downloaded as a PDF.",
-      });
-    } catch (error) {
-      console.error("Error downloading resume:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download resume. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
-
-
   return (
     <div className="w-full max-w-xl space-y-6 p-4">
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">
           {`${allData?.firstName ? `${allData?.firstName}${allData?.lastName}_CV` : 'Untitled'}`}
         </h2>
-
-        {/* Resume Formatting */}
-        {/* <Card>
-          <CardContent className="p-4 space-y-4">
-            <h3 className="font-medium">Resume Formatting</h3>
-            <div className="space-y-3">
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Template" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="modern">Modern</SelectItem>
-                  <SelectItem value="classic">Classic</SelectItem>
-                  <SelectItem value="professional">Professional</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Font Style" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="arial">Arial</SelectItem>
-                  <SelectItem value="times">Times New Roman</SelectItem>
-                  <SelectItem value="calibri">Calibri</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card> */}
 
         {/* Personal Information */}
         <Accordion type="single" collapsible defaultValue="personal-info">
@@ -441,26 +385,6 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
           <Button variant="light" onClick={handleBack}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          {/* <Button
-            color="primary"
-            variant="solid"
-            className="w-full"
-            size="lg"
-            onClick={handleSave}
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <>
-                <CircleDot className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4 mr-2" />
-                Save and Download
-              </>
-            )}
-          </Button> */}
 
           <div className="mt-6 flex justify-center space-x-4">
             <Button
@@ -470,14 +394,6 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
               variant="solid"
             >
               {isSaving ? "Saving..." : "Save Resume"}
-            </Button>
-            <Button
-              onClick={handleDownload}
-              disabled={isDownloading}
-              color="secondary"
-              variant="solid"
-            >
-              {isDownloading ? "Downloading..." : "Download PDF"}
             </Button>
           </div>
 

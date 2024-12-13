@@ -8,6 +8,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '@nextui-org/button';
+import { toast } from '@/hooks/use-toast';
 
 const ResumeStart: React.FC = () => {
     const { id } = useParams()
@@ -71,8 +72,17 @@ const ResumeStart: React.FC = () => {
                 }
 
                 pdf.save('resume.pdf');
+                toast({
+                    title: "Success",
+                    description: "Your resume has been downloaded as a PDF.",
+                });
             } catch (error) {
                 console.error('Error generating PDF:', error);
+                toast({
+                    title: "Error",
+                    description: "Failed to download resume. Please try again.",
+                    variant: "destructive",
+                });
             }
         }
     };

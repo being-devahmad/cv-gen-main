@@ -17,6 +17,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Image } from "@nextui-org/react"
 
 interface Resume {
   id: string
@@ -165,17 +166,17 @@ export function ResumeTemplates() {
             <DialogDescription>Make changes to your resume here.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <img
+            <div className="flex items-center justify-center">
+              <Image
                 src={getTemplateImage(selectedResume?.templateId)}
                 alt="Selected Resume"
-                className="col-span-4 rounded-md object-cover w-full h-48"
+                className="col-span-4 rounded-md object-cover w-full h-64"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Input
                 id="name"
-                value={updatedName}
+                value={updatedName || "Untitled"}
                 onChange={(e) => setUpdatedName(e.target.value)}
                 className="col-span-4"
               />
@@ -198,17 +199,17 @@ function ResumeCard({ resume, onEdit }: { resume: Resume; onEdit: () => void }) 
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader className="p-0">
-        <img
+      <CardHeader className="p-0 flex justify-center items-center" >
+        <Image
           src={templateImage}
           alt={resume.name}
-          className="w-full h-48 object-cover"
+          className="h-48 object-cover"
         />
       </CardHeader>
       <CardContent className="p-4">
         <h2 className="font-semibold text-lg truncate">{resume.name || "Untitled"}</h2>
         <p className="text-sm text-muted-foreground">
-          {formatDate(resume.updatedAt)}
+          Last UpdatedAt : {formatDate(resume.updatedAt)}
         </p>
       </CardContent>
       <CardFooter>
