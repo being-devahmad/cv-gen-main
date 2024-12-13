@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { GEMINI_API_KEY } from '@/lib/config'
 
 interface ProcessingResult {
@@ -7,9 +8,6 @@ interface ProcessingResult {
     categoryData: any | null
     processingError: string | null
 }
-
-const MAX_RETRIES = 3
-const RETRY_DELAY = 1000 // 1 second
 
 export function useTemplateProcessing() {
     const [result, setResult] = useState<ProcessingResult>({
@@ -27,55 +25,25 @@ export function useTemplateProcessing() {
 
         setResult(prev => ({ ...prev, isProcessing: true, processingError: null, categoryData: null }))
 
-        const fetchWithRetry = async (retryCount = 0): Promise<any> => {
-            try {
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${AIzaSyCc__8oxhYQ46a-uSw1DGjrfVv3oixXdmA}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: `Analyze the uploaded file to determine if it matches a resume format. If it is a resume, extract its content into a structured JSON format. The JSON should include key-value pairs such as personalInformation, education, experience, projects, and skills. Each section should adhere to the following structure:
-                                    personalInformation should include fields like name, contact, and email.
-                                    education should be an array of objects, each containing institution, degree, location, and year.
-                                    experience should be an array of objects with jobTitle, company, location, duration, and responsibilities.
-                                    projects should be an array of objects with name, technologies, and description.
-                                    skills should list languages, frameworks, tools, and libraries.
-                                    Return the result in JSON format, preserving the hierarchy and logical groupings of the information.
-                                    Parse and structure the following resume content:
-                                    ${fileContent}`
-                                }]
-                            }]
-                        })
-                    }
-                )
+        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" })
 
-                if (response.status === 429 && retryCount < MAX_RETRIES) {
-                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)))
-                    return fetchWithRetry(retryCount + 1)
-                }
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`)
-                }
-
-                return await response.json()
-            } catch (error) {
-                if (error instanceof Error && error.message.includes('429') && retryCount < MAX_RETRIES) {
-                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)))
-                    return fetchWithRetry(retryCount + 1)
-                }
-                throw error
-            }
-        }
+        const prompt = `Analyze the uploaded file to determine if it matches a resume format. If it is a resume, extract its content into a structured JSON format. The JSON should include key-value pairs such as personalInformation, education, experience, projects, and skills. Each section should adhere to the following structure:
+    personalInformation should include fields like name, contact, and email.
+    education should be an array of objects, each containing institution, degree, location, and year.
+    experience should be an array of objects with jobTitle, company, location, duration, and responsibilities.
+    projects should be an array of objects with name, technologies, and description.
+    skills should list languages, frameworks, tools, and libraries.
+    Return the result in JSON format, preserving the hierarchy and logical groupings of the information.
+    Parse and structure the following resume content:
+    ${fileContent}`
 
         try {
-            const data = await fetchWithRetry()
-            const rawText = data.candidates[0].content.parts[0].text
+            const result = await model.generateContent(prompt)
+            const response = await result.response
+            const text = response.text()
 
-            const jsonMatch = rawText.match(/\{[\s\S]*\}/)
+            const jsonMatch = text.match(/\{[\s\S]*\}/)
             if (jsonMatch) {
                 const jsonString = jsonMatch[0]
                 const categorizedContent = JSON.parse(jsonString)

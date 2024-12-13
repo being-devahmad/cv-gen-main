@@ -56,21 +56,20 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   };
 
   useEffect(() => {
-    if (categoryData?.PersonalInformation) {
-      const { Name, Email, Phone } = categoryData.PersonalInformation;
+    if (categoryData?.personalInformation) {
+      const { name, email, contact } = categoryData.personalInformation;
       const updatedValues = {
-        firstName: Name?.split(' ')[0] || '',
-        lastName: Name?.split(' ').slice(1).join(' ') || '',
-        email: Email || '',
-        phone: Phone || '',
+        firstName: name?.split(' ')[0] || '',
+        lastName: name?.split(' ').slice(1).join(' ') || '',
+        email: email || '',
+        phone: contact || '',
         country: form.getValues('country'),
         city: form.getValues('city'),
         postalCode: form.getValues('postalCode'),
         summary: form.getValues('summary'),
       };
-
       form.reset(updatedValues);
-      setAllData((prevData) => ({ ...prevData, ...updatedValues }));
+      setAllData((prevData: Record<string, unknown>) => ({ ...prevData, ...updatedValues }));
     }
   }, [categoryData, form, setAllData]);
 

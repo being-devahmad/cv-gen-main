@@ -16,7 +16,7 @@ const steps = [
   { id: "finish", title: "Finish" },
 ];
 
-export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
+export const ResumeForm2 = ({ allData, setAllData, categoryData }) => {
   const [activeTab, setActiveTab] = useState("contact");
 
   const handleActivetab = (tab) => {
@@ -74,6 +74,7 @@ export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
                 setAllData={setAllData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                categoryData={categoryData}
               />
             ) : activeTab === "education" ? (
               <Education
@@ -81,6 +82,7 @@ export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
                 setAllData={setAllData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                categoryData={categoryData}
               />
             ) : activeTab === "projects" ? (
               <Projects
@@ -88,6 +90,7 @@ export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
                 setAllData={setAllData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                categoryData={categoryData}
               />
             ) : activeTab === "skills" ? (
               <Skills
@@ -95,6 +98,7 @@ export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
                 setAllData={setAllData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                categoryData={categoryData}
               />
             ) : activeTab === "finish" ? (
               <PreviewResume
@@ -102,6 +106,7 @@ export const ResumeForm2 = ({ allData, setAllData , categoryData}) => {
                 setAllData={setAllData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                categoryData={categoryData}
               />
             ) : (
               ""

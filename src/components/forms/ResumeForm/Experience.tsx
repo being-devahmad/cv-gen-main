@@ -24,6 +24,10 @@ interface ExperienceItem {
   description: string;
 }
 
+interface CategoryData {
+  experience: any[];
+}
+
 const Experience: React.FC<ExperienceProps> = ({
   allData,
   setAllData,
@@ -33,8 +37,34 @@ const Experience: React.FC<ExperienceProps> = ({
 }) => {
 
 
-  const [experiences, setExperiences] = useState<ExperienceItem[]>(
-    allData.experiences || [
+
+  // const [experiences, setExperiences] = useState<ExperienceItem[]>(
+  //   allData.experiences || [
+  //     {
+  //       title: "",
+  //       company: "",
+  //       location: "",
+  //       startDate: "",
+  //       endDate: "",
+  //       currentlyWorking: false,
+  //       description: "",
+  //     },
+  //   ]
+  // );
+
+  const [experiences, setExperiences] = useState<ExperienceItem[]>(() => {
+    if (categoryData.experience && categoryData.experience.length > 0) {
+      return categoryData.experience.map((exp: any) => ({
+        title: exp.jobTitle || "",
+        company: exp.company || "",
+        location: exp.location || "",
+        startDate: exp.duration ? exp.duration.split(' - ')[0] : "",
+        endDate: exp.duration ? exp.duration.split(' - ')[1] : "",
+        currentlyWorking: exp.duration.toLowerCase().includes('present'),
+        description: exp.responsibilities ? exp.responsibilities.join('\n') : "",
+      }));
+    }
+    return allData.experiences || [
       {
         title: "",
         company: "",
@@ -44,8 +74,8 @@ const Experience: React.FC<ExperienceProps> = ({
         currentlyWorking: false,
         description: "",
       },
-    ]
-  );
+    ];
+  });
 
   const handleAddExperience = () => {
     setExperiences([
@@ -68,13 +98,21 @@ const Experience: React.FC<ExperienceProps> = ({
     setAllData({ ...allData, experiences: updatedExperiences });
   };
 
+  const formatDate = (input: string): string => {
+    const date = new Date(input);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
+    return input; // Return the input as-is if it's not a valid date
+  };
+
   const handleChange = (index: number, field: string, value: string | boolean) => {
     const updatedExperiences = experiences.map((exp, i) =>
-      i === index ? { ...exp, [field]: value } : exp
+      i === index ? { ...exp, [field]: field.includes('Date') ? formatDate(value as string) : value } : exp
     );
 
     if (field === 'currentlyWorking' && value === true) {
-      updatedExperiences[index].endDate = '';
+      updatedExperiences[index].endDate = 'Present';
     }
 
     setExperiences(updatedExperiences);
@@ -90,6 +128,12 @@ const Experience: React.FC<ExperienceProps> = ({
   const handleBack = () => {
     setActiveTab('contact');
   };
+
+  useEffect(() => {
+    if (experiences.length > 0) {
+      setAllData({ ...allData, experiences: experiences });
+    }
+  }, []);
 
 
   return (
@@ -154,7 +198,7 @@ const Experience: React.FC<ExperienceProps> = ({
                   label="End Date"
                   type="month"
                   value={experience.endDate}
-                  onChange={(e) => handleChange(index, "endDate", e.target.value)}
+                  onChange={(e) => handleChange(index, "endDate", formatDate(e.target.value))}
                   disabled={experience.currentlyWorking}
                   placeholder={experience.currentlyWorking ? "Present" : ""}
                 />

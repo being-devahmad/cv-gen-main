@@ -22,6 +22,8 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { db } from "@/lib/firebaseConfig"
 import { jsPDF } from "jspdf";
 import { useAuth } from "@/hooks/useAuth"
+import { usePDF } from 'react-to-pdf';
+import { useParams } from "react-router-dom"
 
 interface PreviewResumeProps {
   allData: Record<string, any>;
@@ -41,27 +43,9 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
   const { user } = useAuth()
   console.log("currentUserId-->", user?.id || null)
 
-  const [customSections, setCustomSections] = useState([]);
-  const [newSectionName, setNewSectionName] = useState('');
+  const { id } = useParams()
+  console.log("id-->", id)
 
-  const handleAddCustomSection = () => {
-    if (newSectionName) {
-      setCustomSections(prevSections => [...prevSections, newSectionName]);
-      setAllData(prevData => ({
-        ...prevData,
-        [newSectionName]: []
-      }));
-      setNewSectionName('');
-    }
-  };
-
-  const handleAddCustomField = (sectionName: string) => {
-    const updatedSection = [...(allData[sectionName] || []), { title: '', description: '' }];
-    setAllData({
-      ...allData,
-      [sectionName]: updatedSection
-    });
-  };
 
 
   // const handleSaveAndDownload = async () => {
@@ -133,18 +117,102 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
   // };
 
 
-  const handleSaveAndDownload = async () => {
+  // const handleSaveAndDownload = async () => {
+  //   setIsSaving(true);
+  //   try {
+  //     const dataToSave = {
+  //       ...allData,
+  //       userId: user?.id || null,
+  //       createdAt: serverTimestamp(),
+  //       updatedAt: serverTimestamp(),
+  //     };
+  //     console.log("Final Data to Save -->", dataToSave);
+
+  //     // Save data to Firestore in the 'resumes' collection
+  //     const docRef = await addDoc(collection(db, "resumes"), dataToSave);
+  //     console.log("Document written with ID: ", docRef.id);
+
+  //     toast({
+  //       title: "Success",
+  //       description: "Your resume data has been saved.",
+  //     });
+
+  //     // Generate PDF using jsPDF
+  //     const pdf = new jsPDF();
+
+  //     // Add content to the PDF
+  //     pdf.setFontSize(16);
+  //     pdf.text("Resume", 10, 10);
+  //     pdf.setFontSize(12);
+
+  //     // Formatting allData into readable content
+  //     const formattedData = `
+  //       Name: ${allData?.firstName || ""} ${allData?.lastName || ""}
+  //       Email: ${allData?.email || ""}
+  //       Phone: ${allData?.phone || ""}
+  //       Address: ${allData?.address || ""}
+
+  //       Experience:
+  //     `;
+
+  //     pdf.text(formattedData, 10, 20);
+
+  //     allData?.experiences?.forEach((exp, index) => {
+  //       const experienceText = `
+  //         ${index + 1}. ${exp.company || "Unknown Company"} (${exp.startDate || "N/A"} - ${exp.endDate || "Present"
+  //         })
+  //         Title: ${exp.title || "N/A"}
+  //         Description: ${exp.description || "N/A"}
+  //       `;
+  //       pdf.text(experienceText, 10, 40 + index * 30); // Adjust line spacing for multiple experiences
+  //     });
+
+  //     // Save the PDF
+  //     const fileName = `${allData?.firstName || "Untitled"}_${allData?.lastName || ""}_CV.pdf`;
+  //     pdf.save(fileName);
+  //   } catch (error) {
+  //     console.error("Error saving resume data:", error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to save resume data. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+
+  const handleBack = () => {
+    setActiveTab('skills');
+  };
+
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { toPDF, targetRef } = usePDF({ filename: 'resume.pdf' });
+
+  const removeUndefined = (obj: any): any => {
+    Object.keys(obj).forEach(key => {
+      if (obj[key] && typeof obj[key] === 'object') {
+        removeUndefined(obj[key]);
+      } else if (obj[key] === undefined) {
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  const handleSave = async () => {
     setIsSaving(true);
     try {
+      const cleanedData = removeUndefined({ ...allData });
       const dataToSave = {
-        ...allData,
+        ...cleanedData,
         userId: user?.id || null,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
+        templateId: id // templateId
       };
       console.log("Final Data to Save -->", dataToSave);
 
-      // Save data to Firestore in the 'resumes' collection
       const docRef = await addDoc(collection(db, "resumes"), dataToSave);
       console.log("Document written with ID: ", docRef.id);
 
@@ -152,40 +220,6 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
         title: "Success",
         description: "Your resume data has been saved.",
       });
-
-      // Generate PDF using jsPDF
-      const pdf = new jsPDF();
-
-      // Add content to the PDF
-      pdf.setFontSize(16);
-      pdf.text("Resume", 10, 10);
-      pdf.setFontSize(12);
-
-      // Formatting allData into readable content
-      const formattedData = `
-        Name: ${allData?.firstName || ""} ${allData?.lastName || ""}
-        Email: ${allData?.email || ""}
-        Phone: ${allData?.phone || ""}
-        Address: ${allData?.address || ""}
-        
-        Experience:
-      `;
-
-      pdf.text(formattedData, 10, 20);
-
-      allData?.experiences?.forEach((exp, index) => {
-        const experienceText = `
-          ${index + 1}. ${exp.company || "Unknown Company"} (${exp.startDate || "N/A"} - ${exp.endDate || "Present"
-          })
-          Title: ${exp.title || "N/A"}
-          Description: ${exp.description || "N/A"}
-        `;
-        pdf.text(experienceText, 10, 40 + index * 30); // Adjust line spacing for multiple experiences
-      });
-
-      // Save the PDF
-      const fileName = `${allData?.firstName || "Untitled"}_${allData?.lastName || ""}_CV.pdf`;
-      pdf.save(fileName);
     } catch (error) {
       console.error("Error saving resume data:", error);
       toast({
@@ -198,9 +232,26 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
     }
   };
 
-  const handleBack = () => {
-    setActiveTab('skills');
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    try {
+      await toPDF();
+      toast({
+        title: "Success",
+        description: "Your resume has been downloaded as a PDF.",
+      });
+    } catch (error) {
+      console.error("Error downloading resume:", error);
+      toast({
+        title: "Error",
+        description: "Failed to download resume. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
+
 
 
   return (
@@ -361,53 +412,6 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
           </AccordionItem>
         </Accordion>
 
-        {/* Add this section for custom sections */}
-        {customSections.map((sectionName) => (
-          <AccordionItem key={sectionName} value={sectionName}>
-            <AccordionTrigger className="text-base font-medium">{sectionName}</AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-4 p-2">
-                {allData[sectionName]?.map((item: { title: string; description: string }, index: number) => (
-                  <div key={index} className="space-y-2">
-                    <Input
-                      placeholder="Title"
-                      value={item.title}
-                      onChange={(e) => {
-                        const updatedSection = [...allData[sectionName]];
-                        updatedSection[index].title = e.target.value;
-                        setAllData({ ...allData, [sectionName]: updatedSection });
-                      }}
-                    />
-                    <Textarea
-                      placeholder="Description"
-                      value={item.description}
-                      onChange={(e) => {
-                        const updatedSection = [...allData[sectionName]];
-                        updatedSection[index].description = e.target.value;
-                        setAllData({ ...allData, [sectionName]: updatedSection });
-                      }}
-                    />
-                  </div>
-                ))}
-                <Button onClick={() => handleAddCustomField(sectionName)}>Add Field</Button>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-
-        {/* Add Custom Section */}
-        <div className="space-y-4">
-          <h3 className="font-medium">Add Custom Section</h3>
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="Section Name"
-              value={newSectionName}
-              onChange={(e) => setNewSectionName(e.target.value)}
-            />
-            <Button onClick={handleAddCustomSection}>Add</Button>
-          </div>
-        </div>
-
 
         {/* Add Blocks Section */}
         <div className="space-y-4">
@@ -437,12 +441,12 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
           <Button variant="light" onClick={handleBack}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <Button
+          {/* <Button
             color="primary"
             variant="solid"
             className="w-full"
             size="lg"
-            onClick={handleSaveAndDownload}
+            onClick={handleSave}
             disabled={isSaving}
           >
             {isSaving ? (
@@ -456,7 +460,26 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
                 Save and Download
               </>
             )}
-          </Button>
+          </Button> */}
+
+          <div className="mt-6 flex justify-center space-x-4">
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
+              color="primary"
+              variant="solid"
+            >
+              {isSaving ? "Saving..." : "Save Resume"}
+            </Button>
+            <Button
+              onClick={handleDownload}
+              disabled={isDownloading}
+              color="secondary"
+              variant="solid"
+            >
+              {isDownloading ? "Downloading..." : "Download PDF"}
+            </Button>
+          </div>
 
         </div>
       </div>
