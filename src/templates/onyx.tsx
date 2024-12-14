@@ -90,7 +90,7 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
         experiences.map((exp, i) => {
           const { company, startDate, endDate, title, location, description } = exp
           return (
-            <div className="mb-6">
+            <div className="mb-6" key={i}>
               <h3 className="font-bold text-gray-800">{company}</h3>
               <div className="flex justify-between">
                 <p className="text-gray-500 text-sm">

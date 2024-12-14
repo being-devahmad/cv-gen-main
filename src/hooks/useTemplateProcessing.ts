@@ -76,3 +76,112 @@ export function useTemplateProcessing() {
     return { ...result, processDocument }
 }
 
+
+
+// import { openaiModel } from '@/lib/config'
+// import { useState, useCallback } from 'react'
+// import { generateObject } from 'ai'
+// import { z } from 'zod'
+
+// interface ProcessingResult {
+//     isComplete: boolean
+//     isProcessing: boolean
+//     categoryData: any | null
+//     processingError: string | null
+// }
+
+// const resumeSchema = z.object({
+//     personalInformation: z.object({
+//         name: z.string(),
+//         contact: z.string(),
+//         email: z.string(),
+//     }),
+//     education: z.array(z.object({
+//         institution: z.string(),
+//         degree: z.string(),
+//         location: z.string(),
+//         year: z.string(),
+//     })),
+//     experience: z.array(z.object({
+//         jobTitle: z.string(),
+//         company: z.string(),
+//         location: z.string(),
+//         duration: z.string(),
+//         responsibilities: z.array(z.string()),
+//     })),
+//     projects: z.array(z.object({
+//         name: z.string(),
+//         technologies: z.array(z.string()),
+//         description: z.string(),
+//     })),
+//     skills: z.object({
+//         languages: z.array(z.string()),
+//         frameworks: z.array(z.string()),
+//         tools: z.array(z.string()),
+//         libraries: z.array(z.string()),
+//     }),
+// })
+
+// export function useTemplateProcessing() {
+//     const [result, setResult] = useState<ProcessingResult>({
+//         isComplete: false,
+//         isProcessing: false,
+//         categoryData: null,
+//         processingError: null,
+//     })
+
+//     const processDocument = useCallback(async (fileContent: string | ArrayBuffer) => {
+//         if (!fileContent) {
+//             setResult(prev => ({ ...prev, processingError: "No file content provided" }))
+//             return
+//         }
+
+//         setResult(prev => ({ ...prev, isProcessing: true, processingError: null, categoryData: null }))
+//         try {
+//             const base64Content = Buffer.from(fileContent.toString()).toString('base64')
+
+//             const { object: categorizedContent } = await generateObject({
+//                 model: openaiModel,
+//                 messages: [
+//                     {
+//                         role: 'user',
+//                         content: [
+//                             {
+//                                 type: 'text',
+//                                 text: "Analyze the uploaded file to determine if it matches a resume format. If it is a resume, extract its content into a structured JSON format. Ensure that all content, including any text with background colors (e.g., headers or highlighted sections), is included. Utilize OCR or text recognition techniques to handle complex PDF layouts or styles.",
+//                             },
+//                             {
+//                                 type: 'file',
+//                                 data: base64Content,
+//                                 mimeType: 'application/pdf',
+//                             },
+//                         ],
+//                     },
+//                 ],
+//                 schema: resumeSchema,
+//             })
+//             const allEmpty = Object.values(categorizedContent)
+//                 .every(value => 
+//                     value === null ||
+//                     (Array.isArray(value) && value.length === 0) ||
+//                     (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0)
+//                 )
+
+//             if (allEmpty) {
+//                 throw new Error('No relevant information found in the document')
+//             }
+
+//             setResult(prev => ({ ...prev, categoryData: categorizedContent, isComplete: true }))
+//         } catch (error) {
+//             setResult(prev => ({
+//                 ...prev,
+//                 processingError: error instanceof Error ? error.message : 'An unknown error occurred'
+//             }))
+//         } finally {
+//             setResult(prev => ({ ...prev, isProcessing: false }))
+//         }
+//     }, [])
+
+//     return { ...result, processDocument }
+// }
+
