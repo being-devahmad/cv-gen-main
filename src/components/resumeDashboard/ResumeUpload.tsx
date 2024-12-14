@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { TemplatePreview } from "./TemplatePreview"
+import { useNavigate } from "react-router-dom"
 
 interface FileDetails {
     name: string
@@ -14,6 +15,8 @@ export default function ResumeUpload() {
     const [file, setFile] = useState<FileDetails | null>(null)
     const [isDragging, setIsDragging] = useState(false)
     const [showPreview, setShowPreview] = useState(false)
+
+    const navigate = useNavigate()
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault()
@@ -74,6 +77,10 @@ export default function ResumeUpload() {
     const handleNext = useCallback(() => {
         setShowPreview(true)
     }, [])
+
+    const handleBack = () => {
+        navigate("/select")
+    }
 
     if (showPreview && file) {
         return <TemplatePreview fileName={file.name} fileContent={file.content} />
@@ -145,7 +152,7 @@ export default function ResumeUpload() {
                 )}
 
                 <div className="flex justify-between">
-                    <Button variant="ghost">Back</Button>
+                    <Button variant="ghost" onClick={handleBack}>Back</Button>
                     {file && (
                         <Button onClick={handleNext}>Next</Button>
                     )}

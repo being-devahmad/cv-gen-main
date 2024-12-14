@@ -1,11 +1,11 @@
-import { MapPin, Phone, Mail, Linkedin, Github, Globe } from "lucide-react";
+import { MapPin, Phone, Mail, } from "lucide-react";
 import React from "react";
 
-const Header = ({ allData }) => {
-  const { name, city, country, email, phone } = allData
+const Header = ({ allData }: { allData: { firstName: string; lastName: string; city: string; country: string; email: string; phone: string } }) => {
+  const { firstName, lastName, city, country, email, phone } = allData
   return (
     <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-lg">
-      <h1 className="text-2xl font-bold">John Doe</h1>
+      <h1 className="text-2xl font-bold">{`${firstName} ${lastName}`}</h1>
       <div className="mt-2 flex flex-wrap gap-2 text-xs">
         <div className="flex items-center gap-1">
           <MapPin size={12} />
@@ -36,9 +36,7 @@ const Header = ({ allData }) => {
   );
 };
 
-
-
-const Summary = ({ allData }) => {
+const Summary = ({ allData }: { allData: { summary: string } }) => {
   const { summary } = allData
   return (
     <div className="p-6 bg-white">
@@ -50,7 +48,7 @@ const Summary = ({ allData }) => {
   )
 }
 
-const Experience = ({ allData }) => {
+const Experience = ({ allData }: { allData: { experiences: Array<{ company: string; startDate: string; endDate: string; title: string; location: string; description: string }> } }) => {
   const { experiences } = allData
   return (
     <div className="p-6 bg-white">
@@ -60,7 +58,7 @@ const Experience = ({ allData }) => {
           experiences.map((exp, i) => {
             const { company, startDate, endDate, title, location, description } = exp
             return (
-              <div>
+              <div key={i}>
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold">{company}</h3>
@@ -83,7 +81,7 @@ const Experience = ({ allData }) => {
   )
 }
 
-const Education = ({ allData }) => {
+const Education = ({ allData }: { allData: { education: Array<{ degree: string; startDate: string; endDate: string; organization: string; location: string }> } }) => {
   const { education } = allData;
   return (
     <div className="p-6 bg-white">
@@ -93,7 +91,7 @@ const Education = ({ allData }) => {
           education.map((edu, i) => {
             const { degree, startDate, endDate, organization, location } = edu
             return (
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start" key={i}>
                 <div>
                   <h3 className="font-bold">{organization}</h3>
                   <p className="text-gray-600">{location}</p>
@@ -131,7 +129,7 @@ const Education = ({ allData }) => {
 //   )
 // }
 
-const Skills = ({ allData }) => {
+const Skills = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
   const { skills } = allData
 
   const renderSkillItem = (item: string | { category: string; items: string[] }) => {
@@ -196,7 +194,7 @@ const Skills = ({ allData }) => {
 
 
 
-const Bronzor = ({ allData }) => {
+const Bronzor = ({ allData }: { allData: any }) => {
   return (
     <div className="max-w-4xl mx-auto bg-gray-100 min-h-screen">
       <Header allData={allData} />

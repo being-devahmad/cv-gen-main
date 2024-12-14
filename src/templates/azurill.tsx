@@ -1,17 +1,6 @@
 import React from "react";
 
-const Header = ({ allData }: {
-    allData: {
-        firstName: string;
-        lastName: string;
-        phone: string;
-        email: string;
-        city: string;
-        postalCode: string;
-        country: string;
-        summary: string;
-    }
-}) => {
+const Header = ({ allData }: { allData: { firstName: string; lastName: string; city: string; country: string; email: string; phone: string; postalCode: string, summary: string } }) => {
     const { firstName, lastName, phone, email, city, postalCode, country, summary } = allData;
 
     return (
@@ -42,7 +31,7 @@ const Header = ({ allData }: {
     );
 };
 
-const Education = ({ allData }: { allData: { education: any[] } }) => {
+const Education = ({ allData }: { allData: { education: Array<{ degree: string; startDate: string; endDate: string; organization: string; location: string }> } }) => {
     const { education } = allData;
 
     return (
@@ -77,7 +66,7 @@ const Education = ({ allData }: { allData: { education: any[] } }) => {
     );
 };
 
-const Experience = ({ allData }: { allData: { experiences: any[] } }) => {
+const Experience = ({ allData }: { allData: { experiences: Array<{ company: string; startDate: string; endDate: string; title: string; location: string; description: string }> } }) => {
     const { experiences } = allData;
     return (
         <section className="mb-8">
@@ -245,7 +234,7 @@ const Skills = ({ allData }: { allData: { skills: Array<{ category: string; item
 };
 
 
-export const Azurill = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
+export const Azurill = ({ allData }: { allData: any }) => {
     return (
         <div className="max-w-[800px] mx-auto p-8 font-sans">
             <Header allData={allData} />

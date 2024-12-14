@@ -13,7 +13,7 @@ interface AITextareaProps {
     customPrompt?: string
 }
 
-export function AITextarea({ value, onChange, label, error, customPrompt }: AITextareaProps) {
+export function AITextarea({ value, onChange, error, customPrompt }: AITextareaProps) {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [suggestions, setSuggestions] = useState<string[]>([])
     const [showSuggestions, setShowSuggestions] = useState(false)

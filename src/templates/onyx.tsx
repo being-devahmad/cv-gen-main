@@ -1,22 +1,22 @@
 import { NextUIProvider } from "@nextui-org/react";
-import { MapPin, Phone, Mail, Linkedin, Github, Globe } from "lucide-react";
-import { Image } from "@nextui-org/react";
 import React from "react";
 
-const Header = ({ allData }) => {
-  const { firstName, lastName, phone, email, city, postalCode, country, summary } = allData;
+const Header = ({ allData }: {
+  allData: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  }
+}) => {
+  const { firstName, lastName, phone, email, city, postalCode, country } = allData;
   return (
     <header className="flex flex-col items-center justify-between border-b pb-6 mb-8 w-full overflow-x-hidden bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
       <div className="flex justify-center items-center space-x-4 w-full ms-5 mt-4">
-        {/* <div className=" w-24 h-24 bg-gray-300 rounded-full overflow-hidden">
-          <Image
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnSA1zygA3rubv-VK0DrVcQ02Po79kJhXo_A&s"
-            alt="Profile"
-            width={100}
-            height={100}
-            className="rounded-full mx-auto"
-          />
-        </div> */}
+
         <div className="text-center ">
           <h1 className="text-4xl font-bold text-white">{`${firstName} ${lastName}`}</h1>
           {/* <p className="text-lg text-gray-300">
@@ -88,7 +88,7 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
     <Section title="Experience">
       {
         experiences.map((exp, i) => {
-          const { company, startDate, endDate, title, location, description } = exp
+          const { company, startDate, endDate, title, description } = exp
           return (
             <div className="mb-6" key={i}>
               <h3 className="font-bold text-gray-800">{company}</h3>
@@ -119,7 +119,7 @@ const Education = ({ allData }: { allData: { education: Array<{ degree: string, 
         education.map((edu, i) => {
           const { degree, startDate, endDate, organization, location } = edu
           return (
-            <div>
+            <div key={i}>
               <h3 className="font-bold text-gray-800">{organization}</h3>
               <p className="text-gray">{location}</p>
               <div className="flex justify-between">
@@ -136,23 +136,9 @@ const Education = ({ allData }: { allData: { education: Array<{ degree: string, 
   )
 };
 
-// const Projects = () => (
-//   <Section title="Projects">
-//     <ul className="list-disc list-inside text-gray-700">
-//       <li>
-//         <strong>E-Commerce Platform:</strong> Led the development of a
-//         full-stack platform, improving sales conversion by 25%.
-//       </li>
-//       <li>
-//         <strong>Interactive Dashboard:</strong> Designed an analytics dashboard
-//         for a SaaS application, enhancing data visualization.
-//       </li>
-//     </ul>
-//   </Section>
-// );
 
 
-const Skills = ({ allData }) => {
+const Skills = ({ allData }: { allData: { skills: Array<{ category: string, items: string[] }> } }) => {
   const { skills } = allData
 
   const renderSkillItem = (item: string | { category: string; items: string[] }) => {
@@ -200,7 +186,7 @@ const Skills = ({ allData }) => {
   )
 };
 
-export const Onyx = ({ allData }) => {
+export const Onyx = ({ allData }: { allData: any }) => {
   return (
     <NextUIProvider>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md">

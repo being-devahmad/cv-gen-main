@@ -20,18 +20,10 @@ interface EducationProps {
   categoryData: Record<string, any>;
 }
 
-const formatDate = (input: string): string => {
-  const date = new Date(input);
-  if (!isNaN(date.getTime())) {
-    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
-  }
-  return input; // Return the input as-is if it's not a valid date
-};
 
 export default function Education({
   allData,
   setAllData,
-  activeTab,
   setActiveTab,
   categoryData,
 }: EducationProps) {

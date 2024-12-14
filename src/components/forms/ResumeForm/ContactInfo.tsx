@@ -19,7 +19,6 @@ interface ContactInfoProps {
 export const ContactInfo: React.FC<ContactInfoProps> = ({
   allData,
   setAllData,
-  activeTab,
   setActiveTab,
   categoryData
 }) => {

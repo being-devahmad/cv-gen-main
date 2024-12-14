@@ -24,14 +24,10 @@ interface ExperienceItem {
   description: string;
 }
 
-interface CategoryData {
-  experience: any[];
-}
 
 const Experience: React.FC<ExperienceProps> = ({
   allData,
   setAllData,
-  activeTab,
   setActiveTab,
   categoryData
 }) => {

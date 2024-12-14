@@ -161,7 +161,7 @@ export function useTemplateProcessing() {
 //                 schema: resumeSchema,
 //             })
 //             const allEmpty = Object.values(categorizedContent)
-//                 .every(value => 
+//                 .every(value =>
 //                     value === null ||
 //                     (Array.isArray(value) && value.length === 0) ||
 //                     (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0)

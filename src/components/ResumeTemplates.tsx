@@ -81,10 +81,6 @@ export function ResumeTemplates() {
     return template?.image || "/placeholder.svg?height=240&width=320"
   }
 
-  function formatDate(timestamp: { seconds: number; nanoseconds: number }) {
-    const date = new Date(timestamp.seconds * 1000)
-    return date.toLocaleDateString()
-  }
 
   const handleSave = async () => {
     if (!selectedResume || !updatedName.trim()) return

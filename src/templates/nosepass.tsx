@@ -1,4 +1,3 @@
-import { Image } from "@nextui-org/react";
 import { Mail, Phone, MapPin, } from "lucide-react";
 
 export function PersonalInformation({
@@ -56,7 +55,7 @@ export function Education({ allData }: { allData: { education: any[] } }) {
         const { degree, startDate, endDate, organization } = val;
         return (
           <>
-            <div className="bg-gray-100 rounded-lg p-4">
+            <div className="bg-gray-100 rounded-lg p-4" key={ind}>
               <h3 className="font-semibold text-gray-800 text-lg">
                 {organization}
               </h3>
@@ -99,62 +98,10 @@ export function Summary({ allData }: { allData: { summary: string } }) {
   );
 }
 
-// export function Profiles() {
-//   return (
-//     <section className="mb-6 text-sm">
-//       <h2 className="font-semibold mb-3 border-b border-gray-600 pb-1">
-//         PROFILES
-//       </h2>
-//       <ul className="space-y-2">
-//         <li className="flex items-center gap-2">
-//           <Linkedin className="w-4 h-4" />
-//           <a href="https://linkedin.com/in/johndoe" className="hover:underline">
-//             linkedin.com/joh
-//           </a>
-//         </li>
-//         <li className="flex items-center gap-2">
-//           <Github className="w-4 h-4" />
-//           <a href="https://github.com/johndoe" className="hover:underline">
-//             github.com/john
-//           </a>
-//         </li>
-//       </ul>
-//     </section>
-//   );
-// }
+
 
 import { Briefcase } from "lucide-react";
 
-// export function Projects() {
-//   const projects = [
-//     "E-commerce Website",
-//     "Banking Portal",
-//     "News Website",
-//     "Books Store",
-//     "YouTube Clone",
-//     "Budget Tracking Application",
-//     "Google Meet Layout",
-//   ];
-
-//   return (
-//     <section className="mb-6">
-//       <h2 className="text-2xl font-bold mb-3 text-gray-800 border-b border-gray-300 pb-1 flex items-center">
-//         <Briefcase className="w-6 h-6 mr-2 text-blue-500" /> PROJECTS
-//       </h2>
-//       <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-//         {projects.map((project, index) => (
-//           <li
-//             key={index}
-//             className="flex items-center bg-gray-100 rounded-lg p-2"
-//           >
-//             <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-//             <span className="text-gray-700">{project}</span>
-//           </li>
-//         ))}
-//       </ul>
-//     </section>
-//   );
-// }
 
 export function Experience({ allData }: { allData: { experiences: any[] } }) {
   const { experiences } = allData;
@@ -183,19 +130,7 @@ export function Experience({ allData }: { allData: { experiences: any[] } }) {
                   {startDate} - {endDate}
                 </span>
               </div>
-              {/* <a
-                href={exp.website}
-                className="text-blue-500 text-sm hover:underline mb-2 block"
-              >
-                {exp.website}
-              </a>
-              <ul className="list-disc list-inside text-gray-700 space-y-1">
-                {exp.achievements.map((achievement, i) => (
-                  <li key={i} className="text-sm">
-                    {achievement}
-                  </li>
-                ))}
-              </ul> */}
+             
               <p className="text-xs">{description.slice(0, 100)}</p>
             </div>
           );
@@ -254,34 +189,8 @@ const Skills = ({
     </div>
   );
 };
-import { Linkedin, Github } from "lucide-react";
 import React from "react";
 
-// export function SocialProfiles() {
-//   return (
-//     <section className="mb-6">
-//       <h2 className="text-xl font-semibold mb-3 border-b border-gray-600 pb-1">
-//         PROFILES
-//       </h2>
-//       <div className="space-y-2 text-sm">
-//         <a
-//           href="https://linkedin.com/in/johndoe"
-//           className="flex items-center gap-2 hover:text-blue-400 transition-colors"
-//         >
-//           <Linkedin className="w-4 h-4" />
-//           <span>linkedin.com/in/johndoe</span>
-//         </a>
-//         <a
-//           href="https://github.com/johndoe"
-//           className="flex items-center gap-2 hover:text-blue-400 transition-colors"
-//         >
-//           <Github className="w-4 h-4" />
-//           <span>github.com/johndoe</span>
-//         </a>
-//       </div>
-//     </section>
-//   );
-// }
 
 export const Nosepass = ({ allData }: { allData: any }) => {
   return (
@@ -290,15 +199,7 @@ export const Nosepass = ({ allData }: { allData: any }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-5 bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6">
             <div className="flex flex-col items-center mb-6">
-              {/* <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4">
-                <Image
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnSA1zygA3rubv-VK0DrVcQ02Po79kJhXo_A&s"
-                  alt="John Doe"
-                  width={150}
-                  height={150}
-                  className="rounded-full mx-auto"
-                />
-              </div> */}
+             
               <Header allData={allData} />
             </div>
             <PersonalInformation allData={allData} />

@@ -19,9 +19,9 @@ const ResumeStart: React.FC = () => {
     console.log("TemplateId------->", id)
 
     const location = useLocation();
-    const { categoryData } = location.state || {}; // Ensure fallback to empty object
+    const { categoryData } = location.state || {};
 
-    console.log("Received categoryData:", categoryData); // Debugging log
+    console.log("Received categoryData:", categoryData); 
 
     const resumeRef = useRef<HTMLDivElement>(null);
 

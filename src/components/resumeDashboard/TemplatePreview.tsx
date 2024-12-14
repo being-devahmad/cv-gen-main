@@ -74,9 +74,9 @@ export const TemplatePreview: React.FC<ContinuousTemplatePreviewProps> = ({ file
                     <div className="bg-red-50 border-l-4 border-red-500 p-4 my-4">
                         <div className="flex items-center">
                             <AlertCircle className="h-6 w-6 text-red-500 mr-3" />
-                            <p className="text-sm text-red-700">
+                            {/* <p className="text-sm text-red-700">
                                 {processingError}
-                            </p>
+                            </p> */}
                         </div>
                         <p className="mt-2 text-sm text-red-700">
                             We're experiencing high demand. Please try again in a few minutes or contact support if the issue persists.

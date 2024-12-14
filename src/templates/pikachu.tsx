@@ -1,8 +1,18 @@
-import { MapPin, Phone, Mail, Link2, Linkedin, Github, Layers } from 'lucide-react';
+import { MapPin, Phone, Mail } from 'lucide-react';
 import React from 'react';
 
-const Header = ({ allData }) => {
-  const { firstName, lastName, city, country, postalCode, phone, email } = allData
+const Header = ({ allData }: {
+  allData: {
+    firstName: string;
+    lastName: string;
+    city: string;
+    country: string;
+    postalCode: string;
+    phone: string;
+    email: string;
+  }
+}) => {
+  const { firstName, lastName, city, country, postalCode, phone, email } = allData;
   return (
     <div className="bg-amber-600 text-white p-6">
       <div className="max-w-4xl mx-auto">
@@ -27,8 +37,8 @@ const Header = ({ allData }) => {
   );
 };
 
-const Summary = ({ allData }) => {
-  const { summary } = allData
+const Summary = ({ allData }: { allData: { summary: string } }) => {
+  const { summary } = allData;
   return (
     <div className="mb-6">
       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">Summary</h2>
@@ -39,8 +49,19 @@ const Summary = ({ allData }) => {
   );
 };
 
-const Experience = ({ allData }) => {
-  const { experiences } = allData
+const Experience = ({ allData }: {
+  allData: {
+    experiences: Array<{
+      company: string;
+      startDate: string;
+      endDate: string;
+      title: string;
+      location: string;
+      description: string;
+    }>
+  }
+}) => {
+  const { experiences } = allData;
   return (
     <div className="mb-6">
       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">Experience</h2>
@@ -49,7 +70,7 @@ const Experience = ({ allData }) => {
           experiences.map((exp, i) => {
             const { company, startDate, endDate, title, location, description } = exp
             return (
-              <div>
+              <div key={i}>
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h3 className="font-bold">{company}</h3>
@@ -72,7 +93,17 @@ const Experience = ({ allData }) => {
   );
 };
 
-const Education = ({ allData }) => {
+const Education = ({ allData }: {
+  allData: {
+    education: Array<{
+      degree: string;
+      startDate: string;
+      endDate: string;
+      organization: string;
+      location: string;
+    }>
+  }
+}) => {
   const { education } = allData;
   return (
     <div className="mb-6">
@@ -100,32 +131,8 @@ const Education = ({ allData }) => {
   );
 };
 
-// const Profiles = () => {
-//   return (
-//     <div className="mb-6">
-//       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">Profiles</h2>
-//       <div className="space-y-2">
-//         <a href="https://linkedin.com/in/johndoe" className="flex items-center gap-2 text-blue-600">
-//           <Linkedin size={16} />
-//           <span>johndoe</span>
-//           <span className="text-gray-600 text-sm">LinkedIn</span>
-//         </a>
-//         <a href="https://github.com/johndoe" className="flex items-center gap-2 text-gray-900">
-//           <Github size={16} />
-//           <span>johndoe</span>
-//           <span className="text-gray-600 text-sm">GitHub</span>
-//         </a>
-//         <div className="flex items-center gap-2">
-//           <span className="text-lg"><Layers /></span>
-//           <span>johndoe</span>
-//           <span className="text-gray-600 text-sm">StackOverflow</span>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
 
-const Skills = ({ allData }) => {
+const Skills = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
   const { skills } = allData
 
   const renderSkillItem = (item: string | { category: string; items: string[] }) => {
@@ -166,91 +173,20 @@ const Skills = ({ allData }) => {
   );
 };
 
-// const Certifications = () => {
-//   return (
-//     <div className="mb-6">
-//       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">Certifications</h2>
-//       <div className="space-y-2">
-//         <div>
-//           <h3 className="font-bold">Full-Stack Web Development</h3>
-//           <p className="text-gray-600">CodeAcademy</p>
-//           <p className="text-sm">2020</p>
-//         </div>
-//         <div>
-//           <h3 className="font-bold">AWS Certified Developer</h3>
-//           <p className="text-gray-600">Amazon Web Services</p>
-//           <p className="text-sm">2019</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
 
-// const Languages = () => {
-//   return (
-//     <div className="mb-6">
-//       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">Languages</h2>
-//       <div className="space-y-2">
-//         <div>
-//           <h3 className="font-bold">English</h3>
-//           <p className="text-gray-600 text-sm">Native Speaker</p>
-//         </div>
-//         <div>
-//           <h3 className="font-bold">Spanish</h3>
-//           <p className="text-gray-600 text-sm">Intermediate</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const References = () => {
-//   return (
-//     <div className="mb-6">
-//       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">References</h2>
-//       <p className="text-gray-600">Available upon request</p>
-//     </div>
-//   );
-// };
-
-// const Projects = () => {
-//   return (
-//     <div className="mb-6">
-//       <h2 className="text-lg font-bold border-b border-amber-600 pb-1 mb-3">Projects</h2>
-//       <div className="space-y-4">
-//         <div>
-//           <h3 className="font-bold">E-Commerce Platform</h3>
-//           <p className="text-gray-600">Project Lead</p>
-//           <p className="text-sm">Led the development of a full-stack e-commerce platform, improving sales conversion by 25%.</p>
-//         </div>
-//         <div>
-//           <h3 className="font-bold">Interactive Dashboard</h3>
-//           <p className="text-gray-600">Frontend Developer</p>
-//           <p className="text-sm">Created an interactive analytics dashboard for a SaaS application, enhancing data visualization for clients.</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-export const Pikachu = ({ allData }) => {
+export const Pikachu = ({ allData }: { allData: any }) => {
 
   return (
     <div className="max-w-7xl mx-auto bg-white shadow-lg">
-      <Header />
+      <Header allData={allData} />
       <div className="flex">
         <div className="w-1/3 p-6 bg-gray-50">
-          <Profiles allData={allData} />
           <Skills allData={allData} />
-          {/* <Certifications /> */}
-          {/* <Languages allData={allData} /> */}
-          {/* <References /> */}
         </div>
         <div className="w-2/3 p-6">
           <Summary allData={allData} />
           <Experience allData={allData} />
           <Education allData={allData} />
-          {/* <Projects /> */}
         </div>
       </div>
     </div>

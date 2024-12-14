@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
-import { AlertTriangle, Check, FileText, RefreshCw } from 'lucide-react'
+import { AlertTriangle, Check, RefreshCw } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { DialogTitle } from "@radix-ui/react-dialog"
 
