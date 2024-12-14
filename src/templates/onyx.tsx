@@ -1,12 +1,14 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { MapPin, Phone, Mail, Linkedin, Github, Globe } from "lucide-react";
 import { Image } from "@nextui-org/react";
+import React from "react";
 
-const Header = () => {
+const Header = ({ allData }) => {
+  const { firstName, lastName, phone, email, city, postalCode, country, summary } = allData;
   return (
     <header className="flex flex-col items-center justify-between border-b pb-6 mb-8 w-full overflow-x-hidden bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
-      <div className="flex items-center space-x-4 w-full ms-5 mt-4">
-        <div className=" w-24 h-24 bg-gray-300 rounded-full overflow-hidden">
+      <div className="flex justify-center items-center space-x-4 w-full ms-5 mt-4">
+        {/* <div className=" w-24 h-24 bg-gray-300 rounded-full overflow-hidden">
           <Image
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnSA1zygA3rubv-VK0DrVcQ02Po79kJhXo_A&s"
             alt="Profile"
@@ -14,20 +16,20 @@ const Header = () => {
             height={100}
             className="rounded-full mx-auto"
           />
-        </div>
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-800">John Doe</h1>
-          <p className="text-lg text-gray-300">
+        </div> */}
+        <div className="text-center ">
+          <h1 className="text-4xl font-bold text-white">{`${firstName} ${lastName}`}</h1>
+          {/* <p className="text-lg text-gray-300">
             Creative and Innovative Web Developer
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="mt-4 md:mt-0 text-gray-300 text-sm text-center w-full">
-        <p>Pleasantville, CA 94588</p>
-        <p>(555) 123-4567 · john.doe@gmail.com</p>
-        <p>https://johndoe.me</p>
+        <p>{`${city}, ${country} ${postalCode}`}</p>
+        <p>{`${phone} · ${email}`}</p>
+        {/* <p>https://johndoe.me</p> */}
       </div>
-      <div className="flex space-x-6 mt-4 md:mt-0 w-full justify-center">
+      {/* <div className="flex space-x-6 mt-4 md:mt-0 w-full justify-center">
         <a
           href="https://linkedin.com/in/johndoe"
           target="_blank"
@@ -55,12 +57,12 @@ const Header = () => {
           <Globe size={20} />
           <span className="mt-1">Portfolio</span>
         </a>
-      </div>
+      </div> */}
     </header>
   );
 };
 
-const Section = ({ title, children }) => (
+const Section = ({ title, children }: { title: string, children: React.ReactNode }) => (
   <section className="mb-8">
     <h2 className="text-xl font-semibold text-gray-800 border-b-2 border-gray-300 pb-2 mb-4">
       {title}
@@ -69,130 +71,152 @@ const Section = ({ title, children }) => (
   </section>
 );
 
-const Summary = () => (
-  <Section title="Summary">
-    <p className="text-gray-700">
-      Innovative Web Developer with 5 years of experience building impactful and
-      user-friendly websites and applications. Specializes in front-end
-      technologies and modern web standards with a proven track record of
-      leading successful projects from concept to deployment.
-    </p>
-  </Section>
-);
-
-const Experience = () => (
-  <Section title="Experience">
-    <div className="mb-6">
-      <h3 className="font-bold text-gray-800">Creative Solutions Inc.</h3>
-      <p className="text-gray-500 text-sm">
-        Senior Web Developer · January 2019 - Present
+const Summary = ({ allData }: { allData: { summary: string } }) => {
+  const { summary } = allData;
+  return (
+    <Section title="Summary">
+      <p className="text-gray-700">
+        {summary}
       </p>
-      <ul className="list-disc list-inside text-gray-700 mt-2">
-        <li>
-          Redesigned the main product website, increasing user engagement by
-          40%.
-        </li>
-        <li>
-          Developed a responsive framework for improved cross-device
-          compatibility.
-        </li>
-        <li>
-          Mentored a team of junior developers, fostering technical excellence.
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h3 className="font-bold text-gray-800">TechAdvancers</h3>
-      <p className="text-gray-500 text-sm">
-        Web Developer · June 2016 - December 2018
-      </p>
-      <ul className="list-disc list-inside text-gray-700 mt-2">
-        <li>
-          Collaborated with a team to develop high-quality web applications
-          using React.js and Node.js.
-        </li>
-        <li>
-          Integrated third-party services like Stripe and Twilio to enhance
-          functionality.
-        </li>
-        <li>Optimized application performance, reducing load times by 30%.</li>
-      </ul>
-    </div>
-  </Section>
-);
+    </Section>
+  )
+};
 
-const Education = () => (
-  <Section title="Education">
-    <div>
-      <h3 className="font-bold text-gray-800">University of California</h3>
-      <p className="text-gray-500 text-sm">
-        Bachelor of Science in Computer Science · August 2012 - May 2016
-      </p>
-    </div>
-  </Section>
-);
+const Experience = ({ allData }: { allData: { experiences: Array<{ company: string, startDate: string, endDate: string, title: string, location: string, description: string }> } }) => {
+  const { experiences } = allData;
+  return (
+    <Section title="Experience">
+      {
+        experiences.map((exp, i) => {
+          const { company, startDate, endDate, title, location, description } = exp
+          return (
+            <div className="mb-6">
+              <h3 className="font-bold text-gray-800">{company}</h3>
+              <div className="flex justify-between">
+                <p className="text-gray-500 text-sm">
+                  {`${title} · `}
+                </p>
+                <p>{`${startDate} - ${endDate}`}</p>
+              </div>
+              <ul className="list-disc list-inside text-gray-700 mt-2">
+                <li>
+                  {description}
+                </li>
+              </ul>
+            </div>
+          )
+        })
+      }
+    </Section>
+  )
+};
 
-const Projects = () => (
-  <Section title="Projects">
-    <ul className="list-disc list-inside text-gray-700">
-      <li>
-        <strong>E-Commerce Platform:</strong> Led the development of a
-        full-stack platform, improving sales conversion by 25%.
-      </li>
-      <li>
-        <strong>Interactive Dashboard:</strong> Designed an analytics dashboard
-        for a SaaS application, enhancing data visualization.
-      </li>
-    </ul>
-  </Section>
-);
+const Education = ({ allData }: { allData: { education: Array<{ degree: string, startDate: string, endDate: string, organization: string, location: string }> } }) => {
+  const { education } = allData;
+  return (
+    <Section title="Education">
+      {
+        education.map((edu, i) => {
+          const { degree, startDate, endDate, organization, location } = edu
+          return (
+            <div>
+              <h3 className="font-bold text-gray-800">{organization}</h3>
+              <p className="text-gray">{location}</p>
+              <div className="flex justify-between">
+                <p className="text-gray-500 text-sm">
+                  {`${degree} · `}
+                </p>
+                <p>{`${startDate} - ${endDate}`}</p>
+              </div>
+            </div>
+          )
+        })
+      }
+    </Section>
+  )
+};
 
-const Certifications = () => (
-  <Section title="Certifications">
-    <ul className="list-disc list-inside text-gray-700">
-      <li>Certified Web Developer - FreeCodeCamp</li>
-      <li>Advanced JavaScript Specialist - Coursera</li>
-    </ul>
-  </Section>
-);
+// const Projects = () => (
+//   <Section title="Projects">
+//     <ul className="list-disc list-inside text-gray-700">
+//       <li>
+//         <strong>E-Commerce Platform:</strong> Led the development of a
+//         full-stack platform, improving sales conversion by 25%.
+//       </li>
+//       <li>
+//         <strong>Interactive Dashboard:</strong> Designed an analytics dashboard
+//         for a SaaS application, enhancing data visualization.
+//       </li>
+//     </ul>
+//   </Section>
+// );
 
-const Skills = () => (
-  <Section title="Skills">
-    <div className="grid grid-cols-2 gap-4 text-gray-700">
-      <div>
-        <strong>Web Technologies:</strong> HTML5, CSS3, JavaScript, TypeScript
+
+const Skills = ({ allData }) => {
+  const { skills } = allData
+
+  const renderSkillItem = (item: string | { category: string; items: string[] }) => {
+    if (typeof item === 'string') {
+      return <li className="ml-4">{item}</li>;
+    } else if (typeof item === 'object' && item !== null) {
+      return (
+        <li>
+          {item.items.length > 0 && <h3 className="font-semibold">{item.category}</h3>}
+          <ul className="list-disc list-inside">
+            {Array.isArray(skills) ? skills.map((skill, index) => (
+              <React.Fragment key={index}>
+                {renderSkillItem(skill)}
+              </React.Fragment>
+            )) : null}
+          </ul>
+        </li>
+      );
+    }
+    return null;
+  };
+
+
+  return (
+    <Section title="Skills">
+      <div className="grid grid-cols-2 gap-4 text-gray-700">
+
+        {
+          skills?.map((skill, i) => {
+            const { category, items } = skill
+            return (
+              <div key={i}>
+                {items.length > 0 && (
+                  <div>
+                    <strong>{category}:</strong>
+                    <p className="text-gray-700">{items.join(", ")}</p>
+                  </div>
+                )}
+              </div>
+            )
+          })
+        }
       </div>
-      <div>
-        <strong>Frameworks:</strong> React.js, Angular, Next.js, Vue.js
-      </div>
-      <div>
-        <strong>Tools:</strong> Git, Docker, Webpack, Jenkins
-      </div>
-      <div>
-        <strong>Soft Skills:</strong> Team Collaboration, Problem Solving,
-        Leadership
-      </div>
-    </div>
-  </Section>
-);
+    </Section>
+  )
+};
 
-export const Onyx = () => {
+export const Onyx = ({ allData }) => {
   return (
     <NextUIProvider>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md">
-        <Header />
+        <Header allData={allData} />
         <div className="border-b-2 border-gray-300 my-6"></div>
-        <Summary />
+        <Summary allData={allData} />
         <div className="border-b-2 border-gray-300 my-6"></div>
-        <Experience />
+        <Experience allData={allData} />
         <div className="border-b-2 border-gray-300 my-6"></div>
-        <Education />
+        <Education allData={allData} />
+        {/* <div className="border-b-2 border-gray-300 my-6"></div>
+        <Projects /> */}
         <div className="border-b-2 border-gray-300 my-6"></div>
-        <Projects />
+        {/* <Certifications allData={allData} /> */}
         <div className="border-b-2 border-gray-300 my-6"></div>
-        <Certifications />
-        <div className="border-b-2 border-gray-300 my-6"></div>
-        <Skills />
+        <Skills allData={allData} />
       </div>
     </NextUIProvider>
   );

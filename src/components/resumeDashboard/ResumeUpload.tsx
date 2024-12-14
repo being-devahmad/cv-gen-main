@@ -2,7 +2,6 @@ import { useState, useCallback } from "react"
 import { X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { TemplatePreview } from "./TemplatePreview"
 
 interface FileDetails {
     name: string

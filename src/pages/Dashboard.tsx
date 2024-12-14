@@ -21,7 +21,7 @@ const Dashboard = () => {
         </div>
         <div className="flex gap-4 items-center md:flex-row flex-col justify-evenly">
           <CreateCard
-            handleClick={() => navigate("/")}
+            handleClick={() => navigate("/select")}
             title="Resume"
             subTitle="Better resume builder"
           />

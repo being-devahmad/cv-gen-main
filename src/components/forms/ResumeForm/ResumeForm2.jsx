@@ -3,7 +3,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Experience from "./Experience";
 import Education from "./Education";
 import Skills from "./Skills";
-import { Projects } from "./Projects";
 import { PreviewResume } from "./PreviewResume";
 import { ContactInfo } from "./ContactInfo"
 
@@ -11,7 +10,6 @@ const steps = [
   { id: "contact", title: "Contact Info" },
   { id: "experience", title: "Experience" },
   { id: "education", title: "Education" },
-  { id: "projects", title: "Projects" },
   { id: "skills", title: "Skills" },
   { id: "finish", title: "Finish" },
 ];
@@ -78,14 +76,6 @@ export const ResumeForm2 = ({ allData, setAllData, categoryData }) => {
               />
             ) : activeTab === "education" ? (
               <Education
-                allData={allData}
-                setAllData={setAllData}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                categoryData={categoryData}
-              />
-            ) : activeTab === "projects" ? (
-              <Projects
                 allData={allData}
                 setAllData={setAllData}
                 activeTab={activeTab}

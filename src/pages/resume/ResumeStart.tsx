@@ -12,6 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import ResumePreview from '@/components/resumeDashboard/ResumePreview';
 import { Onyx } from '@/templates/onyx';
 import Bronzor from '@/templates/bronzor';
+import Pikachu from '@/templates/pikachu';
 
 const ResumeStart: React.FC = () => {
     const { id } = useParams()
@@ -35,7 +36,6 @@ const ResumeStart: React.FC = () => {
         summary: "",
         experiences: [],
         education: [],
-        projects: [],
         // skills: []
     });
 
@@ -99,11 +99,13 @@ const ResumeStart: React.FC = () => {
             case '3':
                 return <Nosepass allData={allData} />;
             case '4':
-                return <Onyx />;
+                return <Onyx allData={allData} />;
             case '5':
-                return <Bronzor />;
+                return <Bronzor allData={allData} />;
+            case '6':
+                return <Pikachu allData={allData} />;
             default:
-                return <Azurill  />;
+                return <Azurill allData={allData} />;
         }
     };
 
