@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://i.imgur.com/8bsHUOZ.png" alt="AI Resume Builder Banner" width="100%"/>
 
   # AI Resume Builder ⚡️
 
@@ -23,14 +22,10 @@
 
 Transform your job search with our AI-powered resume builder! Create professional, ATS-optimized resumes in minutes that catch recruiters' attention and highlight your true potential.
 
-<div align="center">
-  <img src="https://i.imgur.com/YL3JRPE.png" alt="AI Resume Builder Interface" width="80%"/>
-</div>
 
 ## ✨ Key Features
 
 ### 🤖 AI Writing Assistant
-<img align="right" src="https://i.imgur.com/K7JF9QX.png" width="40%"/>
 
 - Generate compelling content tailored to job descriptions
 - Highlight relevant skills and experiences
@@ -46,7 +41,6 @@ Transform your job search with our AI-powered resume builder! Create professiona
 - Font customization
 
 ### 📊 ATS Optimization
-<img align="left" src="https://i.imgur.com/RZ5NLBL.png" width="40%"/>
 
 - Keyword optimization
 - Format compatibility
@@ -63,10 +57,15 @@ Transform your job search with our AI-powered resume builder! Create professiona
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- OpenAI API key
+### ENV File
+- VITE_GEMINI_API_KEY=""
+- VITE_FIREBASE_API_KEY=""
+- VITE_AUTH_DOMAIN=""
+- VITE_PROJECT_ID=""
+- VITE_STORAGE_BUCKET=""
+- VITE_MESSAGING_SENDER_ID=""
+- VITE_APP_ID=""
+- VITE_MEASUREMENT_ID=""
 
 ### Installation
 
@@ -89,9 +88,6 @@ npm run dev
 
 ## 📱 Usage
 
-<div align="center">
-  <img src="https://i.imgur.com/W9nVxvK.png" alt="Usage Steps" width="100%"/>
-</div>
 
 1. **Create Account**: Sign up using email or social login
 2. **Choose Template**: Browse and select from our template library
@@ -101,12 +97,12 @@ npm run dev
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, TypeScript, TailwindCSS
-- **AI Integration**: OpenAI GPT-4
-- **State Management**: Redux Toolkit
+- **Frontend**: React, TypeScript, TailwindCSS, Shadcn UI, NextUI
+- **Libraries**: Shadcn UI, NextUI
+- **AI Integration**: Gemini-pro
+- **State Management**: Context API
 - **Form Handling**: React Hook Form
 - **PDF Generation**: React-PDF
-- **Testing**: Jest, React Testing Library
 
 ## 📊 Project Structure
 
