@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Plus, Trash2 } from 'lucide-react';
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 interface EducationItem {
   degree: string;
@@ -28,6 +29,9 @@ export default function Education({
   categoryData,
 }: EducationProps) {
   const [education, setEducation] = useState<EducationItem[]>(() => {
+
+
+
     if (categoryData && categoryData.education.length > 0) {
       return categoryData.education.map((edu: any) => ({
         degree: edu.degree || "",
@@ -82,9 +86,14 @@ export default function Education({
     setAllData({ ...allData, education: updatedEducation });
   };
 
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleNext = () => {
-    setActiveTab("skills");
+    if (education.length === 1) {
+      setShowConfirmation(true);
+    } else {
+      setActiveTab("skills");
+    }
   };
 
   const handleBack = () => {
@@ -171,6 +180,19 @@ export default function Education({
           Next to Skills <span className="pl-2">&#x2192;</span>
         </Button>
       </div>
+
+      <ConfirmationDialog
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onContinue={() => {
+          setShowConfirmation(false);
+          setActiveTab("skills");
+        }}
+        onAddMore={() => {
+          setShowConfirmation(false);
+          addEducation();
+        }}
+      />
     </Card>
   );
 }

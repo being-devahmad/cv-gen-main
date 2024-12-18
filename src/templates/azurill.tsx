@@ -1,12 +1,13 @@
 import React from "react";
 
-const Header = ({ allData }: { allData: { firstName: string; lastName: string; city: string; country: string; email: string; phone: string; postalCode: string, summary: string } }) => {
-    const { firstName, lastName, phone, email, city, postalCode, country, summary } = allData;
+const Header = ({ allData }: { allData: { firstName: string; lastName: string; jobTite: string; city: string; country: string; email: string; phone: string; postalCode: string, summary: string } }) => {
+    const { firstName, lastName, phone, email, city, postalCode, country, summary, jobTite } = allData;
 
     return (
         <>
             <div>
                 <h1 className="text-4xl font-bold mb-2">{firstName} {lastName} </h1>
+                <p className="font-bold mb-2">{jobTite} </p>
                 <div className="text-sm space-x-2">
                     <span>{phone}</span>
                     <span>·</span>

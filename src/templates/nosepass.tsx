@@ -52,15 +52,18 @@ export function Education({ allData }: { allData: { education: any[] } }) {
         <GraduationCap className="w-5 h-5 text-blue-500" /> Education
       </h2>
       {education?.map((val, ind) => {
-        const { degree, startDate, endDate, organization } = val;
+        const { degree, startDate, endDate, organization, location } = val;
         return (
           <>
             <div className="bg-gray-100 rounded-lg p-4" key={ind}>
-              <h3 className="font-semibold text-gray-800 text-lg">
-                {organization}
-              </h3>
-              <p className="text-gray-700 text-sm">{degree}</p>
-              <p className="text-gray-600 mt-1 text-xs">{startDate} - {endDate}</p>
+              <div className="flex justify-between">
+                <h3 className="font-semibold text-gray-800 text-lg">
+                  {degree}
+                </h3>
+                <p className="text-gray-600 mt-1 text-xs">{startDate} - {endDate}</p>
+              </div>
+
+              <p className="text-gray-700 text-sm">{organization} <span>,</span> {location} </p>
             </div>
           </>
         );
@@ -72,14 +75,17 @@ export function Education({ allData }: { allData: { education: any[] } }) {
 export function Header({
   allData,
 }: {
-  allData: { firstName: string; lastName: string };
+  allData: { firstName: string; lastName: string; jobTitle: string };
 }) {
-  const { firstName, lastName } = allData;
+  const { firstName, lastName, jobTitle } = allData;
   return (
     <header className="text-center">
       <h1 className="text-2xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
         {`${firstName} ${lastName}`}
       </h1>
+      <p className="text-md font-bold mb-1 text-white from-blue-400 to-purple-500">
+        {jobTitle}
+      </p>
     </header>
   );
 }
@@ -110,28 +116,26 @@ export function Experience({ allData }: { allData: { experiences: any[] } }) {
   return (
     <section className="mb-6">
       <h2 className="text-xl font-bold mb-3 text-gray-800 border-b border-gray-300 pb-1 flex items-center">
-        <Briefcase className="w-6 h-6 mr-2 text-blue-500" /> EXPERIENCE
+        <Briefcase className="w-6 h-6 mr-2 text-blue-500" /> Experience
       </h2>
       <div className="space-y-6">
         {experiences.map((exp, index) => {
-          const { company, startDate, endDate, title, description } = exp;
-          console.log("hahah", experiences);
+          const { company, startDate, endDate, title, description, location , current } = exp;
           return (
             <div key={index}>
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h3 className="font-semibold text-gray-800 text-lg">
-                    {company}
+                    {title}
                   </h3>
-                  <p className="text-gray-700">{title}</p>
-                  {/* <p className="text-gray-600">{location}</p> */}
+                  <p className="text-gray-700">{company} <span>,</span> {location}</p>
                 </div>
                 <span className="text-gray-600 text-sm">
-                  {startDate} - {endDate}
+                  {startDate} - {endDate ? endDate : (!endDate && current && "present")}
                 </span>
               </div>
-             
-              <p className="text-xs">{description.slice(0, 100)}</p>
+
+              <p className="text-xs">{description}</p>
             </div>
           );
         })}
@@ -139,6 +143,45 @@ export function Experience({ allData }: { allData: { experiences: any[] } }) {
     </section>
   );
 }
+
+
+// Achievements
+export function Activities({ allData }: { allData: { activities: any[] } }) {
+  const { activities } = allData;
+
+
+  return (
+    <section className="mb-6">
+      <h2 className="text-xl font-bold mb-3 text-gray-800 border-b border-gray-300 pb-1 flex items-center">
+        <Briefcase className="w-6 h-6 mr-2 text-blue-500" /> Achievements
+      </h2>
+      <div className="space-y-6">
+        {activities && activities.map((activity, index) => {
+          const { title, employer, startDate, endDate, description, current } = activity
+          return (
+            <div key={index}>
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-semibold text-gray-800 text-lg">
+                    {title}
+                  </h3>
+                  <p className="text-gray-700">{employer}</p>
+                </div>
+                <span className="text-gray-600 text-sm">
+                {startDate} - {endDate ? endDate : (!endDate && current && "present")}
+                </span>
+              </div>
+
+              <p className="text-xs">{description}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+
 const Skills = ({
   allData,
 }: {
@@ -172,10 +215,13 @@ const Skills = ({
     return null;
   };
 
+
+
+
   return (
-    <div className=" ">
+    <div className=" mb-2">
       <h2 className="text-xl font-bold border-b border-gray-100 pb-2 mb-4">
-        SKILLS
+        Skills
       </h2>
       <ul className="space-y-2">
         {Array.isArray(skills)
@@ -189,8 +235,27 @@ const Skills = ({
     </div>
   );
 };
-import React from "react";
 
+
+export const Languages = ({ allData }: { allData: { languages: { name: string; level: string }[] } }) => {
+  return (
+    <section className="mb-6 text-xs">
+      <h2 className="text-xl font-bold border-b border-gray-100 pb-2 mb-4">
+        Languages
+      </h2>
+      <ul className="space-y-4">
+        {allData.languages.map((lang, id) => {
+          return (
+            <li key={id}>{lang.name} <span>-</span> <span>{lang.level}</span></li>
+          )
+        })}
+      </ul>
+    </section>
+  )
+}
+
+
+import React from "react";
 
 export const Nosepass = ({ allData }: { allData: any }) => {
   return (
@@ -199,17 +264,19 @@ export const Nosepass = ({ allData }: { allData: any }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-5 bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6">
             <div className="flex flex-col items-center mb-6">
-             
+
               <Header allData={allData} />
             </div>
             <PersonalInformation allData={allData} />
             <Skills allData={allData} />
+            {allData.languages && <Languages allData={allData} />}
             {/* <Profiles allData={allData} /> */}
           </div>
           <div className="md:col-span-7 p-6">
             <Summary allData={allData} />
             <Experience allData={allData} />
             <Education allData={allData} />
+            {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
           </div>
         </div>
       </div>

@@ -23,6 +23,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import Resume from "@/pages/Resumes";
 import BuilderLandingPage from "@/pages/resume/ResumeOptions";
 import ResumeStart from "@/pages/resume/ResumeStart";
+import DashboardSettings from "@/pages/DashboardSettings";
 
 export const router = createBrowserRouter([
   {
@@ -149,11 +150,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: (
-          <div>
-            <h2>Dashboard settings</h2>
-          </div>
-        ),
+        element: <DashboardSettings />,
       },
     ],
   },

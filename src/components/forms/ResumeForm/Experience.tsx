@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@nextui-org/button";
-import { Input, Checkbox } from "@nextui-org/react";
-import { Plus, Trash2 } from 'lucide-react';
+import { Input, Checkbox, Textarea } from "@nextui-org/react";
+import { Brain, Plus, Trash2 } from 'lucide-react';
 import { Separator } from "@/components/ui/separator";
-import { AITextarea } from "./AIBasedDescription";
+import { AIChatSession } from "@/services/AIModal";
+import { AIGenerateExperienceDialog } from "@/components/AIGenerateExperienceDialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ExperienceProps {
   allData: Record<string, any>;
@@ -24,15 +26,12 @@ interface ExperienceItem {
   description: string;
 }
 
-
 const Experience: React.FC<ExperienceProps> = ({
   allData,
   setAllData,
   setActiveTab,
   categoryData
 }) => {
-
-
   const [experiences, setExperiences] = useState<ExperienceItem[]>(() => {
     if (categoryData && categoryData.experience.length > 0) {
       return categoryData.experience.map((exp: any) => ({
@@ -41,7 +40,7 @@ const Experience: React.FC<ExperienceProps> = ({
         location: exp.location || "",
         startDate: exp.duration ? exp.duration.split(' - ')[0] : "",
         endDate: exp.duration ? exp.duration.split(' - ')[1] : "",
-        // currentlyWorking: exp.duration.includes('present'),
+        currentlyWorking: exp.duration.includes('present'),
         description: exp.responsibilities ? exp.responsibilities.join('\n') : "",
       }));
     }
@@ -58,6 +57,12 @@ const Experience: React.FC<ExperienceProps> = ({
     ];
   });
 
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [currentExperienceIndex, setCurrentExperienceIndex] = useState<number | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; index: number | null }>({ isOpen: false, index: null });
+
   const handleAddExperience = () => {
     setExperiences([
       ...experiences,
@@ -73,24 +78,47 @@ const Experience: React.FC<ExperienceProps> = ({
     ]);
   };
 
+  // const handleRemoveExperience = (index: number) => {
+  //   const updatedExperiences = experiences.filter((_, i) => i !== index);
+  //   setExperiences(updatedExperiences);
+  //   setAllData({ ...allData, experiences: updatedExperiences });
+  // };
+
   const handleRemoveExperience = (index: number) => {
-    const updatedExperiences = experiences.filter((_, i) => i !== index);
-    setExperiences(updatedExperiences);
-    setAllData({ ...allData, experiences: updatedExperiences });
+    setDeleteConfirmation({ isOpen: true, index });
   };
 
-  const formatDate = (input: string): string => {
-    const date = new Date(input);
-    if (!isNaN(date.getTime())) {
-      return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const confirmDelete = () => {
+    if (deleteConfirmation.index !== null) {
+      const updatedExperiences = experiences.filter((_, i) => i !== deleteConfirmation.index);
+      setExperiences(updatedExperiences);
+      setAllData({ ...allData, experiences: updatedExperiences });
     }
-    return input; // Return the input as-is if it's not a valid date
+    setDeleteConfirmation({ isOpen: false, index: null });
   };
+
+  // const formatDate = (input: string): string => {
+  //   const date = new Date(input);
+  //   if (!isNaN(date.getTime())) {
+  //     // Return formatted date only if the input is valid
+  //     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  //   }
+  //   // Return input as-is if it's not a valid date
+  //   return input;
+  // };
+
 
   const handleChange = (index: number, field: string, value: string | boolean) => {
-    const updatedExperiences = experiences.map((exp, i) =>
-      i === index ? { ...exp, [field]: field.includes('Date') ? formatDate(value as string) : value } : exp
-    );
+    const updatedExperiences = experiences.map((exp, i) => {
+      if (i === index) {
+        const updatedField = field.includes('Date') && typeof value === 'string'
+          ? { [field]: value } // Only format valid ISO strings
+          : { [field]: value };
+
+        return { ...exp, ...updatedField };
+      }
+      return exp;
+    });
 
     if (field === 'currentlyWorking' && value === true) {
       updatedExperiences[index].endDate = 'Present';
@@ -99,6 +127,7 @@ const Experience: React.FC<ExperienceProps> = ({
     setExperiences(updatedExperiences);
     setAllData({ ...allData, experiences: updatedExperiences });
   };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,12 +139,65 @@ const Experience: React.FC<ExperienceProps> = ({
     setActiveTab('contact');
   };
 
+  const generateExperienceFromAI = async (index: number) => {
+    setIsAnalyzing(true);
+    setCurrentExperienceIndex(index);
+    const experience = experiences[index];
+    const prompt = `Generate a concise professional description for the following work experience:
+    Job Title: ${experience.title}
+    Company: ${experience.company}
+    Location: ${experience.location}
+    Start Date: ${experience.startDate}
+    End Date: ${experience.endDate}
+    Currently Working: ${experience.currentlyWorking ? 'Yes' : 'No'}
+    
+    Please provide 2-3 brief, impactful statements describing key responsibilities and achievements for this role. 
+    Format the response as a JSON array with each statement as an object containing 'id' and 'text' fields. For example:
+    [
+      { "id": 1, "text": "Led a team of 5 developers to successfully launch a new product feature, increasing user engagement by 25%." },
+      { "id": 2, "text": "Optimized database queries, resulting in a 40% improvement in application performance." }
+    ]`;
+
+    try {
+      const result = await AIChatSession.sendMessage(prompt);
+      const jsonResponse = JSON.parse(result.response.text());
+      console.log("AI-generated description:", jsonResponse);
+      setSuggestions(jsonResponse.map((item: { text: string }) => item.text));
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error("Error generating AI experience description:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    if (currentExperienceIndex !== null) {
+      const updatedExperiences = [...experiences];
+      const currentDescription = updatedExperiences[currentExperienceIndex].description;
+      updatedExperiences[currentExperienceIndex].description = currentDescription
+        ? `${currentDescription}\n• ${suggestion}`
+        : `• ${suggestion}`;
+      setExperiences(updatedExperiences);
+      setAllData({ ...allData, experiences: updatedExperiences });
+    }
+  };
+
+  const handleAcceptAll = () => {
+    if (currentExperienceIndex !== null) {
+      const updatedExperiences = [...experiences];
+      updatedExperiences[currentExperienceIndex].description = suggestions.map(s => `• ${s}`).join('\n');
+      setExperiences(updatedExperiences);
+      setAllData({ ...allData, experiences: updatedExperiences });
+      setShowSuggestions(false);
+    }
+  };
+
   useEffect(() => {
     if (experiences.length > 0) {
       setAllData({ ...allData, experiences: experiences });
     }
   }, []);
-
 
   return (
     <Card className="p-6">
@@ -179,11 +261,10 @@ const Experience: React.FC<ExperienceProps> = ({
                   label="End Date"
                   type="month"
                   value={experience.endDate}
-                  onChange={(e) => handleChange(index, "endDate", formatDate(e.target.value))}
+                  onChange={(e) => handleChange(index, "endDate", e.target.value)}
                   disabled={experience.currentlyWorking}
                   placeholder={experience.currentlyWorking ? "Present" : ""}
                 />
-
               </div>
 
               <div className="mb-2">
@@ -197,11 +278,25 @@ const Experience: React.FC<ExperienceProps> = ({
               </div>
 
               <div>
-                <AITextarea
-                  value={experience.description}
-                  onChange={(value) => handleChange(index, "description", value)}
-                  label="Description"
-                />
+                <div className="flex justify-end" >
+                  <Button
+                    size="sm"
+                    radius="sm"
+                    className="font-bold bg-black text-white mb-1"
+                    variant="faded"
+                    onClick={() => generateExperienceFromAI(index)}
+                  >
+                    <Brain /> Generate with AI
+                  </Button>
+                </div>
+                <div>
+                  <Textarea
+                    variant="bordered"
+                    value={experience.description}
+                    onChange={(e) => handleChange(index, "description", e.target.value)}
+                    label="Description"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -221,10 +316,39 @@ const Experience: React.FC<ExperienceProps> = ({
           </Button>
         </div>
       </form>
+
+      <AIGenerateExperienceDialog
+        isAnalyzing={isAnalyzing}
+        showSuggestions={showSuggestions}
+        suggestions={suggestions}
+        onClose={() => setShowSuggestions(false)}
+        onSuggestionClick={handleSuggestionClick}
+        onAcceptAll={handleAcceptAll}
+      />
+
+      {/* Delete Confirmation DIalog */}
+      <Dialog open={deleteConfirmation.isOpen} onOpenChange={(isOpen) => setDeleteConfirmation({ isOpen, index: null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this experience? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="light" onClick={() => setDeleteConfirmation({ isOpen: false, index: null })}>
+              Cancel
+            </Button>
+            <Button color="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </Card>
   );
 };
 
 export default Experience;
-
 

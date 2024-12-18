@@ -1,64 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FileText, AlertTriangle, Check, AlertCircle } from 'lucide-react';
-import { useTemplateProcessing } from '@/hooks/useTemplateProcessing';
-import { templates } from '@/data/templates';
+import React, { useState, useCallback } from 'react'
+import { motion } from 'framer-motion'
+import { FileText, AlertTriangle, Check, AlertCircle } from 'lucide-react'
+import { AIFileParser } from './AIResumeParser'
 
-interface ContinuousTemplatePreviewProps {
-    fileName: string;
-    fileContent: string | ArrayBuffer | null;
+interface TemplatePreviewProps {
+    fileName: string
+    fileContent: string | ArrayBuffer | null
 }
 
-export const TemplatePreview: React.FC<ContinuousTemplatePreviewProps> = ({ fileName, fileContent }) => {
-    const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
-    const { isComplete, isProcessing, categoryData, processingError, processDocument } = useTemplateProcessing();
-    const [progress, setProgress] = useState(0);
-    const [applyCount, setApplyCount] = useState(0);
+export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, fileContent }) => {
+    const [parsedResumeData, setParsedResumeData] = useState<any>(null)
+    const [parsingError, setParsingError] = useState<string | null>(null)
+    const [parsingProgress, setParsingProgress] = useState(0)
 
-    const getTemplateImage = useCallback((templateId?: string) => {
-        const template = templates.find((temp) => temp.id === templateId);
-        return template?.image || "/placeholder.svg?height=240&width=320";
-    }, []);
+    const handleParseComplete = useCallback((data: any) => {
+        setParsedResumeData(data)
+        setParsingProgress(100)
+    }, [])
 
-    const applyTemplate = useCallback(() => {
-        if (fileContent) {
-            processDocument(fileContent);
-            setApplyCount((prev) => prev + 1);
-        }
-    }, [fileContent, processDocument]);
+    const handleParseError = useCallback((error: string) => {
+        setParsingError(error)
+        setParsingProgress(0)
+    }, [])
 
-    useEffect(() => {
-        applyTemplate();
-    }, [applyTemplate]);
+    const handleParsingProgress = useCallback((progress: number) => {
+        setParsingProgress(progress)
+    }, [])
 
-    useEffect(() => {
-        if (categoryData) {
-            navigate(`/select/${id}/start`, { state: { categoryData } });
-        } else if (isComplete) {
-            const timer = setTimeout(() => {
-                applyTemplate();
-            }, 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [categoryData, id, navigate, isComplete, applyTemplate]);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress((oldProgress) => {
-                const newProgress = Math.min(oldProgress + Math.random() * 10, 100);
-                if (newProgress === 100) {
-                    clearInterval(timer);
-                }
-                return newProgress;
-            });
-        }, 500);
-
-        return () => clearInterval(timer);
-    }, [applyCount]);
-
-    if (processingError) {
+    if (parsingError) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-100 p-4 flex items-center justify-center">
                 <motion.div
@@ -70,21 +39,17 @@ export const TemplatePreview: React.FC<ContinuousTemplatePreviewProps> = ({ file
                         <AlertTriangle className="w-12 h-12 text-red-500" />
                     </div>
                     <h2 className="text-xl font-semibold text-center text-red-600 mb-2">Error Processing Document</h2>
-                    {/* <p className="text-center text-gray-600">{processingError}</p> */}
                     <div className="bg-red-50 border-l-4 border-red-500 p-4 my-4">
                         <div className="flex items-center">
                             <AlertCircle className="h-6 w-6 text-red-500 mr-3" />
-                            {/* <p className="text-sm text-red-700">
-                                {processingError}
-                            </p> */}
                         </div>
                         <p className="mt-2 text-sm text-red-700">
-                            We're experiencing high demand. Please try again in a few minutes or contact support if the issue persists.
+                            {parsingError || "We're experiencing high demand. Please try again in a few minutes or contact support if the issue persists."}
                         </p>
                     </div>
                 </motion.div>
             </div>
-        );
+        )
     }
 
     return (
@@ -100,7 +65,7 @@ export const TemplatePreview: React.FC<ContinuousTemplatePreviewProps> = ({ file
                     </div>
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">{fileName}</h2>
-                        <p className="text-sm text-gray-500">Applying template... (Attempt {applyCount})</p>
+                        <p className="text-sm text-gray-500">Processing your resume...</p>
                     </div>
                 </div>
 
@@ -108,12 +73,12 @@ export const TemplatePreview: React.FC<ContinuousTemplatePreviewProps> = ({ file
                     <div className="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
                         <motion.div
                             initial={{ width: 0 }}
-                            animate={{ width: `${progress}%` }}
+                            animate={{ width: `${parsingProgress}%` }}
                             transition={{ duration: 0.5 }}
                             className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
                         />
                     </div>
-                    {progress === 100 && (
+                    {parsingProgress === 100 && (
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -127,29 +92,26 @@ export const TemplatePreview: React.FC<ContinuousTemplatePreviewProps> = ({ file
                 </div>
 
                 <p className="text-center text-sm font-medium text-gray-600 mb-4">
-                    {isProcessing ? "Processing your document..." : "Preparing for next attempt..."}
+                    {parsingProgress < 100 ? "Analyzing your resume..." : "Resume analysis complete!"}
                 </p>
 
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden">
-                    <img
-                        src={getTemplateImage(id)}
-                        alt="Resume template preview"
-                        className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-white text-center"
-                        >
-                            <h3 className="text-xl font-bold mb-2">Your New Resume</h3>
-                            <p className="text-sm">Customizing and optimizing...</p>
-                        </motion.div>
+                {parsedResumeData && (
+                    <div className="mt-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Parsed Resume Data:</h3>
+                        <pre className="bg-gray-100 p-4 rounded-lg overflow-auto max-h-60 text-sm">
+                            {JSON.stringify(parsedResumeData, null, 2)}
+                        </pre>
                     </div>
-                </div>
+                )}
+
+                <AIFileParser
+                    fileContent={fileContent}
+                    onParseComplete={handleParseComplete}
+                    onParseError={handleParseError}
+                    onParsingProgress={handleParsingProgress}
+                />
             </motion.div>
         </div>
-    );
-};
+    )
+}
 

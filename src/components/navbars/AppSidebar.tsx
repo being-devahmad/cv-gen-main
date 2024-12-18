@@ -1,4 +1,4 @@
-import { Calendar, Home, LucidePaperclip, Settings } from "lucide-react";
+import {  Home, LucidePaperclip, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -25,13 +25,8 @@ const items = [
   },
   {
     title: "Templates",
-    url: "/dashboard/Templates",
+    url: "/select",
     icon: LucidePaperclip,
-  },
-  {
-    title: "Jobs",
-    url: "/dashboard/jobs",
-    icon: Calendar,
   },
 ];
 

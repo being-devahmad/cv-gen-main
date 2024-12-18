@@ -37,7 +37,6 @@ export default function Skills({
       const skillCategories: SkillCategory[] = [
         { category: "Technical Skills", items: [] },
         { category: "Soft Skills", items: [] },
-        { category: "Languages", items: categoryData.skills.languages || [] },
         { category: "Frameworks", items: categoryData.skills.frameworks || [] },
         { category: "Libraries", items: categoryData.skills.libraries || [] },
         { category: "Tools", items: categoryData.skills.tools || [] },
@@ -47,7 +46,6 @@ export default function Skills({
     return allData.skills || [
       { category: "Technical Skills", items: [] },
       { category: "Soft Skills", items: [] },
-      { category: "Languages", items: [] },
       { category: "Frameworks", items: [] },
       { category: "Libraries", items: [] },
       { category: "Tools", items: [] },

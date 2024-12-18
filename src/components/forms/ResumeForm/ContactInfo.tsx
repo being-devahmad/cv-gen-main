@@ -6,7 +6,11 @@ import { ContactInfoSchema } from "@/lib/validations";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Brain } from 'lucide-react';
+import { AIChatSession } from "@/services/AIModal";
+import { AIGenerateDialog } from "@/components/AIGenerateDialog";
 
 interface ContactInfoProps {
   allData: Record<string, any>;
@@ -27,6 +31,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
     defaultValues: {
       firstName: allData.firstName || "",
       lastName: allData.lastName || "",
+      jobTitle: allData.jobTitle || "",
       phone: allData.phone || "",
       email: allData.email || "",
       country: allData.country || "",
@@ -43,6 +48,10 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
     formState: { errors },
   } = form;
 
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   const handleInputChange = (field: string, value: string) => {
     setAllData({ ...allData, [field]: value });
   };
@@ -54,12 +63,50 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
     setActiveTab("experience");
   };
 
+  const prompt = `Job Title: {jobTitle} , Depends on job title give me list of  summery for 3 experience level, Mid Level and Freasher level in 1 - 2 lines in array format, with summary in JSON Format. Format should be like 
+  [
+    {
+      id : "",
+      summary : ""
+  }] `
+
+  const generateSummaryFromAI = async () => {
+    setIsAnalyzing(true);
+    const PROMPT = prompt.replace('{jobTitle}', allData?.jobTitle);
+    try {
+      const result = await AIChatSession.sendMessage(PROMPT);
+      const parsedResult = JSON.parse(result.response.text());
+      console.log("paresedResult-->", parsedResult)
+      const summaries = parsedResult && parsedResult.map((item: any) => item.summary);
+      setSuggestions(summaries);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error("Error generating AI suggestions:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    form.setValue("summary", suggestion);
+    setAllData({ ...allData, summary: suggestion });
+    setShowSuggestions(false);
+  };
+
+  const handleAcceptAll = () => {
+    const combinedSummary = suggestions.join(" ");
+    form.setValue("summary", combinedSummary);
+    setAllData({ ...allData, summary: combinedSummary });
+    setShowSuggestions(false);
+  };
+
   useEffect(() => {
     if (categoryData?.personalInformation) {
-      const { name, email, contact } = categoryData.personalInformation;
+      const { name, email, contact, jobTitle } = categoryData.personalInformation;
       const updatedValues = {
         firstName: name?.split(' ')[0] || '',
         lastName: name?.split(' ').slice(1).join(' ') || '',
+        jobTitle: jobTitle,
         email: email || '',
         phone: contact || '',
         country: form.getValues('country'),
@@ -89,8 +136,9 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="First Name"
                   variant="bordered"
-                  {...field}
+                  isInvalid={!!errors.firstName}
                   errorMessage={errors.firstName?.message?.toString()}
+                  {...field}
                   onChange={(e) => {
                     field.onChange(e);
                     handleInputChange("firstName", e.target.value);
@@ -106,11 +154,33 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Last Name"
                   variant="bordered"
+                  isInvalid={!!errors.lastName}
                   errorMessage={errors.lastName?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
                     handleInputChange("lastName", e.target.value);
+                  }}
+                />
+              )}
+            />
+          </div>
+
+          {/* Job Title */}
+          <div className="grid grid-cols-1 gap-3">
+            <FormField
+              control={control}
+              name="jobTitle"
+              render={({ field }) => (
+                <Input
+                  label="Job Title"
+                  variant="bordered"
+                  isInvalid={!!errors.jobTitle}
+                  errorMessage={errors.jobTitle?.message?.toString()}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    handleInputChange("jobTitle", e.target.value);
                   }}
                 />
               )}
@@ -126,6 +196,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Phone"
                   variant="bordered"
+                  isInvalid={!!errors.phone}
                   errorMessage={errors.phone?.message?.toString()}
                   {...field}
                   onChange={(e) => {
@@ -144,7 +215,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                   label="Email"
                   type="email"
                   variant="bordered"
-                  errorMessage={errors?.email?.message?.toString()}
+                  isInvalid={!!errors.email}
+                  errorMessage={errors.email?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -164,7 +236,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Country"
                   variant="bordered"
-                  errorMessage={errors?.country?.message?.toString()}
+                  isInvalid={!!errors.country}
+                  errorMessage={errors.country?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -181,7 +254,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="City"
                   variant="bordered"
-                  errorMessage={errors?.city?.message?.toString()}
+                  isInvalid={!!errors.city}
+                  errorMessage={errors.city?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -198,7 +272,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
                 <Input
                   label="Postal Code"
                   variant="bordered"
-                  errorMessage={errors?.postalCode?.message?.toString()}
+                  isInvalid={!!errors.postalCode}
+                  errorMessage={errors.postalCode?.message?.toString()}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -208,21 +283,37 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
               )}
             />
           </div>
-          <FormField
-            control={control}
-            name="summary"
-            render={({ field }) => (
-              <textarea
-                className="textarea-bordered bg-[#F7F7F8] w-full p-2 border-2 rounded-lg shadow-md"
-                placeholder="Enter a brief summary"
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                  handleInputChange("summary", e.target.value);
-                }}
-              />
-            )}
-          />
+
+          <div>
+            <div className="flex justify-end">
+              <Button
+                size="sm"
+                radius="sm"
+                className="font-bold bg-black text-white mb-1"
+                variant="faded"
+                onClick={generateSummaryFromAI}
+              >
+                <Brain /> Generate with AI
+              </Button>
+            </div>
+            <FormField
+              control={control}
+              name="summary"
+              render={({ field }) => (
+                <Textarea
+                  className={`textarea-bordered bg-[#F7F7F8] w-full p-2 border-2 rounded-lg ${
+                    errors.summary ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Enter a brief summary"
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    handleInputChange("summary", e.target.value);
+                  }}
+                />
+              )}
+            />
+          </div>
 
           <div className="flex items-center justify-end mt-10">
             <Button
@@ -236,6 +327,16 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
           </div>
         </form>
       </Form>
+
+      <AIGenerateDialog
+        isAnalyzing={isAnalyzing}
+        showSuggestions={showSuggestions}
+        suggestions={suggestions}
+        onClose={() => setShowSuggestions(false)}
+        onSuggestionClick={handleSuggestionClick}
+        onAcceptAll={handleAcceptAll}
+      />
+
     </Card>
   );
 };

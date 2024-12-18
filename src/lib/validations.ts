@@ -27,12 +27,13 @@ export const ContactUsSchema = z.object({
 export const ContactInfoSchema = z.object({
   firstName: z.string().min(2, "First Name is required"),
   lastName: z.string().min(2, "Last Name is required"),
+  jobTitle: z.string().min(2, "Job Title is required"),
   city: z.string().min(2, "City is required"),
   postalCode: z.string().min(2, "Postal Code is required"),
   country: z.string().min(3, "Countryis required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(11, "Phone number must be at least 11 digits"),
-  summary: z.string().optional(), // Add summary
+  summary: z.string().optional(),
 });
 
 export const ExperienceSchema = z.object({

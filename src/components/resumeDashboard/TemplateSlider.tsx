@@ -18,7 +18,7 @@ interface Template {
 }
 
 export function TemplateSlider() {
-    const [activeIndex, setActiveIndex] = useState(0 - 1)
+    const [activeIndex, setActiveIndex] = useState(0)
     const navigate = useNavigate()
     const [slidesPerView, setSlidesPerView] = useState(1)
 
