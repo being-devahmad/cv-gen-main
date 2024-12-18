@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
+import { doc, updateDoc } from "firebase/firestore"; // Import updateDoc and doc
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, Plus, X } from 'lucide-react'
 import { useState } from "react"
@@ -19,16 +19,18 @@ interface PreviewResumeProps {
   setAllData: (data: Record<string, any>) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  resumeID:any
 }
 
 export const PreviewResume: React.FC<PreviewResumeProps> = ({
   allData,
   setAllData,
-  setActiveTab
+  setActiveTab,
+  resumeID
 }) => {
 
 
-  console.log("ALL___DATA___>", allData)
+  console.log("ALL___DATA___>", allData,resumeID)
 
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
@@ -132,38 +134,89 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
     return obj;
   };
 
+  // const handleSave = async () => {
+  //   setIsSaving(true);
+  //   try {
+  //     const cleanedData = removeUndefined({ ...allData });
+  //     const dataToSave = {
+  //       ...cleanedData,
+  //       userId: user?.id || null,
+  //       createdAt: serverTimestamp(),
+  //       updatedAt: serverTimestamp(),
+  //       templateId: id // templateId
+  //     };
+  //     console.log("Final Data to Save -->", dataToSave);
+
+  //     const docRef = await addDoc(collection(db, "resumes"), dataToSave);
+  //     console.log("Document written with ID: ", docRef.id);
+
+  //     toast({
+  //       title: "Success",
+  //       description: "Your resume data has been saved.",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error saving resume data:", error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to save resume data. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+
+
   const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      const cleanedData = removeUndefined({ ...allData });
-      const dataToSave = {
-        ...cleanedData,
-        userId: user?.id || null,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        templateId: id // templateId
-      };
-      console.log("Final Data to Save -->", dataToSave);
-
-      const docRef = await addDoc(collection(db, "resumes"), dataToSave);
-      console.log("Document written with ID: ", docRef.id);
-
-      toast({
-        title: "Success",
-        description: "Your resume data has been saved.",
-      });
-    } catch (error) {
-      console.error("Error saving resume data:", error);
-      toast({
-        title: "Error",
-        description: "Failed to save resume data. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
-    }
+      setIsSaving(true);
+      try {
+          const cleanedData = removeUndefined({ ...allData });
+          const dataToSave = {
+              ...cleanedData,
+              userId: user?.id || null,
+              updatedAt: serverTimestamp(), // Always update the timestamp
+              templateId: id, // templateId
+          };
+  
+          // Check if there's a resumeId for updating
+          if (resumeID) {
+              console.log("Updating existing resume with ID:", resumeID);
+  
+              const resumeRef = doc(db, "resumes", resumeID); // Get reference to the existing document
+              await updateDoc(resumeRef, dataToSave); // Update the document
+  
+              toast({
+                  title: "Success",
+                  description: "Your resume data has been updated.",
+              });
+          } else {
+              console.log("Creating a new resume.");
+  
+              const newResume = {
+                  ...dataToSave,
+                  createdAt: serverTimestamp(), // Add createdAt only for new documents
+              };
+  
+              const docRef = await addDoc(collection(db, "resumes"), newResume); // Create a new document
+              console.log("Document written with ID: ", docRef.id);
+  
+              toast({
+                  title: "Success",
+                  description: "Your resume data has been saved.",
+              });
+          }
+      } catch (error) {
+          console.error("Error saving resume data:", error);
+          toast({
+              title: "Error",
+              description: "Failed to save resume data. Please try again.",
+              variant: "destructive",
+          });
+      } finally {
+          setIsSaving(false);
+      }
   };
-
+  
   return (
 
     <>

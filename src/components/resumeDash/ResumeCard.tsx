@@ -9,6 +9,8 @@ import { formatDate } from "./formDate";
 import { DuplicateDialog } from "./DuplicateDialog";
 import { DeleteDialog } from "./DeleteDialog";
 import { EditDialog } from "./EditDialog";
+import { useNavigate } from "react-router-dom";
+// import { cursorTo } from "readline";
 
 interface Resume {
     id: string;
@@ -25,7 +27,11 @@ interface Props {
     resume: Resume;
 }
 
+
+
 export function ResumeCard({ resume }: Props) {
+    const navigate = useNavigate();
+    console.log("resume>>",resume)
     const [actionType, setActionType] = useState<"edit" | "duplicate" | "delete" | null>(null);
 
     const getTemplateImage = (templateId?: string) => {
@@ -33,8 +39,11 @@ export function ResumeCard({ resume }: Props) {
         return template?.image || "/placeholder.svg?height=240&width=320";
     };
 
+    const moveToEditPage=()=>{
+        navigate(`/select/${resume?.templateId}/start`, { state: { resume } });
+    }
     return (
-        <Card className="overflow-hidden relative">
+        <Card className="overflow-hidden relative border-5" style={{cursor:"pointer"}} onClick={moveToEditPage}>
             <CardHeader className="p-0 flex justify-center items-center">
                 <Image src={getTemplateImage(resume.templateId)} alt={resume.name} className="h-48 object-cover" />
                 <div className="absolute top-2 right-2">

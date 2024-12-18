@@ -26,6 +26,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   setActiveTab,
   categoryData
 }) => {
+ 
   const form = useForm({
     resolver: zodResolver(ContactInfoSchema),
     defaultValues: {
@@ -118,7 +119,7 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
       setAllData((prevData: Record<string, unknown>) => ({ ...prevData, ...updatedValues }));
     }
   }, [categoryData, form, setAllData]);
-
+  console.log("allData>>",allData)
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
