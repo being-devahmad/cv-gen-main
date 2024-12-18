@@ -17,7 +17,7 @@ import { ResumeForm } from '@/components/forms/ResumeForm/ResumeForm';
 
 const ResumeStart: React.FC = () => {
     const { id } = useParams()
-    console.log("TemplateId------->", id)
+    console.log("TemplateId--------->", id)
 
 
     const location = useLocation();
