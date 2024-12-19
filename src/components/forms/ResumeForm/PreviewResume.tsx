@@ -19,7 +19,7 @@ interface PreviewResumeProps {
   setAllData: (data: Record<string, any>) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  resumeID:any
+  resumeID: any
 }
 
 export const PreviewResume: React.FC<PreviewResumeProps> = ({
@@ -30,7 +30,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
 }) => {
 
 
-  console.log("ALL___DATA___>", allData,resumeID)
+  console.log("ALL___DATA___>", allData, resumeID)
 
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
@@ -168,55 +168,55 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
 
 
   const handleSave = async () => {
-      setIsSaving(true);
-      try {
-          const cleanedData = removeUndefined({ ...allData });
-          const dataToSave = {
-              ...cleanedData,
-              userId: user?.id || null,
-              updatedAt: serverTimestamp(), // Always update the timestamp
-              templateId: id, // templateId
-          };
-  
-          // Check if there's a resumeId for updating
-          if (resumeID) {
-              console.log("Updating existing resume with ID:", resumeID);
-  
-              const resumeRef = doc(db, "resumes", resumeID); // Get reference to the existing document
-              await updateDoc(resumeRef, dataToSave); // Update the document
-  
-              toast({
-                  title: "Success",
-                  description: "Your resume data has been updated.",
-              });
-          } else {
-              console.log("Creating a new resume.");
-  
-              const newResume = {
-                  ...dataToSave,
-                  createdAt: serverTimestamp(), // Add createdAt only for new documents
-              };
-  
-              const docRef = await addDoc(collection(db, "resumes"), newResume); // Create a new document
-              console.log("Document written with ID: ", docRef.id);
-  
-              toast({
-                  title: "Success",
-                  description: "Your resume data has been saved.",
-              });
-          }
-      } catch (error) {
-          console.error("Error saving resume data:", error);
-          toast({
-              title: "Error",
-              description: "Failed to save resume data. Please try again.",
-              variant: "destructive",
-          });
-      } finally {
-          setIsSaving(false);
+    setIsSaving(true);
+    try {
+      const cleanedData = removeUndefined({ ...allData });
+      const dataToSave = {
+        ...cleanedData,
+        userId: user?.id || null,
+        updatedAt: serverTimestamp(), // Always update the timestamp
+        templateId: id, // templateId
+      };
+
+      // Check if there's a resumeId for updating
+      if (resumeID) {
+        console.log("Updating existing resume with ID:", resumeID);
+
+        const resumeRef = doc(db, "resumes", resumeID); // Get reference to the existing document
+        await updateDoc(resumeRef, dataToSave); // Update the document
+
+        toast({
+          title: "Success",
+          description: "Your resume data has been updated.",
+        });
+      } else {
+        console.log("Creating a new resume.");
+
+        const newResume = {
+          ...dataToSave,
+          createdAt: serverTimestamp(), // Add createdAt only for new documents
+        };
+
+        const docRef = await addDoc(collection(db, "resumes"), newResume); // Create a new document
+        console.log("Document written with ID: ", docRef.id);
+
+        toast({
+          title: "Success",
+          description: "Your resume data has been saved.",
+        });
       }
+    } catch (error) {
+      console.error("Error saving resume data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save resume data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
-  
+
   return (
 
     <>
@@ -462,14 +462,26 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
               <Button variant="bordered" size="sm" onClick={handleBack}>
                 <ArrowLeft className="w-4 h-4" />
               </Button>
-              <Button
-                variant="bordered"
-                className="bg-black text-white"
-                onClick={handleSave}
-                disabled={isSaving}
-              >
-                {isSaving ? "Saving..." : "Save Resume"}
-              </Button>
+              {
+                resumeID ?
+                  <Button
+                    variant="bordered"
+                    className="bg-black text-white"
+                    onClick={handleSave}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? "Updating..." : "Update Resume"}
+                  </Button>
+                  :
+                  <Button
+                    variant="bordered"
+                    className="bg-black text-white"
+                    onClick={handleSave}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? "Saving..." : "Save Resume"}
+                  </Button>
+              }
             </div>
           </div>
         </div>

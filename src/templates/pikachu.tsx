@@ -10,9 +10,10 @@ const Header = ({ allData }: {
     postalCode: string;
     phone: string;
     email: string;
+    jobTitle: string;
   }
 }) => {
-  const { firstName, lastName, city, country, postalCode, phone, email } = allData;
+  const { firstName, lastName, city, country, postalCode, phone, email, } = allData;
   return (
     <div className="bg-amber-600 text-white p-6">
       <div className="max-w-4xl mx-auto">
@@ -180,6 +181,7 @@ export const Pikachu = ({ allData }: { allData: any }) => {
     <div className="max-w-7xl mx-auto bg-white shadow-lg">
       <Header allData={allData} />
       <div className="flex">
+        wert
         <div className="w-1/3 p-6 bg-gray-50">
           <Skills allData={allData} />
         </div>

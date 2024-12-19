@@ -1,10 +1,7 @@
-// import { resumeList } from "@/data/resumeList";
-// import { Card, CardContent, CardHeader } from "./ui/card";
-// import { Separator } from "./ui/separator";
-
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import { Image } from "@nextui-org/react";
 
 const CoverLetterTemplates = () => {
   const navigate = useNavigate()
@@ -14,30 +11,6 @@ const CoverLetterTemplates = () => {
   }
 
   return (
-    // <div className="flex items-center justify-evenly gap-3">
-    //   {resumeList.map((resume, index) => (
-    //     <Card key={index}>
-    //       <CardHeader className="p-3">
-    //         <div className="max-w-[240px]">
-    //           {/* <AspectRatio ratio={16 / 9}> */}
-    //           <img
-    //             src={resume.imageSrc}
-    //             alt="Image"
-    //             className="rounded-md object-cover"
-    //           />
-    //           {/* </AspectRatio> */}
-    //         </div>
-    //       </CardHeader>
-    //       <Separator />
-    //       <CardContent className="mt-2 p-2">
-    //         <h2 className="font-bold text-md">{resume.name}</h2>
-    //         <p className="text-slate-600 text-xm">{resume.lastUpdated}</p>
-    //       </CardContent>
-    //     </Card>
-    //   ))}
-    // </div>
-
-
     <>
       <div className="w-full max-w-7xl mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row items-start justify-between gap-12">
@@ -69,7 +42,7 @@ const CoverLetterTemplates = () => {
           <div className="flex-1 flex justify-center items-start">
             <div className="relative w-full max-w-md">
               <div className="absolute inset-0 bg-blue-100 rounded-full blur-3xl opacity-30" />
-              <img
+              <Image
                 src="https://resumedone.co/static/img/no_cover_letter.png"
                 alt="Cover letter illustration"
                 className="relative w-full h-auto"

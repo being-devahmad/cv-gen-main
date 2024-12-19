@@ -1,99 +1,73 @@
-import { AIChatSession } from '@/services/AIModal'
-import React, { useEffect } from 'react'
+// import React, { useEffect } from 'react';
+// import { GoogleGenerativeAI } from "@google/generative-ai";
+// import { GoogleAIFileManager } from "@google/generative-ai/server";
 
-interface AIFileParserProps {
-    fileContent: string | ArrayBuffer | null
-    onParseComplete: (data: any) => void
-    onParseError: (error: string) => void
-    onParsingProgress: (progress: number) => void
-}
+// interface AIFileParserProps {
+//     fileContent: string | ArrayBuffer | null;
+//     onParseComplete: (data: any) => void;
+//     onParseError: (error: string) => void;
+//     onParsingProgress: (progress: number) => void;
+// }
 
-export const AIFileParser: React.FC<AIFileParserProps> = ({
-    fileContent,
-    onParseComplete,
-    onParseError,
-    onParsingProgress,
-}) => {
-    useEffect(() => {
-        const parseResume = async () => {
-            try {
-                onParsingProgress(10)
+// export const AIFileParser: React.FC<AIFileParserProps> = ({
+//     fileContent,
+//     onParseComplete,
+//     onParseError,
+//     onParsingProgress,
+// }) => {
+//     useEffect(() => {
+//         const parseFile = async () => {
+//             if (!fileContent) return;
 
-                if (typeof fileContent !== 'string') {
-                    throw new Error('File content must be a string')
-                }
+//             try {
+//                 onParsingProgress(10);
+//                 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_KEY);
+//                 const fileManager = new GoogleAIFileManager(import.meta.env.VITE_GEMINI_KEY);
 
-                onParsingProgress(30)
+//                 const model = genAI.getGenerativeModel({
+//                     model: "gemini-1.5-flash",
+//                 });
 
-                const prompt = `Analyze the following resume content and extract its information into a structured JSON format. Include all content, even text with background colors (e.g., headers or highlighted sections). The JSON should follow this structure:
-            {
-                    "name": "",
-                    "contact": "",
-                    "email": ""
-                    "city":"",
-                    "country:"",
-                    "jobTitle":"",
-                "education": [
-                    {
-                        "institution": "",
-                        "degree": "",
-                        "location": "",
-                        "year": ""
-                    }
-                ],
-                "experience": [
-                    {
-                        "jobTitle": "",
-                        "company": "",
-                        "location": "",
-                        "duration": "",
-                        "responsibilities": []
-                    }
-                ],
-                "projects": [
-                    {
-                        "name": "",
-                        "technologies": [],
-                        "description": ""
-                    }
-                ],
-                "skills": {
-                    "languages": [],
-                    "frameworks": [],
-                    "tools": [],
-                    "libraries": []
-                }
-            }
-            Ensure the extraction process preserves the hierarchy and logical groupings of the information, capturing details across various text styles, layouts, and formats. 
-            Return only the JSON object without any additional text or explanation.
-            Resume content:
-            ${fileContent}`
+//                 onParsingProgress(30);
 
-                onParsingProgress(50)
+//                 let fileBuffer: ArrayBuffer;
+//                 if (typeof fileContent === 'string') {
+//                     fileBuffer = new TextEncoder().encode(fileContent).buffer;
+//                 } else {
+//                     fileBuffer = fileContent;
+//                 }
 
-                const result = await AIChatSession.sendMessage(prompt)
-                console.log("result-->", result)
-                const response = await result.response
-                console.log("response-->", response)
-                const text = response.text()
-                console.log("text-->", text)
+//                 const uploadResponse = await fileManager.uploadFile(new Uint8Array(fileBuffer), {
+//                     mimeType: "application/pdf", // Assuming PDF, adjust if needed
+//                     displayName: "Resume",
+//                 });
 
+//                 onParsingProgress(60);
 
-                onParsingProgress(80)
+//                 const result = await model.generateContent([
+//                     {
+//                         fileData: {
+//                             mimeType: uploadResponse.file.mimeType,
+//                             fileUri: uploadResponse.file.uri,
+//                         },
+//                     },
+//                     { text: "Extract the following information from this resume and format it as JSON: name, email, phone, skills, work experience (including company names, job titles, and dates), and education (including school names, degrees, and dates)." },
+//                 ]);
 
-                const parsedData = JSON.parse(text)
-                onParseComplete(parsedData)
-            } catch (error) {
-                console.log("error-->", error)
-                onParseError(error instanceof Error ? error.message : 'An unknown error occurred while parsing the resume')
-            }
-        }
+//                 onParsingProgress(90);
 
-        if (fileContent) {
-            parseResume()
-        }
-    }, [fileContent, onParseComplete, onParseError, onParsingProgress])
+//                 const parsedData = JSON.parse(result.response.text());
+//                 onParseComplete(parsedData);
+//                 onParsingProgress(100);
+//             } catch (error) {
+//                 console.error('Error parsing file:', error);
+//                 onParseError('Failed to parse the resume. Please try again.');
+//             }
+//         };
 
-    return null
-}
+//         parseFile();
+//     }, [fileContent, onParseComplete, onParseError, onParsingProgress]);
+
+//     return null;
+// };
 

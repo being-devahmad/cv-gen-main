@@ -3,16 +3,25 @@ import { ExistingResumeIcon, NewResumeIcon } from "@/components/resumeDashboard/
 import { useParams, useNavigate } from "react-router-dom"
 import OptionCard from "@/components/resumeDashboard/OptionCard"
 import ResumeUpload from "@/components/resumeDashboard/ResumeUpload"
+import ResumeLoadingSkeleton from "@/components/skeletons/ResumeLoadingSkeleton"
 
 export default function BuilderLandingPage() {
     const { id } = useParams()
     const navigate = useNavigate()
     const [showResumeUpload, setShowResumeUpload] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     console.log('Selected template ID:', id)
 
     const handleNewResume = () => {
-        navigate(`/select/${id}/start`)
+        setIsLoading(true);
+        setTimeout(() => {
+            navigate(`/select/${id}/start`);
+        }, 1000); // Add a small delay to show the loading state
+    };
+
+    if (isLoading) {
+        return <ResumeLoadingSkeleton />
     }
 
     const handleExistingResume = () => {

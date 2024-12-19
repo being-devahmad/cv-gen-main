@@ -10,7 +10,6 @@ import { DuplicateDialog } from "./DuplicateDialog";
 import { DeleteDialog } from "./DeleteDialog";
 import { EditDialog } from "./EditDialog";
 import { useNavigate } from "react-router-dom";
-// import { cursorTo } from "readline";
 
 interface Resume {
     id: string;
@@ -31,7 +30,7 @@ interface Props {
 
 export function ResumeCard({ resume }: Props) {
     const navigate = useNavigate();
-    console.log("resume>>",resume)
+    console.log("resume>>", resume)
     const [actionType, setActionType] = useState<"edit" | "duplicate" | "delete" | null>(null);
 
     const getTemplateImage = (templateId?: string) => {
@@ -39,13 +38,13 @@ export function ResumeCard({ resume }: Props) {
         return template?.image || "/placeholder.svg?height=240&width=320";
     };
 
-    const moveToEditPage=()=>{
+    const moveToEditPage = () => {
         navigate(`/select/${resume?.templateId}/start`, { state: { resume } });
     }
     return (
-        <Card className="overflow-hidden relative border-5" style={{cursor:"pointer"}} onClick={moveToEditPage}>
+        <Card className="overflow-hidden relative border-5" style={{ cursor: "pointer" }} >
             <CardHeader className="p-0 flex justify-center items-center">
-                <Image src={getTemplateImage(resume.templateId)} alt={resume.name} className="h-48 object-cover" />
+                <Image src={getTemplateImage(resume.templateId)} alt={resume.name} className="h-48 object-cover" onClick={moveToEditPage} />
                 <div className="absolute top-2 right-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -54,9 +53,21 @@ export function ResumeCard({ resume }: Props) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setActionType("edit")}><Edit className="mr-2 h-4 w-4" /> Rename</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setActionType("duplicate")}><Copy className="mr-2 h-4 w-4" /> Duplicate</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setActionType("delete")}><Trash className="mr-2 h-4 w-4" /> Delete</DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setActionType("edit")}>
+                                <Edit className="mr-2 h-4 w-4 cursor-pointer" />
+                                Rename
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setActionType("duplicate")}>
+                                <Copy className="mr-2 h-4 w-4 cursor-pointer" />
+                                Duplicate
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setActionType("delete")}>
+                                <Trash className="mr-2 h-4 w-4 cursor-pointer" />
+                                Delete
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

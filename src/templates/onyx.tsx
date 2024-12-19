@@ -88,18 +88,18 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
     <Section title="Experience">
       {
         experiences.map((exp, i) => {
-          const { company, startDate, endDate, title, description } = exp
+          const { company, startDate, endDate, title, description, location } = exp
           return (
             <div className="mb-6" key={i}>
-              <h3 className="font-bold text-gray-800">{company}</h3>
+              <h3 className="font-bold text-gray-800">{title}</h3>
               <div className="flex justify-between">
                 <p className="text-gray-500 text-sm">
-                  {`${title} · `}
+                  {`${company} , ${location} `}
                 </p>
                 <p>{`${startDate} - ${endDate}`}</p>
               </div>
-              <ul className="list-disc list-inside text-gray-700 mt-2">
-                <li>
+              <ul className="list-inside text-gray-700 mt-2">
+                <li className="">
                   {description}
                 </li>
               </ul>
@@ -120,14 +120,15 @@ const Education = ({ allData }: { allData: { education: Array<{ degree: string, 
           const { degree, startDate, endDate, organization, location } = edu
           return (
             <div key={i}>
-              <h3 className="font-bold text-gray-800">{organization}</h3>
-              <p className="text-gray">{location}</p>
+              <h3 className="font-bold text-gray-800">{degree}</h3>
+
               <div className="flex justify-between">
                 <p className="text-gray-500 text-sm">
-                  {`${degree} · `}
+                  {`${organization} , ${location} `}
                 </p>
                 <p>{`${startDate} - ${endDate}`}</p>
               </div>
+
             </div>
           )
         })
@@ -135,6 +136,35 @@ const Education = ({ allData }: { allData: { education: Array<{ degree: string, 
     </Section>
   )
 };
+
+
+const Activities = ({ allData }: { allData: { activities: Array<{ title: string, employer: string, startDate: string, endDate: string, description: string }> } }) => {
+  const { activities } = allData;
+  return (
+    <Section title="Activity">
+      {
+        activities.map((activity, i) => {
+          const { title, employer, startDate, endDate, description } = activity
+          return (
+            <div key={i}>
+              <h3 className="font-bold text-gray-800">{title}</h3>
+
+              <div className="flex justify-between">
+                <p className="text-gray-500 text-sm">
+                  {`${employer} `}
+                </p>
+                <p>{`${startDate} - ${endDate}`}</p>
+              </div>
+
+              <p>{description}</p>
+
+            </div>
+          )
+        })
+      }
+    </Section>
+  )
+}
 
 
 
@@ -191,17 +221,17 @@ export const Onyx = ({ allData }: { allData: any }) => {
     <NextUIProvider>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md">
         <Header allData={allData} />
-        <div className="border-b-2 border-gray-300 my-6"></div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
         <Summary allData={allData} />
-        <div className="border-b-2 border-gray-300 my-6"></div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
         <Experience allData={allData} />
-        <div className="border-b-2 border-gray-300 my-6"></div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
         <Education allData={allData} />
-        {/* <div className="border-b-2 border-gray-300 my-6"></div>
-        <Projects /> */}
-        <div className="border-b-2 border-gray-300 my-6"></div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
+        <Activities allData={allData} />
+        {/* <div className="border-b-2 border-gray-300 my-4"></div> */}
         {/* <Certifications allData={allData} /> */}
-        <div className="border-b-2 border-gray-300 my-6"></div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
         <Skills allData={allData} />
       </div>
     </NextUIProvider>

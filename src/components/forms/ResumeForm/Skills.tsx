@@ -37,6 +37,7 @@ export default function Skills({
       const skillCategories: SkillCategory[] = [
         { category: "Technical Skills", items: [] },
         { category: "Soft Skills", items: [] },
+        { category: "Tools", items: categoryData.skills.tools || [] },
         { category: "Frameworks", items: categoryData.skills.frameworks || [] },
         { category: "Libraries", items: categoryData.skills.libraries || [] },
         { category: "Tools", items: categoryData.skills.tools || [] },
@@ -46,6 +47,7 @@ export default function Skills({
     return allData.skills || [
       { category: "Technical Skills", items: [] },
       { category: "Soft Skills", items: [] },
+      { category: "Tools", items: [] },
       { category: "Frameworks", items: [] },
       { category: "Libraries", items: [] },
       { category: "Tools", items: [] },
@@ -139,7 +141,7 @@ export default function Skills({
           {skills.map((category, categoryIndex) => (
             <div key={category.category}>
               {
-                category.items.length > 0 && <h3 className="text-lg font-medium mb-3">{category.category}</h3>
+                category.items.length > 0 && <h3 className="text-lg font-medium">{category.category}</h3>
               }
               <div className="flex flex-wrap gap-2">
                 {category.items.map((skill, skillIndex) => (
@@ -162,7 +164,7 @@ export default function Skills({
           ))}
         </div>
       </div>
-      <div className="flex justify-between items-center mt-10">
+      <div className="flex justify-between items-center mt-4">
         <Button variant="light" onClick={handleBack}>
           Back
         </Button>

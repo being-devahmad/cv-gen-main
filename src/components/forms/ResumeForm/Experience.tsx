@@ -78,12 +78,6 @@ const Experience: React.FC<ExperienceProps> = ({
     ]);
   };
 
-  // const handleRemoveExperience = (index: number) => {
-  //   const updatedExperiences = experiences.filter((_, i) => i !== index);
-  //   setExperiences(updatedExperiences);
-  //   setAllData({ ...allData, experiences: updatedExperiences });
-  // };
-
   const handleRemoveExperience = (index: number) => {
     setDeleteConfirmation({ isOpen: true, index });
   };
@@ -96,16 +90,6 @@ const Experience: React.FC<ExperienceProps> = ({
     }
     setDeleteConfirmation({ isOpen: false, index: null });
   };
-
-  // const formatDate = (input: string): string => {
-  //   const date = new Date(input);
-  //   if (!isNaN(date.getTime())) {
-  //     // Return formatted date only if the input is valid
-  //     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
-  //   }
-  //   // Return input as-is if it's not a valid date
-  //   return input;
-  // };
 
 
   const handleChange = (index: number, field: string, value: string | boolean) => {

@@ -30,11 +30,7 @@ const Dashboard = () => {
             title="Cover Letter"
             subTitle="Make better cover letters"
           /> */}
-          {/* <CreateCard
-            handleClick={() => navigate("/")}
-            title="Resign Letters"
-            subTitle="Create best resignation letters"
-          /> */}
+          
         </div>
       </div>
       <DashBoardTabs />
