@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "pdfjs-dist/build/pdf.worker.entry": "pdfjs-dist/build/pdf.worker.js",
     },
   },
 });
