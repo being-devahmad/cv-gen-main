@@ -13,7 +13,7 @@ export function PersonalInformation({
 }) {
   const { phone, email, city, postalCode, country } = allData;
   return (
-    <section className="mb-6 text-xs">
+    <section className="mb-6">
       <h2 className="font-semibold mb-3 border-b border-gray-300 pb-1 flex items-center gap-2">
         <Mail className="w-4 h-4" /> Contact Me
       </h2>
@@ -47,8 +47,8 @@ import { GraduationCap } from "lucide-react";
 export function Education({ allData }: { allData: { education: any[] } }) {
   const { education } = allData;
   return (
-    <section>
-      <h2 className="text-xl font-bold mb-3 text-gray-800 border-b border-gray-300 pb-1 flex items-center gap-2">
+    <section className="mb-6">
+      <h2 className="text-xl font-bold mb-3 text-gray-800 border-b border-gray-300 pb-1 flex items-center gap-2 ">
         <GraduationCap className="w-5 h-5 text-blue-500" /> Education
       </h2>
       {education?.map((val, ind) => {
@@ -120,7 +120,7 @@ export function Experience({ allData }: { allData: { experiences: any[] } }) {
       </h2>
       <div className="space-y-6">
         {experiences.map((exp, index) => {
-          const { company, startDate, endDate, title, description, location , current } = exp;
+          const { company, startDate, endDate, title, description, location, current } = exp;
           return (
             <div key={index}>
               <div className="flex justify-between items-start mb-2">
@@ -135,7 +135,9 @@ export function Experience({ allData }: { allData: { experiences: any[] } }) {
                 </span>
               </div>
 
-              <p className="text-xs">{description}</p>
+              <pre className="font-sans max-w-[100%] break-words whitespace-pre-wrap text-xs">
+                {description}
+              </pre>
             </div>
           );
         })}
@@ -168,7 +170,7 @@ export function Activities({ allData }: { allData: { activities: any[] } }) {
                   <p className="text-gray-700">{employer}</p>
                 </div>
                 <span className="text-gray-600 text-sm">
-                {startDate} - {endDate ? endDate : (!endDate && current && "present")}
+                  {startDate} - {endDate ? endDate : (!endDate && current && "present")}
                 </span>
               </div>
 
@@ -182,41 +184,9 @@ export function Activities({ allData }: { allData: { activities: any[] } }) {
 }
 
 
-const Skills = ({
-  allData,
-}: {
-  allData: { skills: (string | { category: string; items: string[] })[] };
-}) => {
+const Skills = ({ allData }: { allData: { skills: Array<{ name: string; level: string }> } }) => {
   const { skills } = allData;
-
-  const renderSkillItem = (
-    item: string | { category: string; items: string[] }
-  ) => {
-    if (typeof item === "string") {
-      return <li className="ml-4">{item}</li>;
-    } else if (typeof item === "object" && item !== null) {
-      return (
-        <li>
-          {item.items.length > 0 && (
-            <h3 className="font-semibold text-sm my-2">{item.category}</h3>
-          )}
-          <ul className="list-disc list-inside">
-            {Array.isArray(item.items)
-              ? item.items.map((subItem, index) => (
-                <li key={index} className="ml-4 text-xs">
-                  {subItem}
-                </li>
-              ))
-              : null}
-          </ul>
-        </li>
-      );
-    }
-    return null;
-  };
-
-
-
+  const experienceLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
   return (
     <div className=" mb-2">
@@ -224,13 +194,22 @@ const Skills = ({
         Skills
       </h2>
       <ul className="space-y-2">
-        {Array.isArray(skills)
-          ? skills.map((skill, index) => (
-            <React.Fragment key={index}>
-              {renderSkillItem(skill)}
-            </React.Fragment>
-          ))
-          : null}
+        {skills.map((skill, index) => (
+          <li key={index} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="font-medium">{skill.name}</span>
+              {/* <span className="text-sm text-gray-600">{skill.level}</span> */}
+            </div>
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-500 transition-all duration-300"
+                style={{
+                  width: `${((experienceLevels.indexOf(skill.level) + 1) / experienceLevels.length) * 100}%`,
+                }}
+              />
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -238,6 +217,7 @@ const Skills = ({
 
 
 export const Languages = ({ allData }: { allData: { languages: { name: string; level: string }[] } }) => {
+
   return (
     <section className="mb-6 text-xs">
       <h2 className="text-xl font-bold border-b border-gray-100 pb-2 mb-4">
@@ -255,7 +235,6 @@ export const Languages = ({ allData }: { allData: { languages: { name: string; l
 }
 
 
-import React from "react";
 
 export const Nosepass = ({ allData }: { allData: any }) => {
   return (
@@ -268,14 +247,18 @@ export const Nosepass = ({ allData }: { allData: any }) => {
               <Header allData={allData} />
             </div>
             <PersonalInformation allData={allData} />
-            <Skills allData={allData} />
+            {allData.skills && allData.skills.length > 0 && <Skills allData={allData} />}
             {allData.languages && <Languages allData={allData} />}
             {/* <Profiles allData={allData} /> */}
           </div>
           <div className="md:col-span-7 p-6">
+
             <Summary allData={allData} />
-            <Experience allData={allData} />
-            <Education allData={allData} />
+
+            {allData.experiences && allData.experiences.length > 0 && <Experience allData={allData} />}
+
+            {allData.education && allData.education.length > 0 && <Education allData={allData} />}
+
             {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
           </div>
         </div>

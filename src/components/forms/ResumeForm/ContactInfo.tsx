@@ -24,9 +24,9 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   allData,
   setAllData,
   setActiveTab,
-  categoryData
+  // categoryData
 }) => {
- 
+
   const form = useForm({
     resolver: zodResolver(ContactInfoSchema),
     defaultValues: {
@@ -102,24 +102,24 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   };
 
   useEffect(() => {
-    if (categoryData?.personalInformation) {
-      const { name, email, contact, jobTitle } = categoryData.personalInformation;
-      const updatedValues = {
-        firstName: name?.split(' ')[0] || '',
-        lastName: name?.split(' ').slice(1).join(' ') || '',
-        jobTitle: jobTitle,
-        email: email || '',
-        phone: contact || '',
-        country: form.getValues('country'),
-        city: form.getValues('city'),
-        postalCode: form.getValues('postalCode'),
-        summary: form.getValues('summary'),
-      };
-      form.reset(updatedValues);
-      setAllData((prevData: Record<string, unknown>) => ({ ...prevData, ...updatedValues }));
-    }
-  }, [categoryData, form, setAllData]);
-  console.log("allData>>",allData)
+    const formFields = [
+      'firstName', 'lastName', 'jobTitle', 'phone', 'email',
+      'country', 'city', 'postalCode', 'summary'
+    ];
+
+    const updatedValues = formFields.reduce((acc: any, field: any) => {
+      if (allData[field]) {
+        acc[field] = allData[field];
+      }
+      return acc;
+    }, {});
+
+    form.reset(updatedValues);
+  }, [allData, form]);
+
+  console.log("allData>>", allData)
+
+
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
@@ -302,9 +302,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
               name="summary"
               render={({ field }) => (
                 <Textarea
-                  className={`textarea-bordered bg-[#F7F7F8] w-full p-2 border-2 rounded-lg ${
-                    errors.summary ? 'border-red-500' : ''
-                  }`}
+                  className={`textarea-bordered bg-[#F7F7F8] w-full p-2 border-2 rounded-lg ${errors.summary ? 'border-red-500' : ''
+                    }`}
                   placeholder="Enter a brief summary"
                   {...field}
                   onChange={(e) => {

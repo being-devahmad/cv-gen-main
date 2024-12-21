@@ -135,7 +135,7 @@ const Experience: React.FC<ExperienceProps> = ({
     End Date: ${experience.endDate}
     Currently Working: ${experience.currentlyWorking ? 'Yes' : 'No'}
     
-    Please provide 2-3 brief, impactful statements describing key responsibilities and achievements for this role. 
+    Please provide 2-3 brief, impactful ATS friendly statements describing key responsibilities and achievements including some number that could add value to resume for this role. 
     Format the response as a JSON array with each statement as an object containing 'id' and 'text' fields. For example:
     [
       { "id": 1, "text": "Led a team of 5 developers to successfully launch a new product feature, increasing user engagement by 25%." },

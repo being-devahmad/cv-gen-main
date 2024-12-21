@@ -40,6 +40,8 @@ export function ResumeTemplates() {
                     id: doc.id,
                     ...doc.data(),
                 })) as Resume[];
+
+                resumeList.sort((a, b) => b.updatedAt.seconds - a.updatedAt.seconds);
                 setResumes(resumeList);
                 setLoading(false);
                 setError(null);

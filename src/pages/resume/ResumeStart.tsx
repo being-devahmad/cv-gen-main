@@ -9,7 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 // import { toast } from '@/hooks/use-toast';
 import { Onyx } from "@/templates/onyx";
 import Bronzor from "@/templates/bronzor";
-import Pikachu from "@/templates/pikachu";
+// import Pikachu from "@/templates/pikachu";
 import TemplateArtboard from "@/components/resumeDashboard/TemplateArtboard";
 import { Button } from "@/components/ui/button";
 import { ResumeForm } from "@/components/forms/ResumeForm/ResumeForm";
@@ -17,19 +17,20 @@ import { ResumeForm } from "@/components/forms/ResumeForm/ResumeForm";
 
 const ResumeStart: React.FC = () => {
   const { id } = useParams();
-  console.log("TemplateId--------->", id);
+  // console.log("TemplateId--------->", id);
 
   const [resumeID, setResumeID] = useState("");
   const location = useLocation();
   const { categoryData, resume } = location.state || {};
 
-  console.log("Received Data:", categoryData, resume);
+  // console.log("Received Data:", categoryData, resume);
 
   const resumeRef = useRef<HTMLDivElement>(null);
 
   const [allData, setAllData] = useState({
     firstName: "",
     lastName: "",
+    jobTitle: "",
     phone: "",
     email: "",
     country: "",
@@ -46,6 +47,7 @@ const ResumeStart: React.FC = () => {
         ...allData,
         firstName: resume?.firstName,
         lastName: resume?.lastName,
+        jobTitle: resume?.jobTitle,
         phone: resume?.phone,
         email: resume?.email,
         country: resume?.country,
@@ -72,8 +74,8 @@ const ResumeStart: React.FC = () => {
         return <Onyx allData={allData} />;
       case "5":
         return <Bronzor allData={allData} />;
-      case "6":
-        return <Pikachu allData={allData} />;
+      // case "6":
+      //   return <Pikachu allData={allData} />;
       default:
         return <Azurill allData={allData} />;
     }
@@ -92,28 +94,16 @@ const ResumeStart: React.FC = () => {
             />
           </div>
           <div className="w-full lg:w-1/2 overflow-y-auto flex flex-col">
-            {/* <div className="sticky top-0 z-10 bg-white p-4 shadow-md"> */}
-            <Button
-              // onClick={handleDownload}
-              // onClick={}
-              className="w-full bg-gray-400 text-white px-4 py-2 rounded-md font-semibold
+            <div className="sticky top-0 z-10 bg-white p-4 shadow-md">
+              <Button
+                className="w-full bg-gray-400 text-white px-4 py-2 rounded-md font-semibold
                             hover:bg-gray-500 transition-colors"
-            >
-              Download as PDF
-            </Button>
-            {/* </div> */}
-            {/* <div className="flex-grow overflow-hidden flex justify-center">
-                            <div className="w-full max-w-[1200px] ">
-                                <TemplateArtboard>
-                                    <div ref={resumeRef} id="content-id">
-                                        {renderTemplate()}
-                                    </div>
-                                </TemplateArtboard>
-                            </div>
-                        </div> */}
-
+              >
+                Download as PDF
+              </Button>
+            </div>
             <div className="flex-grow overflow-hidden flex justify-center">
-              <div className="w-full max-w-[1200px] ">
+              <div className="w-full h-full flex items-center justify-center">
                 <TemplateArtboard>
                   <div ref={resumeRef}>{renderTemplate()}</div>
                 </TemplateArtboard>

@@ -1,4 +1,5 @@
 import { NextUIProvider } from "@nextui-org/react";
+import { Github, Globe, Linkedin } from "lucide-react";
 import React from "react";
 
 const Header = ({ allData }: {
@@ -10,9 +11,12 @@ const Header = ({ allData }: {
     city: string;
     postalCode: string;
     country: string;
+    github: string;
+    linkedin: string;
+    portfolio: string;
   }
 }) => {
-  const { firstName, lastName, phone, email, city, postalCode, country } = allData;
+  const { firstName, lastName, phone, email, city, postalCode, country, github, linkedin, portfolio } = allData;
   return (
     <header className="flex flex-col items-center justify-between border-b pb-6 mb-8 w-full overflow-x-hidden bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
       <div className="flex justify-center items-center space-x-4 w-full ms-5 mt-4">
@@ -29,6 +33,24 @@ const Header = ({ allData }: {
         <p>{`${phone} · ${email}`}</p>
         {/* <p>https://johndoe.me</p> */}
       </div>
+
+      <div className="flex space-x-6 mt-4 md:mt-0 w-full justify-center">
+        {portfolio &&
+          <a href={`${portfolio}`} className="hover:text-blue-500  flex items-center space-x-1 transition duration-200 ease-in-out text-black">
+            <Globe size={12} />
+          </a>
+        }
+        {linkedin &&
+          <a href={`${linkedin}`} className=" hover:text-blue-500 flex items-center space-x-1 transition duration-200 ease-in-out text-black">
+            <Linkedin size={12} />
+          </a>
+        }
+        {github && <a href={`${github}`} className=" hover:text-blue-500 flex items-center space-x-1 transition duration-200 ease-in-out text-black">
+          <Github size={12} />
+        </a>
+        }
+      </div>
+
       {/* <div className="flex space-x-6 mt-4 md:mt-0 w-full justify-center">
         <a
           href="https://linkedin.com/in/johndoe"
@@ -99,9 +121,39 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
                 <p>{`${startDate} - ${endDate}`}</p>
               </div>
               <ul className="list-inside text-gray-700 mt-2">
-                <li className="">
+                <pre className="font-sans max-w-[100%] break-words whitespace-pre-wrap">
                   {description}
-                </li>
+                </pre>
+              </ul>
+            </div>
+          )
+        })
+      }
+    </Section>
+  )
+};
+
+
+const CustomSection = ({ allData }: { allData: { customSections: Array<{ title: string, description: string, year: string, subtitle: string }> } }) => {
+  const { customSections } = allData;
+  return (
+    <Section title={'Additional'}>
+      {
+        customSections.map((exp, i) => {
+          const { description, year, subtitle, } = exp
+          return (
+            <div className="mb-6" key={i}>
+
+              <div className="flex justify-between">
+                <h3 className="font-bold text-gray-800">{subtitle}</h3>
+                <p className="text-gray-500 text-sm">
+                  {`${year} `}
+                </p>
+              </div>
+              <ul className="list-inside text-gray-700 mt-2">
+                <pre className="font-sans max-w-[100%] break-words whitespace-pre-wrap">
+                  {description}
+                </pre>
               </ul>
             </div>
           )
@@ -141,7 +193,7 @@ const Education = ({ allData }: { allData: { education: Array<{ degree: string, 
 const Activities = ({ allData }: { allData: { activities: Array<{ title: string, employer: string, startDate: string, endDate: string, description: string }> } }) => {
   const { activities } = allData;
   return (
-    <Section title="Activity">
+    <Section title="Achievements">
       {
         activities.map((activity, i) => {
           const { title, employer, startDate, endDate, description } = activity
@@ -168,49 +220,51 @@ const Activities = ({ allData }: { allData: { activities: Array<{ title: string,
 
 
 
-const Skills = ({ allData }: { allData: { skills: Array<{ category: string, items: string[] }> } }) => {
-  const { skills } = allData
-
-  const renderSkillItem = (item: string | { category: string; items: string[] }) => {
-    if (typeof item === 'string') {
-      return <li className="ml-4">{item}</li>;
-    } else if (typeof item === 'object' && item !== null) {
-      return (
-        <li>
-          {item.items.length > 0 && <h3 className="font-semibold">{item.category}</h3>}
-          <ul className="list-disc list-inside">
-            {Array.isArray(skills) ? skills.map((skill, index) => (
-              <React.Fragment key={index}>
-                {renderSkillItem(skill)}
-              </React.Fragment>
-            )) : null}
-          </ul>
-        </li>
-      );
-    }
-    return null;
-  };
-
+const Skills = ({ allData }: { allData: { skills: Array<{ name: string; level: string }> } }) => {
+  const { skills } = allData;
+  const experienceLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
   return (
     <Section title="Skills">
       <div className="grid grid-cols-2 gap-4 text-gray-700">
-
-        {
-          skills?.map((skill, i) => {
-            const { category, items } = skill
-            return (
-              <div key={i}>
-                {items.length > 0 && (
-                  <div>
-                    <strong>{category}:</strong>
-                    <p className="text-gray-700">{items.join(", ")}</p>
-                  </div>
-                )}
+        <ul className="space-y-2">
+          {skills.map((skill, index) => (
+            <li key={index} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">{skill.name}</span>
               </div>
-            )
-          })
-        }
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 transition-all duration-300"
+                  style={{
+                    width: `${((experienceLevels.indexOf(skill.level) + 1) / experienceLevels.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Section>
+  )
+};
+
+
+const Languages = ({ allData }: { allData: { languages: Array<{ name: string; level: string }> } }) => {
+  const { languages } = allData;
+
+  return (
+    <Section title="Languages">
+      <div className="grid grid-cols-2 gap-4 text-gray-700">
+        <ul className="space-y-2">
+          {languages.map((lang, index) => (
+            <li key={index} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">{lang.name} - {lang.level}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </Section>
   )
@@ -223,16 +277,54 @@ export const Onyx = ({ allData }: { allData: any }) => {
         <Header allData={allData} />
         <div className="border-b-2 border-gray-300 my-4"></div>
         <Summary allData={allData} />
-        <div className="border-b-2 border-gray-300 my-4"></div>
-        <Experience allData={allData} />
-        <div className="border-b-2 border-gray-300 my-4"></div>
-        <Education allData={allData} />
-        <div className="border-b-2 border-gray-300 my-4"></div>
-        <Activities allData={allData} />
-        {/* <div className="border-b-2 border-gray-300 my-4"></div> */}
-        {/* <Certifications allData={allData} /> */}
-        <div className="border-b-2 border-gray-300 my-4"></div>
-        <Skills allData={allData} />
+
+        {/* Experiences */}
+
+        {allData.experiences.length > 0 && <>
+          <div className="border-b-2 border-gray-300 my-4"></div>
+          <Experience allData={allData} />
+        </>
+        }
+
+
+        {/* Education */}
+        {allData.education.length > 0 &&
+          <>
+            <div className="border-b-2 border-gray-300 my-4"></div>
+            <Education allData={allData} />
+          </>
+        }
+
+        {/* Custom Section */}
+        {allData.customSections && allData.customSections.length > 0 &&
+          <>
+            <div className="border-b-2 border-gray-300 my-4"></div>
+            <CustomSection allData={allData} />
+          </>
+        }
+
+        {/* Activities */}
+        {allData.activities && allData.activities.length > 0 && (
+          <>
+            <div className="border-b-2 border-gray-300 my-4"></div>
+            <Activities allData={allData} />
+          </>
+        )}
+
+        {/* Skills */}
+
+        {allData.skills && allData.skills.length > 0 && <>
+          <div className="border-b-2 border-gray-300 my-4"></div>
+          <Skills allData={allData} />
+        </>}
+
+        {/* Languages */}
+
+        {allData.languages && allData.languages.length > 0 && <>
+          <div className="border-b-2 border-gray-300 my-4"></div>
+          <Languages allData={allData} />
+        </>}
+
       </div>
     </NextUIProvider>
   );

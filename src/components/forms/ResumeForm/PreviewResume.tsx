@@ -13,6 +13,8 @@ import { useParams } from "react-router-dom"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ActivityDialog } from "./ActivityDialog"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { CustomSectionDialog } from "./CustomSectionDialog";
+import { CustomSection } from "@/types";
 
 interface PreviewResumeProps {
   allData: Record<string, any>;
@@ -68,6 +70,25 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
   const [languages, setLanguages] = useState<Language[]>(allData.languages || []);
   const [newLanguage, setNewLanguage] = useState<Language>({ name: '', level: '' });
   const [activities, setActivities] = useState<Activity[]>(allData.activities || []);
+  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+
+  const addCustomSection = (section: CustomSection) => {
+    const updatedSections = [...customSections, section];
+    setCustomSections(updatedSections);
+    setAllData((prevAllData: Record<string, any>) => ({
+      ...prevAllData,
+      customSections: updatedSections
+    }));
+  };
+
+  const removeCustomSection = (index: number) => {
+    const updatedSections = customSections.filter((_, i) => i !== index);
+    setCustomSections(updatedSections);
+    setAllData((prevAllData: Record<string, any>) => ({
+      ...prevAllData,
+      customSections: updatedSections
+    }));
+  };
 
   const handleWebsiteChange = (field: string, value: string) => {
     setWebsitesData(prev => {
@@ -167,6 +188,57 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
   // };
 
 
+  // const handleSave = async () => {
+  //   setIsSaving(true);
+  //   try {
+  //     const cleanedData = removeUndefined({ ...allData });
+  //     const dataToSave = {
+  //       ...cleanedData,
+  //       userId: user?.id || null,
+  //       updatedAt: serverTimestamp(), // Always update the timestamp
+  //       templateId: id, // templateId
+  //     };
+
+  //     // Check if there's a resumeId for updating
+  //     if (resumeID) {
+  //       console.log("Updating existing resume with ID:", resumeID);
+
+  //       const resumeRef = doc(db, "resumes", resumeID); // Get reference to the existing document
+  //       await updateDoc(resumeRef, dataToSave); // Update the document
+
+  //       toast({
+  //         title: "Success",
+  //         description: "Your resume data has been updated.",
+  //       });
+  //     } else {
+  //       console.log("Creating a new resume.");
+
+  //       const newResume = {
+  //         ...dataToSave,
+  //         createdAt: serverTimestamp(), // Add createdAt only for new documents
+  //       };
+
+  //       const docRef = await addDoc(collection(db, "resumes"), newResume); // Create a new document
+  //       console.log("Document written with ID: ", docRef.id);
+
+  //       toast({
+  //         title: "Success",
+  //         description: "Your resume data has been saved.",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error saving resume data:", error);
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to save resume data. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+
+
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -174,35 +246,29 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
       const dataToSave = {
         ...cleanedData,
         userId: user?.id || null,
-        updatedAt: serverTimestamp(), // Always update the timestamp
-        templateId: id, // templateId
+        updatedAt: serverTimestamp(),
+        templateId: id,
       };
 
-      // Check if there's a resumeId for updating
       if (resumeID) {
         console.log("Updating existing resume with ID:", resumeID);
-
-        const resumeRef = doc(db, "resumes", resumeID); // Get reference to the existing document
-        await updateDoc(resumeRef, dataToSave); // Update the document
-
+        const resumeRef = doc(db, "resumes", resumeID);
+        await updateDoc(resumeRef, dataToSave);
         toast({
           title: "Success",
-          description: "Your resume data has been updated.",
+          description: "Your resume has been updated.",
         });
       } else {
         console.log("Creating a new resume.");
-
         const newResume = {
           ...dataToSave,
-          createdAt: serverTimestamp(), // Add createdAt only for new documents
+          createdAt: serverTimestamp(),
         };
-
-        const docRef = await addDoc(collection(db, "resumes"), newResume); // Create a new document
-        console.log("Document written with ID: ", docRef.id);
-
+        const docRef = await addDoc(collection(db, "resumes"), newResume);
+        console.log("New resume created with ID: ", docRef.id);
         toast({
           title: "Success",
-          description: "Your resume data has been saved.",
+          description: "Your new resume has been saved.",
         });
       }
     } catch (error) {
@@ -437,7 +503,35 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
                   <ActivityDialog onSave={addActivity} />
                 </AccordionContent>
               </AccordionItem>
+
+              {/* Custom Section */}
+              <AccordionItem value="custom-sections">
+                <AccordionTrigger className="text-lg font-semibold">Custom Sections</AccordionTrigger>
+                <AccordionContent className="space-y-4 p-4">
+                  {customSections.map((section, index) => (
+                    <div key={index} className="border-b pb-4 mb-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-semibold text-lg">{section.title}</h4>
+                        <Button size="sm" variant="bordered" onClick={() => removeCustomSection(index)}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <p className="text-sm font-medium text-gray-600">{section.subtitle}</p>
+                      <p className="text-sm text-gray-500">{section.year}</p>
+                      <p className="mt-2 text-sm">{section.description}</p>
+                    </div>
+                  ))}
+                  <CustomSectionDialog onSave={addCustomSection} />
+                </AccordionContent>
+              </AccordionItem>
+
+
+
             </Accordion>
+
+
+
+
 
             {/* Add Blocks Section */}
             {/* <div className="space-y-4 pt-6">
@@ -485,7 +579,7 @@ export const PreviewResume: React.FC<PreviewResumeProps> = ({
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
 
   )

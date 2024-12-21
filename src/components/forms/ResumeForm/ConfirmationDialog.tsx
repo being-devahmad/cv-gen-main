@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@nextui-org/button";
 import { motion, AnimatePresence } from 'framer-motion';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
 
 interface ConfirmationDialogProps {
     isOpen: boolean;
@@ -48,10 +49,10 @@ export function ConfirmationDialog({
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                            Add Another Experience?
+                            More Information Needed <InfoCircledIcon />
                         </h2>
                         <p className="text-gray-600 mb-6">
-                            You've only listed one job. Do you want to add another position to your work experience?
+                            Looks like you haven't entered any education information. We recommend that you at least enter your past school and degree
                         </p>
                         <div className="flex justify-end space-x-3">
                             <Button
@@ -59,14 +60,14 @@ export function ConfirmationDialog({
                                 onClick={onContinue}
                                 className="px-4 py-2 text-gray-700 border-gray-300 hover:bg-gray-100 transition-colors"
                             >
-                                Continue to Skills
+                                I don't have any education
                             </Button>
                             <Button
                                 color="primary"
                                 onClick={onAddMore}
                                 className="px-4 py-2 bg-black text-white transition-colors"
                             >
-                                Add 
+                                Add
                             </Button>
                         </div>
                     </motion.div>

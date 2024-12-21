@@ -4,6 +4,7 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Plus, Trash2 } from 'lucide-react';
 import { ConfirmationDialog } from "./ConfirmationDialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface EducationItem {
   degree: string;
@@ -28,6 +29,7 @@ export default function Education({
   setActiveTab,
   categoryData,
 }: EducationProps) {
+
   const [education, setEducation] = useState<EducationItem[]>(() => {
 
 
@@ -52,6 +54,8 @@ export default function Education({
     ];
   });
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; index: number | null }>({ isOpen: false, index: null });
+
   useEffect(() => {
     if (education.length > 0) {
       setAllData({ ...allData, education: education });
@@ -72,10 +76,24 @@ export default function Education({
     setEducation(newEducation);
   };
 
+  // const removeEducation = (index: number) => {
+  //   const updatedEducation = education.filter((_, i) => i !== index);
+  //   setEducation(updatedEducation);
+  //   setAllData({ ...allData, education: updatedEducation });
+  // };
+
+
   const removeEducation = (index: number) => {
-    const updatedEducation = education.filter((_, i) => i !== index);
-    setEducation(updatedEducation);
-    setAllData({ ...allData, education: updatedEducation });
+    setDeleteConfirmation({ isOpen: true, index });
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation.index !== null) {
+      const updatedEducation = education.filter((_, i) => i !== deleteConfirmation.index);
+      setEducation(updatedEducation);
+      setAllData({ ...allData, education: updatedEducation });
+    }
+    setDeleteConfirmation({ isOpen: false, index: null });
   };
 
   const handleChange = (index: number, field: string, value: string) => {
@@ -89,7 +107,7 @@ export default function Education({
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleNext = () => {
-    if (education.length === 1) {
+    if (education.length === 0) {
       setShowConfirmation(true);
     } else {
       setActiveTab("skills");
@@ -193,6 +211,28 @@ export default function Education({
           addEducation();
         }}
       />
+
+
+      {/* Delete Confirmation DIalog */}
+      <Dialog open={deleteConfirmation.isOpen} onOpenChange={(isOpen) => setDeleteConfirmation({ isOpen, index: null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this experience? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="light" onClick={() => setDeleteConfirmation({ isOpen: false, index: null })}>
+              Cancel
+            </Button>
+            <Button color="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </Card>
   );
 }

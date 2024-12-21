@@ -1,7 +1,31 @@
-import { MapPin, Phone, Mail, } from "lucide-react";
-import React from "react";
+import { MapPin, Phone, Mail, Github, Linkedin, Globe, } from "lucide-react";
 
-const Header = ({ allData }: { allData: { firstName: string; lastName: string; city: string; country: string; email: string; phone: string } }) => {
+
+const ProfileLinks = ({ allData }: { allData: { github: string; linkedin: string; portfolio: string } }) => {
+  const { github, linkedin, portfolio } = allData
+  return (
+    <>
+      <div className="flex gap-4 mt-3">
+        {portfolio &&
+          <a href={`${portfolio}`} className="flex items-center gap-1">
+            <Globe size={12} />
+          </a>
+        }
+        {linkedin &&
+          <a href={`${linkedin}`} className="flex items-center gap-1">
+            <Linkedin size={12} />
+          </a>
+        }
+        {github && <a href={`${github}`} className="flex items-center gap-1">
+          <Github size={12} />
+        </a>
+        }
+      </div>
+    </>
+  )
+}
+
+const Header = ({ allData }: { allData: { firstName: string; lastName: string; city: string; country: string; email: string; phone: string; github: string; linkedin: string; portfolio: string } }) => {
   const { firstName, lastName, city, country, email, phone } = allData
   return (
     <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-lg">
@@ -19,19 +43,9 @@ const Header = ({ allData }: { allData: { firstName: string; lastName: string; c
           <Mail size={12} />
           <span>{email}</span>
         </div>
-        {/* <div className="flex items-center gap-1">
-          <Globe size={12} />
-          <span>johndoe.me</span>
-        </div>
-        <a href="https://linkedin.com/in/johndoe" className="flex items-center gap-1">
-          <Linkedin size={12} />
-          <span>johndoe</span>
-        </a>
-        <a href="https://github.com/johndoe" className="flex items-center gap-1">
-          <Github size={12} />
-          <span>johndoe</span>
-        </a> */}
+
       </div>
+      <ProfileLinks allData={allData} />
     </div>
   );
 };
@@ -70,7 +84,9 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
                   </div>
                 </div>
                 <ul className="list-disc ml-5 mt-2 text-gray-700">
-                  <li>{description}</li>
+                  <pre className="font-sans max-w-[100%] break-words whitespace-pre-wrap">
+                    {description}
+                  </pre>
                 </ul>
               </div>
             )
@@ -109,60 +125,26 @@ const Education = ({ allData }: { allData: { education: Array<{ degree: string; 
   )
 }
 
-// const Profiles = ({ allData }) => {
-//   return (
-//     <div className="p-6 bg-white">
-//       <h2 className="text-xl font-bold text-red-600 mb-4">Projects</h2>
-//       <div className="space-y-4">
-//         <div>
-//           <h3 className="font-bold">E-Commerce Platform</h3>
-//           <p className="text-gray-600">Project Lead</p>
-//           <p className="text-gray-700">Led the development of a full-stack e-commerce platform, improving sales conversion by 25%.</p>
-//         </div>
-//         <div>
-//           <h3 className="font-bold">Interactive Dashboard</h3>
-//           <p className="text-gray-600">Frontend Developer</p>
-//           <p className="text-gray-700">Created an interactive analytics dashboard for a SaaS application, enhancing data visualization for clients.</p>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
 
-const Skills = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
-  const { skills } = allData
-
-  const renderSkillItem = (item: string | { category: string; items: string[] }) => {
-    if (typeof item === 'string') {
-      return <li className="ml-4">{item}</li>;
-    } else if (typeof item === 'object' && item !== null) {
-      return (
-        <li>
-          {item.items.length > 0 && <h3 className="font-semibold">{item.category}</h3>}
-          <ul className="list-disc list-inside">
-            {Array.isArray(skills) ? skills.map((skill, index) => (
-              <React.Fragment key={index}>
-                {renderSkillItem(skill)}
-              </React.Fragment>
-            )) : null}
-          </ul>
-        </li>
-      );
-    }
-    return null;
-  };
-
+const Activities = ({ allData }: { allData: { activities: any[] } }) => {
+  const { activities } = allData;
   return (
     <div className="p-6 bg-white">
-      <h2 className="text-xl font-bold text-red-600 mb-4">Skills</h2>
-      <div className="grid grid-cols-3 gap-6">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Achievements</h2>
+      <div>
         {
-          skills?.map((skill, i) => {
-            const { category, items } = skill
+          activities && activities.map((activity, i) => {
+            const { title, employer, startDate, endDate, description, current } = activity
             return (
-              <div key={i}>
-                {items.length > 0 && <h3 className="font-bold mb-2">{category}</h3>}
-                <p className="text-gray-700">{items.join(", ")}</p>
+              <div className="flex justify-between items-start" key={i}>
+                <div>
+                  <h3 className="font-bold">{title}</h3>
+                  <p className="text-gray-600">{employer}</p>
+                </div>
+                <div className="text-right">
+                  <p> {startDate} - {endDate ? endDate : (!endDate && current && "present")}</p>
+                  <p className="text-gray-600">{description}</p>
+                </div>
               </div>
             )
           })
@@ -172,37 +154,72 @@ const Skills = ({ allData }: { allData: { skills: Array<{ category: string; item
   )
 }
 
-// const Certifications = ({ allData }) => {
-//   return (
-//     <div className="p-6 bg-white">
-//       <h2 className="text-xl font-bold text-red-600 mb-4">Certifications</h2>
-//       <div className="grid grid-cols-2 gap-6">
-//         <div>
-//           <h3 className="font-bold">Full-Stack Web Development</h3>
-//           <p className="text-gray-600">CodeAcademy</p>
-//           <p className="text-gray-700">2020</p>
-//         </div>
-//         <div>
-//           <h3 className="font-bold">AWS Certified Developer</h3>
-//           <p className="text-gray-600">Amazon Web Services</p>
-//           <p className="text-gray-700">2019</p>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
 
+const Languages = ({ allData }: { allData: { languages: { name: string; level: string }[] } }) => {
+  const { languages } = allData
+
+  return (
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Languages</h2>
+      <div className="grid grid-cols-3 gap-6">
+        <ul className="space-y-2">
+          {languages.map((lang, index) => (
+            <li key={index} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">{lang.name}</span>
+                <span className="text-sm text-gray-600">{lang.level}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+
+const Skills = ({ allData }: { allData: { skills: Array<{ name: string; level: string }> } }) => {
+  const { skills } = allData
+  const experienceLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
+
+  return (
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Skills</h2>
+      <div className="grid grid-cols-3 gap-6">
+        <ul className="space-y-2">
+          {skills.map((skill, index) => (
+            <li key={index} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">{skill.name}</span>
+                {/* <span className="text-sm text-gray-600">{skill.level}</span> */}
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 transition-all duration-300"
+                  style={{
+                    width: `${((experienceLevels.indexOf(skill.level) + 1) / experienceLevels.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
 
 
 const Bronzor = ({ allData }: { allData: any }) => {
   return (
-    <div className="max-w-4xl mx-auto bg-gray-100 min-h-screen">
+    <div className="max-w-4xl mx-auto min-h-screen border">
       <Header allData={allData} />
-      <Summary allData={allData} />
-      <Experience allData={allData} />
-      <Education allData={allData} />
-      {/* <Profiles allData={allData} /> */}
-      <Skills allData={allData} />
+      {allData.summary && <Summary allData={allData} />}
+      {allData.experience && allData.experience.length > 0 && <Experience allData={allData} />}
+      {allData.education && allData.education.length > 0 && <Education allData={allData} />}
+      {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
+      {allData.skills && allData.skills.length > 0 && <Skills allData={allData} />}
+      {allData.languages && allData.languages.length > 0 && <Languages allData={allData} />}
     </div>
   );
 };

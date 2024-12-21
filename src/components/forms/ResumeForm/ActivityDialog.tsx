@@ -121,7 +121,7 @@ export function ActivityDialog({ onSave }: ActivityDialogProps) {
                             htmlFor="current"
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                            Current
+                            I'm currently working
                         </label>
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">

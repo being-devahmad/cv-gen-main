@@ -1,5 +1,3 @@
-import React from "react";
-
 const Header = ({ allData }: { allData: { firstName: string; lastName: string; jobTite: string; city: string; country: string; email: string; phone: string; postalCode: string, summary: string } }) => {
     const { firstName, lastName, phone, email, city, postalCode, country, summary, jobTite } = allData;
 
@@ -89,6 +87,38 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
                                 <p className="font-bold">{title}</p>
                                 <p>{location}</p>
                             </div>
+                            <pre className="font-sans max-w-[100%] break-words whitespace-pre-wrap text-sm mt-2">
+                                {description}
+                            </pre>
+                        </div>
+                    )
+                })}
+            </div>
+        </section>
+    );
+};
+
+
+const Activities = ({ allData }: { allData: { activities: any[] } }) => {
+    const { activities } = allData;
+    return (
+        <section className="mb-8">
+            <h2 className="text-lg font-bold uppercase mb-4">Professional Experience</h2>
+            <div className="space-y-6">
+                {activities.map((activity, i) => {
+                    const { title, employer, startDate, endDate, description, current } = activity
+                    return (
+                        <div key={i}>
+                            <div className="flex justify-between">
+                                <h3 className="font-bold">{title}</h3>
+
+                                <div className="flex gap-0.5 items-center">
+                                    <p className="text-sm">{startDate}</p>
+                                    <span>-</span>
+                                    <p className="text-sm"> {startDate} - {endDate ? endDate : (!endDate && current && "present")}</p>
+                                </div>
+                            </div>
+                            <h5 className="font-bold">{employer}</h5>
                             <p className="text-sm mt-2">
                                 {description}
                             </p>
@@ -99,7 +129,6 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
         </section>
     );
 };
-
 
 // const Projects = () => {
 
@@ -193,39 +222,44 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
 // };
 
 
-const Skills = ({ allData }: { allData: { skills: Array<{ category: string; items: string[] }> } }) => {
+const Skills = ({ allData }: { allData: { skills: Array<{ name: string; level: string }> } }) => {
     const { skills } = allData;
 
-    const renderSkillItem = (item: string | { category: string; items: string[] }) => {
-        if (typeof item === 'string') {
-            return <li className="ml-4">{item}</li>;
-        } else if (typeof item === 'object' && item !== null) {
-            return (
-                <li>
-                    {item.items.length > 0 && <h3 className="font-semibold">{item.category}</h3>}
-                    <ul className="list-disc list-inside">
-                        {Array.isArray(skills) ? skills.map((skill, index) => (
-                            <React.Fragment key={index}>
-                                {renderSkillItem(skill)}
-                            </React.Fragment>
-                        )) : null}
-                    </ul>
-                </li>
-            );
-        }
-        return null;
-    };
+    return (
+        <section className="mb-8">
+            <h2 className="text-lg font-bold uppercase mb-4">Skills</h2>
+            <div className="space-y-6">
+                {skills.map((skill, i) => {
+                    const { name, level } = skill
+                    return (
+                        <div key={i}>
+                            <div className="flex items-center gap-3">
+                                <h3 className="font-bold">{name}</h3>
+                                <p className="text-sm">{level}</p>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </section>
+    );
+};
+
+const Languages = ({ allData }: { allData: { languages: { name: string; level: string }[] } }) => {
+    const { languages } = allData;
 
     return (
-        <section>
-            <h2 className="text-lg font-bold uppercase mb-4">Skills & Certifications</h2>
-            <div className="space-y-1 text-sm">
-                {skills?.map((skill, index) => {
-                    const { category, items } = skill
+        <section className="mb-8">
+            <h2 className="text-lg font-bold uppercase mb-4">Languages</h2>
+            <div className="space-y-6">
+                {languages && languages.map((lang, i) => {
+                    const { name, level } = lang
                     return (
-                        <div key={index} className="flex gap-3">
-                            {items.length > 0 && <div className="font-bold">{category}:</div>}
-                            <div>{items.join(", ")}</div>
+                        <div key={i}>
+                            <div className="flex items-center gap-3">
+                                <h3 className="font-bold">{name}</h3>
+                                <p className="text-sm">{level}</p>
+                            </div>
                         </div>
                     )
                 })}
@@ -239,10 +273,12 @@ export const Azurill = ({ allData }: { allData: any }) => {
     return (
         <div className="max-w-[800px] mx-auto p-8 font-sans">
             <Header allData={allData} />
-            <Education allData={allData} />
-            <Experience allData={allData} />
+            {allData.education.length > 0 && <Education allData={allData} />}
+            {allData.experiences.length > 0 && <Experience allData={allData} />}
+            {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
             {/* <Projects allData={allData} /> */}
-            <Skills allData={allData} />
+            {allData.skills && allData.skills.length > 0 && <Skills allData={allData} />}
+            {allData.languages && <Languages allData={allData} />}
         </div>
     );
 };

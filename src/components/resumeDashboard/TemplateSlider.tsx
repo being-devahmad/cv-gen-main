@@ -14,7 +14,7 @@ interface Template {
     id: string
     name: string
     image: string
-    popularity: 'most' | 'recommended' | null
+    popularity: 'most' | 'recommended' | 'modern' |null
 }
 
 export function TemplateSlider() {

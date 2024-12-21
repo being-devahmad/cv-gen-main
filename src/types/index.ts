@@ -62,3 +62,9 @@ export interface DescriptionPoint {
 }
 
 
+export interface CustomSection {
+  title: string;
+  subtitle: string;
+  year: string;
+  description: string;
+}

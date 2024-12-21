@@ -1,182 +1,191 @@
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+
+import { useEffect, useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Plus, X } from 'lucide-react';
-import { Button } from "@nextui-org/button";
-
-interface SkillCategory {
-  category: string;
-  items: string[];
-}
+} from "@/components/ui/select"
+// import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { X } from "lucide-react"
 
 interface SkillsProps {
-  allData: any;
-  setAllData: (data: any) => void;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-  categoryData: Record<string, any>;
+  allData: any
+  setAllData: (data: any) => void
+  activeTab: string
+  setActiveTab: (tab: string) => void
+  categoryData: Record<string, any>
 }
+
+const experienceLevels = ["Beginner", "Intermediate", "Advanced", "Expert"]
 
 export default function Skills({
   allData,
   setAllData,
   setActiveTab,
-  categoryData,
 }: SkillsProps) {
-  const [skills, setSkills] = useState<SkillCategory[]>(() => {
-    if (categoryData && categoryData.skills) {
-      const skillCategories: SkillCategory[] = [
-        { category: "Technical Skills", items: [] },
-        { category: "Soft Skills", items: [] },
-        { category: "Tools", items: categoryData.skills.tools || [] },
-        { category: "Frameworks", items: categoryData.skills.frameworks || [] },
-        { category: "Libraries", items: categoryData.skills.libraries || [] },
-        { category: "Tools", items: categoryData.skills.tools || [] },
-      ];
-      return skillCategories;
-    }
-    return allData.skills || [
-      { category: "Technical Skills", items: [] },
-      { category: "Soft Skills", items: [] },
-      { category: "Tools", items: [] },
-      { category: "Frameworks", items: [] },
-      { category: "Libraries", items: [] },
-      { category: "Tools", items: [] },
-    ];
-  });
-
-  const [newSkill, setNewSkill] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Technical Skills");
+  const [skills, setSkills] = useState<Array<{ name: string; level: string }>>([])
+  const [currentSkill, setCurrentSkill] = useState("")
+  const [currentLevel, setCurrentLevel] = useState("Expert")
+  // const [hideLevel, setHideLevel] = useState(false)
 
   useEffect(() => {
-    if (skills.length > 0) {
-      setAllData({ ...allData, skills: skills });
+    if (allData.skills && allData.skills.length > 0) {
+      setSkills(allData.skills);
     }
-  }, []);
+  }, [allData.skills]);
 
   const addSkill = () => {
-    if (!newSkill.trim()) return;
-    const updatedSkills = skills.map((category) =>
-      category.category === selectedCategory
-        ? { ...category, items: [...category.items, newSkill.trim()] }
-        : category
-    );
-    setSkills(updatedSkills);
-    setAllData({ ...allData, skills: updatedSkills });
-    setNewSkill("");
-  };
+    if (!currentSkill.trim()) return
+    const newSkill = {
+      name: currentSkill.trim(),
+      level: currentLevel,
+    }
+    setSkills([...skills, newSkill])
+    setCurrentSkill("")
+    setAllData({ ...allData, skills: [...skills, newSkill] })
+  }
 
-  const removeSkill = (categoryIndex: number, skillIndex: number) => {
-    const updatedSkills = skills.map((category, i) =>
-      i === categoryIndex
-        ? {
-          ...category,
-          items: category.items.filter((_, j) => j !== skillIndex),
-        }
-        : category
-    );
+  const removeSkill = (index: number) => {
+    const updatedSkills = skills.filter((_, i) => i !== index);
     setSkills(updatedSkills);
     setAllData({ ...allData, skills: updatedSkills });
   };
 
   const handleNext = () => {
-    console.log("allData", allData);
-    setAllData({ ...allData, skills });
-    setActiveTab("finish");
-  };
+    setActiveTab("finish")
+  }
 
   const handleBack = () => {
-    setActiveTab("education");
-  };
+    setActiveTab("education")
+  }
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-semibold mb-6">Skills</h2>
-      <div className="space-y-6">
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <Label htmlFor="skill">Add Skill</Label>
-            <Input
-              id="skill"
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-              placeholder="Enter a skill"
-              onKeyPress={(e) => e.key === "Enter" && addSkill()}
-            />
-          </div>
-          <div className="flex-1">
-            <Label>Category</Label>
-            <Select
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            >
+    <div className="max-w-2xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold mb-2">
+          <span className="text-blue-500">Tell us</span> about your skills
+        </h1>
+        <p className="text-gray-600">
+          Start with the one you are most experienced at
+        </p>
+      </div>
+
+      <Card className="p-6 space-y-6">
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="level">Experience Level</Label>
+            <Select value={currentLevel} onValueChange={setCurrentLevel}>
               <SelectTrigger>
-                <SelectValue placeholder="Select category" />
+                <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent>
-                {skills.map((cat) => (
-                  <SelectItem key={cat.category} value={cat.category}>
-                    {cat.category}
+                {experienceLevels.map((level) => (
+                  <SelectItem key={level} value={level}>
+                    {level}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <div className="flex items-end">
-            <Button onClick={addSkill}>
-              <Plus className="h-4 w-4 mr-2" /> Add
-            </Button>
+
+          <div className="space-y-2">
+            {/* <Label htmlFor="skill">SKILL</Label> */}
+            <div className="flex gap-2">
+              <Input
+                id="skill"
+                value={currentSkill}
+                onChange={(e) => setCurrentSkill(e.target.value)}
+                placeholder="Type your skill here"
+                onKeyPress={(e) => e.key === "Enter" && addSkill()}
+              />
+            </div>
           </div>
-        </div>
-        <div className="space-y-6">
-          {skills.map((category, categoryIndex) => (
-            <div key={category.category}>
-              {
-                category.items.length > 0 && <h3 className="text-lg font-medium">{category.category}</h3>
-              }
-              <div className="flex flex-wrap gap-2">
-                {category.items.map((skill, skillIndex) => (
-                  <Badge
-                    key={skillIndex}
-                    variant="secondary"
-                    className="px-3 py-1"
-                  >
-                    {skill}
-                    <button
-                      onClick={() => removeSkill(categoryIndex, skillIndex)}
-                      className="ml-2 hover:text-red-500"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
+
+          {currentSkill && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Level - {currentLevel}</span>
+              </div>
+              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-green-500 transition-all duration-300"
+                  style={{
+                    width: `${((experienceLevels.indexOf(currentLevel) + 1) /
+                      experienceLevels.length) *
+                      100
+                      }%`,
+                  }}
+                />
               </div>
             </div>
-          ))}
+          )}
         </div>
-      </div>
-      <div className="flex justify-between items-center mt-4">
-        <Button variant="light" onClick={handleBack}>
-          Back
-        </Button>
+
         <Button
-          radius="sm"
-          className="text-white font-bold hover:bg-button-gpt-hover bg-button-gpt"
-          onClick={handleNext}
+          variant="outline"
+          className="w-full text-blue-500 border-blue-500"
+          onClick={addSkill}
         >
-          Next to Summary <span className="pl-2">&#x2192;</span>
+          Add Skill
+        </Button>
+
+        {skills.length > 0 && (
+          <div className="space-y-4">
+            {skills.map((skill, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+              >
+                <span>{skill.name}</span>
+                {/* {!hideLevel && <span className="text-gray-500">{skill.level}</span>} */}
+                <button
+                  onClick={() => removeSkill(index)}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-between items-center pt-4 border-t">
+          <div className="space-y-4">
+            {/* <div className="flex items-center space-x-2">
+              <Switch
+                id="show-tags"
+                checked={showAsTags}
+                onCheckedChange={setShowAsTags}
+              />
+              <Label htmlFor="show-tags">View skills as tags</Label>
+            </div> */}
+            {/* <div className="flex items-center space-x-2">
+              <Switch
+                id="hide-level"
+                checked={hideLevel}
+                onCheckedChange={setHideLevel}
+              />
+              <Label htmlFor="hide-level">Hide experience level</Label>
+            </div> */}
+          </div>
+        </div>
+      </Card>
+
+      <div className="flex justify-between">
+        <Button variant="ghost" onClick={handleBack}>
+          ← Back
+        </Button>
+        <Button onClick={handleNext} className="bg-blue-500 text-white">
+          Next to Finish →
         </Button>
       </div>
-    </Card>
-  );
+    </div>
+  )
 }
 
