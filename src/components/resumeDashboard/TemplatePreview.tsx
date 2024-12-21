@@ -1,7 +1,12 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { FileText, AlertTriangle, Check, AlertCircle } from 'lucide-react'
-
+import { FileText, AlertTriangle, AlertCircle } from 'lucide-react'
+import { AIChatSession } from "@/services/AIModal"
+import { useNavigate, useParams } from 'react-router-dom'
+import { Card } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { templates, Template } from '@/data/templates'
+import { Image } from '@nextui-org/react'
 
 interface TemplatePreviewProps {
     fileName: string
@@ -9,23 +14,60 @@ interface TemplatePreviewProps {
 }
 
 export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, fileContent }) => {
+    const { id } = useParams<{ id: string }>()
     const [parsedResumeData, setParsedResumeData] = useState<any>(null)
     const [parsingError, setParsingError] = useState<string | null>(null)
     const [parsingProgress, setParsingProgress] = useState(0)
+    const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
+    const [categoryData, setCategoryData] = useState('')
+    const navigate = useNavigate()
+    const { templateId } = useParams()
 
-    const handleParseComplete = useCallback((data: any) => {
-        setParsedResumeData(data)
-        setParsingProgress(100)
-    }, [])
+    useEffect(() => {
+        const template = templates.find(t => t.id === id)
+        setSelectedTemplate(template || null)
+    }, [id])
 
-    const handleParseError = useCallback((error: string) => {
-        setParsingError(error)
-        setParsingProgress(0)
-    }, [])
+    const parseResume = useCallback(async () => {
+        if (!fileContent || typeof fileContent !== 'string') {
+            setParsingError('Invalid file content')
+            return
+        }
 
-    const handleParsingProgress = useCallback((progress: number) => {
-        setParsingProgress(progress)
-    }, [])
+        try {
+            setParsingProgress(10)
+            const prompt = `Parse the following resume content into a structured JSON format. Include fields such as personalInfo, education, experience, skills, languages and any other relevant sections. Here's the resume content:
+
+            ${fileContent}
+
+            Respond only with the JSON object, no additional text.`
+
+            const result = await AIChatSession.sendMessage(prompt)
+            setParsingProgress(50)
+
+            const jsonResponse = JSON.parse(result.response.text())
+            setParsedResumeData(jsonResponse)
+            setParsingProgress(100)
+
+            // Set the category data and navigate to ResumeStart
+            setCategoryData(jsonResponse)
+            // navigate(`select/${templateId}/start`, { state: { parsedData: jsonResponse } })
+
+        } catch (error) {
+            console.error('Error parsing resume:', error)
+            setParsingError('An error occurred while parsing the resume. Please try again.')
+            setParsingProgress(0)
+        }
+    }, [fileContent])
+
+    useEffect(() => {
+        if (fileContent) {
+
+            console.log("CategoryDataSent-->", parsedResumeData, categoryData)
+
+            parseResume()
+        }
+    }, [fileContent, parseResume])
 
     if (parsingError) {
         return (
@@ -54,12 +96,8 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full"
-            >
-                <div className="flex items-center space-x-4 mb-6">
+            <Card className="w-full max-w-md p-6 space-y-6">
+                <div className="flex items-center space-x-4">
                     <div className="bg-blue-100 rounded-full p-3">
                         <FileText className="w-6 h-6 text-blue-600" />
                     </div>
@@ -69,31 +107,28 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
                     </div>
                 </div>
 
-                <div className="relative mb-4">
-                    <div className="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
-                        <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${parsingProgress}%` }}
-                            transition={{ duration: 0.5 }}
-                            className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
-                        />
-                    </div>
-                    {parsingProgress === 100 && (
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2"
-                        >
-                            <div className="bg-green-500 rounded-full p-1">
-                                <Check className="w-4 h-4 text-white" />
-                            </div>
-                        </motion.div>
-                    )}
-                </div>
+                <Progress value={parsingProgress} className="w-full" />
 
-                <p className="text-center text-sm font-medium text-gray-600 mb-4">
+                <p className="text-center text-sm font-medium text-gray-600">
                     {parsingProgress < 100 ? "Analyzing your resume..." : "Resume analysis complete!"}
                 </p>
+
+                {selectedTemplate && (
+                    <div className="mt-6">
+                        <h3 className="text-lg font-semibold text-gray-800">Selected Template: {selectedTemplate.name}</h3>
+                        <div className="relative aspect-[8.5/11] w-64 mx-auto border border-gray-200 rounded-lg overflow-hidden">
+                            <Image
+                                src={selectedTemplate.image}
+                                alt={selectedTemplate.name}
+                                className="w-full h-full object-contain"
+                            />
+                            <div
+                                className="absolute inset-0 bg-blue-500 opacity-20"
+                                style={{ clipPath: `inset(0 ${100 - parsingProgress}% 0 0)` }}
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {parsedResumeData && (
                     <div className="mt-6">
@@ -103,7 +138,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
                         </pre>
                     </div>
                 )}
-            </motion.div>
+            </Card>
         </div>
     )
 }

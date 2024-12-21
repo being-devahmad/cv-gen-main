@@ -6,11 +6,11 @@ import Bronzor from "@/assets/images/bronzor.png"
 
 
 
-interface Template {
+export interface Template {
     id: string
     name: string
     image: string
-    popularity: 'most' | 'recommended' | 'modern' |null
+    popularity: 'most' | 'recommended' | 'modern' | null
 }
 
 export const templates: Template[] = [
