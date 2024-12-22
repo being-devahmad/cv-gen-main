@@ -6,9 +6,9 @@ interface TemplateArtboardProps {
 
 const TemplateArtboard: React.FC<TemplateArtboardProps> = ({ children }) => {
     return (
-        <div className="w-full h-full overflow-hidden bg-gray-100 flex items-center justify-center p-8 ">
-            <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden scale-[0.7] transform origin-top">
-                <div className="w-full h-full overflow-auto">
+        <div className="w-full overflow-hidden bg-gray-100 flex flex-col items-center justify-center p-4 sm:p-8">
+            <div className="w-full max-w-[800px] aspect-[1/1.4142] bg-white shadow-2xl overflow-hidden">
+                <div className="w-[142.857%] h-[142.857%] transform scale-[0.7] origin-top-left">
                     {children}
                 </div>
             </div>

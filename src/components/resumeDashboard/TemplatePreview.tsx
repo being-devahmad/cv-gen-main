@@ -21,7 +21,6 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
     const [categoryData, setCategoryData] = useState('')
     const navigate = useNavigate()
-    const { templateId } = useParams()
 
     useEffect(() => {
         const template = templates.find(t => t.id === id)
@@ -30,41 +29,41 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
 
     const parseResume = useCallback(async () => {
         if (!fileContent || typeof fileContent !== 'string') {
-            setParsingError('Invalid file content')
-            return
+            setParsingError('Invalid file content');
+            return;
         }
 
         try {
-            setParsingProgress(10)
+            setParsingProgress(10);
+
             const prompt = `Parse the following resume content into a structured JSON format. Include fields such as personalInfo, education, experience, skills, languages and any other relevant sections. Here's the resume content:
-
+    
             ${fileContent}
+    
+            Respond only with the JSON object, no additional text.`;
 
-            Respond only with the JSON object, no additional text.`
+            const result = await AIChatSession.sendMessage(prompt);
+            setParsingProgress(50);
 
-            const result = await AIChatSession.sendMessage(prompt)
-            setParsingProgress(50)
+            const jsonResponse = JSON.parse(await result.response.text());
+            setParsedResumeData(jsonResponse);
+            setParsingProgress(100);
 
-            const jsonResponse = JSON.parse(result.response.text())
-            setParsedResumeData(jsonResponse)
-            setParsingProgress(100)
+            const finalResult = JSON.stringify(jsonResponse, null, 2);
+            console.log("FinalResult---->", jsonResponse);
 
-            // Set the category data and navigate to ResumeStart
-            setCategoryData(jsonResponse)
-            // navigate(`select/${templateId}/start`, { state: { parsedData: jsonResponse } })
 
+            // Navigate to ResumeStart with parsed data
+            navigate(`/select/${id}/start`, { state: { categoryData: jsonResponse } });
         } catch (error) {
-            console.error('Error parsing resume:', error)
-            setParsingError('An error occurred while parsing the resume. Please try again.')
-            setParsingProgress(0)
+            console.error('Error parsing resume:', error);
+            setParsingError('An error occurred while parsing the resume. Please try again.');
+            setParsingProgress(0);
         }
-    }, [fileContent])
+    }, [fileContent, navigate, id]);
 
     useEffect(() => {
         if (fileContent) {
-
-            console.log("CategoryDataSent-->", parsedResumeData, categoryData)
-
             parseResume()
         }
     }, [fileContent, parseResume])

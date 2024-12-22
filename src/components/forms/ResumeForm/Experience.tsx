@@ -35,13 +35,13 @@ const Experience: React.FC<ExperienceProps> = ({
   const [experiences, setExperiences] = useState<ExperienceItem[]>(() => {
     if (categoryData && categoryData.experience.length > 0) {
       return categoryData.experience.map((exp: any) => ({
-        title: exp.jobTitle || "",
+        title: exp.jobTitle || "" || exp.title ,
         company: exp.company || "",
         location: exp.location || "",
-        startDate: exp.duration ? exp.duration.split(' - ')[0] : "",
-        endDate: exp.duration ? exp.duration.split(' - ')[1] : "",
-        currentlyWorking: exp.duration.includes('present'),
-        description: exp.responsibilities ? exp.responsibilities.join('\n') : "",
+        startDate: exp.duration ? exp.duration.split(' - ')[0] : "" || exp.years ? exp.years.split(' - ')[0] : "",
+        endDate: exp.duration ? exp.duration.split(' - ')[1] : "" || exp.years ? exp.years.split(' - ')[1] : "",
+        currentlyWorking: exp.duration ? exp.duration.includes('present') : "",
+        description: exp.responsibilities ? exp.responsibilities.join('\n') : "" || exp.description ? exp.description : ""
       }));
     }
     return allData.experiences || [

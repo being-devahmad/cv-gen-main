@@ -193,7 +193,7 @@ export const Chikorita = ({ allData }: { allData: any }) => {
   const resumeRef = useRef(null);
 
   return (
-    <div className="max-w-[800px] mx-auto p-8 font-sans">
+    <div className="max-w-full mx-auto p-8 font-sans border border-red-600">
       <div ref={resumeRef} className="max-w-5xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden ">
         <Header allData={allData} />
         <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6">

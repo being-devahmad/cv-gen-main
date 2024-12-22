@@ -20,10 +20,10 @@ const ResumeStart: React.FC = () => {
   // console.log("TemplateId--------->", id);
 
   const [resumeID, setResumeID] = useState("");
+
   const location = useLocation();
   const { categoryData, resume } = location.state || {};
-
-  // console.log("Received Data:", categoryData, resume);
+  console.log("Received Data:", categoryData, resume);
 
   const resumeRef = useRef<HTMLDivElement>(null);
 

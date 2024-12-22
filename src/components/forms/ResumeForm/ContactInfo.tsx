@@ -24,8 +24,10 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   allData,
   setAllData,
   setActiveTab,
-  // categoryData
+  categoryData
 }) => {
+
+  console.log("categoryData->", categoryData)
 
   const form = useForm({
     resolver: zodResolver(ContactInfoSchema),
@@ -56,6 +58,8 @@ export const ContactInfo: React.FC<ContactInfoProps> = ({
   const handleInputChange = (field: string, value: string) => {
     setAllData({ ...allData, [field]: value });
   };
+
+
 
   const handleSubmitContactDetails = (values: z.infer<typeof ContactInfoSchema>) => {
     console.log("Form Submitted", values);
