@@ -1,19 +1,49 @@
-import { subscriptionTiersInOrder } from "@/data/subscriptionTiers";
+import { useState } from "react";
 import { Button, Card, Checkbox } from "@nextui-org/react";
+
+type PremiumFeatures = {
+  monthlyPlan: string[];
+  lifetimePlan: string[];
+};
+
+type PlanFeatures = string[] | PremiumFeatures;
 
 const PricingPlan = ({
   name,
   price,
-  description,
+  // description,
   features,
-}: (typeof subscriptionTiersInOrder)[number]) => {
-  let bgColor, textColor, checkboxColor, buttonBg;
+  lifetimePrice,
+}: {
+  name: string;
+  price: number;
+  description: string;
+  features: PlanFeatures;
+  lifetimePrice?: number;
+}) => {
+  const [activeTab, setActiveTab] = useState<"monthly" | "lifetime">("monthly");
 
-  if (name === "Teams") {
+  const isPremiumPlan = name === "Premium";
+
+  const currentFeatures = isPremiumPlan
+    ? (features as PremiumFeatures)[activeTab === "monthly" ? "monthlyPlan" : "lifetimePlan"]
+    : (features as string[]);
+
+  const currentPrice = isPremiumPlan
+    ? activeTab === "monthly"
+      ? price
+      : lifetimePrice
+    : price;
+
+  let bgColor, textColor, checkboxColor, buttonBg, monthlyTabBg, lifetimeTabBg;
+
+  if (name === "Premium") {
     bgColor = "bg-black";
     textColor = "text-white";
     checkboxColor = "text-white";
     buttonBg = "bg-white text-black font-semibold";
+    monthlyTabBg = "bg-gray-200 text-black font-semibold";
+    lifetimeTabBg = "bg-gray-300 text-black font-semibold"
   } else {
     bgColor = "bg-white";
     textColor = "text-black";
@@ -22,25 +52,38 @@ const PricingPlan = ({
   }
 
   return (
-    <Card className={`md:p-5 w-full p-4 ${bgColor}  ${textColor}`} shadow="lg">
-      <h2>{name}</h2>
-      <div className="w-full ">
-        <span className="text-xs">Starts at</span>
-        <div>
-          <div>
-            <span className="text-3xl mr-2 font-bold">${price / 100}</span>
-            <span className="text-xs">per month</span>
+    <Card className={`md:p-5 w-full p-4 ${bgColor} ${textColor}`} shadow="lg">
+      <h2 className="text-xl font-bold">{name}</h2>
+      <div className="w-full mt-4">
+        {isPremiumPlan && (
+          <div className={`flex justify-center mb-4 `}>
+            <button
+              onClick={() => setActiveTab("monthly")}
+              className={`px-4 py-2 text-sm font-medium rounded-l ${activeTab === "monthly" ? `${monthlyTabBg}` : `${lifetimeTabBg}`
+                }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setActiveTab("lifetime")}
+              className={`px-4 py-2 text-sm font-medium rounded-r ${activeTab === "lifetime" ? `${monthlyTabBg}` : `${lifetimeTabBg}`
+                }`}
+            >
+              Lifetime
+            </button>
           </div>
-          <p className="text-xs my-3">{description}</p>
+        )}
+        <div>
+          <span className="text-3xl mr-2 font-bold">€{currentPrice}</span>
         </div>
-        <Button className={`${buttonBg}  shadow-lg`} fullWidth size="sm">
+        <Button className={`${buttonBg} shadow-lg mt-4`} fullWidth size="sm">
           Get Started
         </Button>
       </div>
       <div className="w-full h-fit mt-10 mb-6 border border-dashed"></div>
-      <ul className="">
-        {features.map((feature: string, index: number) => (
-          <div className="flex  mb-2" key={index}>
+      <ul>
+        {currentFeatures.map((feature: string, index: number) => (
+          <div className="flex mb-2" key={index}>
             <Checkbox
               defaultSelected
               isDisabled

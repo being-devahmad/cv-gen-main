@@ -273,7 +273,7 @@ const Languages = ({ allData }: { allData: { languages: Array<{ name: string; le
 export const Onyx = ({ allData }: { allData: any }) => {
   return (
     <NextUIProvider>
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md">
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md h-full">
         <Header allData={allData} />
         <div className="border-b-2 border-gray-300 my-4"></div>
         <Summary allData={allData} />

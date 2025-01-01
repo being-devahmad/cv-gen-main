@@ -184,6 +184,43 @@ export function Activities({ allData }: { allData: { activities: any[] } }) {
 }
 
 
+// Custom Sections
+export function CustomSection({ allData }: { allData: { customSections: any[] } }) {
+  const { customSections } = allData;
+
+
+  return (
+    <section className="mb-6">
+      <h2 className="text-xl font-bold mb-3 text-gray-800 border-b border-gray-300 pb-1 flex items-center">
+        <Briefcase className="w-6 h-6 mr-2 text-blue-500" /> Achievements
+      </h2>
+      <div className="space-y-6">
+        {customSections && customSections.map((customSec, index) => {
+           const { description, year, subtitle, title } = customSec
+          return (
+            <div key={index}>
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-semibold text-gray-800 text-lg">
+                    {title}
+                  </h3>
+                  <p className="text-gray-700">{subtitle}</p>
+                </div>
+                <span className="text-gray-600 text-sm">
+                 {year}
+                </span>
+              </div>
+
+              <p className="text-xs">{description}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+
 const Skills = ({ allData }: { allData: { skills: Array<{ name: string; level: string }> } }) => {
   const { skills } = allData;
   const experienceLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
@@ -260,6 +297,8 @@ export const Nosepass = ({ allData }: { allData: any }) => {
             {allData.education && allData.education.length > 0 && <Education allData={allData} />}
 
             {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
+
+            {allData.customSections && allData.customSections.length > 0 && <CustomSection allData={allData} />}
           </div>
         </div>
       </div>

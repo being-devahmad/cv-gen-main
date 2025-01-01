@@ -19,7 +19,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
     const [parsingError, setParsingError] = useState<string | null>(null)
     const [parsingProgress, setParsingProgress] = useState(0)
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
-    const [categoryData, setCategoryData] = useState('')
+    // const [categoryData, setCategoryData] = useState('')
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -36,7 +36,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
         try {
             setParsingProgress(10);
 
-            const prompt = `Parse the following resume content into a structured JSON format. Include fields such as personalInfo, education, experience, skills, languages and any other relevant sections. Here's the resume content:
+            const prompt = `Parse the following resume content into a structured JSON format. Include fields such as firstName , lastName , jobTitle, city , country , phone , email,  postalCode , summary ,  education, experience, skills, languages and any other relevant sections. Here's the resume content:
     
             ${fileContent}
     
@@ -49,7 +49,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
             setParsedResumeData(jsonResponse);
             setParsingProgress(100);
 
-            const finalResult = JSON.stringify(jsonResponse, null, 2);
+            // const finalResult = JSON.stringify(jsonResponse, null, 2);
             console.log("FinalResult---->", jsonResponse);
 
 
@@ -114,7 +114,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ fileName, file
 
                 {selectedTemplate && (
                     <div className="mt-6">
-                        <h3 className="text-lg font-semibold text-gray-800">Selected Template: {selectedTemplate.name}</h3>
+                        {/* <h3 className="text-lg font-semibold text-gray-800">Selected Template: {selectedTemplate.name}</h3> */}
                         <div className="relative aspect-[8.5/11] w-64 mx-auto border border-gray-200 rounded-lg overflow-hidden">
                             <Image
                                 src={selectedTemplate.image}

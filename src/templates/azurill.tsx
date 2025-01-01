@@ -99,6 +99,35 @@ const Experience = ({ allData }: { allData: { experiences: Array<{ company: stri
 };
 
 
+const CustomSection = ({ allData }: { allData: { customSections: Array<{ title: string, description: string, year: string, subtitle: string }> } }) => {
+    const { customSections } = allData;
+    return (
+        <section className="mb-8">
+            <h1 className="text-lg font-bold uppercase mb-4">Additional</h1>
+            <div className="space-y-6">
+                {customSections.map((customSec, i) => {
+                    const { description, year, subtitle, title } = customSec
+                    return (
+                        <div key={i}>
+                            <h1 className="font-bold mb-2">{title}</h1>
+                            <div className="flex justify-between">
+                                <h3 className="font-bold">{subtitle}</h3>
+                                <div className="flex gap-0.5 items-center">
+                                    <p className="text-sm">{year}</p>
+                                </div>
+                            </div>
+                            <pre className="font-sans max-w-[100%] break-words whitespace-pre-wrap text-sm mt-2">
+                                {description}
+                            </pre>
+                        </div>
+                    )
+                })}
+            </div>
+        </section>
+    );
+};
+
+
 const Activities = ({ allData }: { allData: { activities: any[] } }) => {
     const { activities } = allData;
     return (
@@ -276,6 +305,7 @@ export const Azurill = ({ allData }: { allData: any }) => {
             {allData.education.length > 0 && <Education allData={allData} />}
             {allData.experiences.length > 0 && <Experience allData={allData} />}
             {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
+            {allData.customSections && allData.customSections.length > 0 && <CustomSection allData={allData} />}
             {/* <Projects allData={allData} /> */}
             {allData.skills && allData.skills.length > 0 && <Skills allData={allData} />}
             {allData.languages && <Languages allData={allData} />}

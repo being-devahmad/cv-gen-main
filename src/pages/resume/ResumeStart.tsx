@@ -3,7 +3,7 @@ import { ResumeProvider } from "@/hooks/useResume";
 import { Azurill } from "@/templates/azurill";
 import { Chikorita } from "@/templates/chikorita";
 import { Nosepass } from "@/templates/nosepass";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // import html2canvas from 'html2canvas';
 // import jsPDF from 'jspdf';
 // import { toast } from '@/hooks/use-toast';
@@ -62,6 +62,12 @@ const ResumeStart: React.FC = () => {
     }
   }, []);
 
+  const navigate = useNavigate()
+
+  const handleDownload = () => {
+    navigate('/pricing')
+  }
+
   const renderTemplate = () => {
     switch (id) {
       case "1":
@@ -98,6 +104,7 @@ const ResumeStart: React.FC = () => {
               <Button
                 className="w-full bg-gray-400 text-white px-4 py-2 rounded-md font-semibold
                             hover:bg-gray-500 transition-colors"
+                onClick={handleDownload}
               >
                 Download as PDF
               </Button>

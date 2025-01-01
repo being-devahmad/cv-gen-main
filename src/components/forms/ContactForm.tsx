@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Input, Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, Divider } from "@nextui-org/react";
+import { addMessageToFirestore } from "@/lib/actions";
 
 type ContactUsFormData = z.infer<typeof ContactUsSchema>;
 
@@ -35,28 +36,28 @@ const ContactForm = () => {
     formState: { errors },
   } = form;
 
-  const onSubmit = (values: ContactUsFormData) => {
+  const onSubmit = async (values: ContactUsFormData) => {
     setIsLoading(true);
     try {
-      console.log(values);
-      setTimeout(() => {
+      if (user?.id) {
+        await addMessageToFirestore(values, user.id);
         toast({
           title: "Success",
           description: "Message sent. We will get back to you soon.",
         });
-        reset({});
-        setIsLoading(false);
-      }, 2000);
+      } else {
+        throw new Error("User ID is undefined");
+      }
+      reset({});
     } catch (error) {
-      console.log(error);
-      setIsLoading(false);
+      console.error(error);
       toast({
         title: "Error",
         description: "Unable to send message right now",
         variant: "destructive",
       });
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 

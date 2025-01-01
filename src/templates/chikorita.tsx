@@ -57,7 +57,7 @@ const Experience = ({ allData }: { allData: { experiences: any[] } }) => {
       <h2 className="text-xl font-bold text-blue-800 border-b-2 border-blue-300 pb-2 mb-8">WORK EXPERIENCE</h2>
       <div className="relative border-l-2 border-blue-300 pl-7 space-y-12">
         {experiences.map((exp, index) => {
-          const { company, startDate, endDate, title, description, location } = exp;
+          const { company, startDate, endDate, title, description, location , current } = exp;
           return (
             <div key={index} className="relative">
               <div className="absolute left-[-35px] top-0 w-4 h-4 bg-blue-500 rounded-full shadow" />
@@ -67,7 +67,7 @@ const Experience = ({ allData }: { allData: { experiences: any[] } }) => {
                   <p className="text-gray-600 italic">{company} , {location} </p>
                 </div>
                 <div className="text-sm text-gray-500">
-                  {startDate} - {endDate ? endDate : "present"}
+                  {startDate} - {(endDate && current) ? endDate : "present"}
                 </div>
               </div>
               <ul className="list-disc ml-4 space-y-2 text-gray-700">
@@ -144,6 +144,41 @@ const Activities = ({ allData }: { allData: { activities: any[] } }) => {
   );
 };
 
+
+const CustomSection = ({ allData }: { allData: { customSections: Array<{ title: string, description: string, year: string, subtitle: string }> } }) => {
+  const { customSections } = allData;
+
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-bold text-blue-800 border-b-2 border-blue-300 pb-2 mb-8">ACHIEVEMENTS</h2>
+      <div className="relative border-l-2 border-blue-300 pl-7 space-y-12">
+        {customSections && customSections.map((customSec, index) => {
+          const { description, year, subtitle, title } = customSec
+          return (
+            <div key={index} className="relative">
+              <div className="absolute left-[-35px] top-0 w-4 h-4 bg-blue-500 rounded-full shadow" />
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-bold text-lg text-blue-700">{title}  </h3>
+                  <p className="text-gray-600 italic">{subtitle} </p>
+                </div>
+                <div className="text-sm text-gray-500">
+                  {year}
+                </div>
+              </div>
+              <div>
+                <p>{description}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+
+
 const Skills = ({ allData }: { allData: { skills: Array<{ name: string; level: string }> } }) => {
   const { skills } = allData;
   const experienceLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
@@ -193,7 +228,7 @@ export const Chikorita = ({ allData }: { allData: any }) => {
   const resumeRef = useRef(null);
 
   return (
-    <div className="max-w-full mx-auto p-8 font-sans border border-red-600">
+    <div className="max-w-full mx-auto p-8 font-sans ">
       <div ref={resumeRef} className="max-w-5xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden ">
         <Header allData={allData} />
         <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6">
@@ -207,6 +242,7 @@ export const Chikorita = ({ allData }: { allData: any }) => {
             {allData.experiences.length > 0 && <Experience allData={allData} />}
             {allData.education.length > 0 && <Education allData={allData} />}
             {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
+            {allData.customSections && allData.customSections.length > 0 && <CustomSection allData={allData} />}
           </div>
         </div>
       </div>

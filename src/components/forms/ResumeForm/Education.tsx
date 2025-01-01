@@ -36,11 +36,12 @@ export default function Education({
 
     if (categoryData && categoryData.education.length > 0) {
       return categoryData.education.map((edu: any) => ({
-        degree: edu.degree || "",
-        organization: edu.institution || "" || edu.university,
-        location: edu.location || "",
-        startDate: edu.year ? edu.year.split(' - ')[0] : "" ||  edu.years ? edu.years.split(' - ')[0] : "",
-        endDate: edu.year ? edu.year.split(' - ')[1] : "" ||  edu.years ? edu.years.split(' - ')[1] : "",
+        degree: edu.degree ?? "",
+        organization: edu.institution ?? edu.university ?? "",
+        location: edu.location ?? "",
+        startDate: edu.years ? edu.years.split(' - ')[0] : edu.year || "",
+        endDate: edu.years ? edu.years.split(' - ')[1] : edu.year || "",
+
       }));
     }
     return allData.education || [

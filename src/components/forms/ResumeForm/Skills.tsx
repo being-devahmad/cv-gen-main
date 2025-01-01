@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -28,6 +27,7 @@ export default function Skills({
   allData,
   setAllData,
   setActiveTab,
+  categoryData
 }: SkillsProps) {
   const [skills, setSkills] = useState<Array<{ name: string; level: string }>>([])
   const [currentSkill, setCurrentSkill] = useState("")
@@ -35,10 +35,17 @@ export default function Skills({
   // const [hideLevel, setHideLevel] = useState(false)
 
   useEffect(() => {
-    if (allData.skills && allData.skills.length > 0) {
+    if (categoryData?.skills && categoryData.skills.length > 0) {
+      const formattedSkills = categoryData.skills.map((skill: string) => ({
+        name: skill,
+        level: "Intermediate" // Default level, adjust as needed
+      }));
+      setSkills(formattedSkills);
+      setAllData({ ...allData, skills: formattedSkills });
+    } else if (allData?.skills && allData.skills.length > 0) {
       setSkills(allData.skills);
     }
-  }, [allData.skills]);
+  }, [categoryData, allData?.skills]);
 
   const addSkill = () => {
     if (!currentSkill.trim()) return

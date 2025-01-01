@@ -154,6 +154,34 @@ const Activities = ({ allData }: { allData: { activities: any[] } }) => {
   )
 }
 
+const CustomSection = ({ allData }: { allData: { customSections: any[] } }) => {
+  const { customSections } = allData;
+  return (
+    <div className="p-6 bg-white">
+      <h2 className="text-xl font-bold text-red-600 mb-4">Achievements</h2>
+      <div>
+        {
+          customSections && customSections.map((customSec, i) => {
+            const { description, year, subtitle, title } = customSec
+            return (
+              <div className="flex justify-between items-start" key={i}>
+                <div>
+                  <h3 className="font-bold">{title}</h3>
+                  <p className="text-gray-600">{subtitle}</p>
+                </div>
+                <div className="text-right">
+                  <p> {year}</p>
+                  <p className="text-gray-600">{description}</p>
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+  )
+}
+
 
 const Languages = ({ allData }: { allData: { languages: { name: string; level: string }[] } }) => {
   const { languages } = allData
@@ -218,6 +246,7 @@ const Bronzor = ({ allData }: { allData: any }) => {
       {allData.experience && allData.experience.length > 0 && <Experience allData={allData} />}
       {allData.education && allData.education.length > 0 && <Education allData={allData} />}
       {allData.activities && allData.activities.length > 0 && <Activities allData={allData} />}
+      {allData.customSections && allData.customSections.length > 0 && <CustomSection allData={allData} />}
       {allData.skills && allData.skills.length > 0 && <Skills allData={allData} />}
       {allData.languages && allData.languages.length > 0 && <Languages allData={allData} />}
     </div>

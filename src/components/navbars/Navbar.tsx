@@ -92,14 +92,14 @@ const Navbar = () => {
             Company
           </FlyoutLink>
         </li>
-        <li className="cursor-pointer  hidden lg:block hover:text-button-gpt">
+        {/* <li className="cursor-pointer  hidden lg:block hover:text-button-gpt">
           <NavLink
             className={({ isActive }) => (isActive ? "text-button-gpt" : "")}
             to={"/customers"}
           >
             Customers
           </NavLink>
-        </li>
+        </li> */}
         {isAuthenticated ? (
           <ShinyButton className="h-9" href="/dashboard">
             Dashboard

@@ -25,6 +25,7 @@ const LoginForm = () => {
 
   const from = location?.state?.from?.pathname || "/";
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  
   const form = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
